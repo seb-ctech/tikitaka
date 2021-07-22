@@ -1,0 +1,5 @@
+namespace Football {
+    void triangles(){
+        
+    }
+} 
