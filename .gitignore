@@ -1,4 +1,5 @@
-bin
+*.exe
+*.dll
 obj
 .vscode
 *.code-workspace
