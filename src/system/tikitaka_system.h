@@ -4,7 +4,7 @@
 #include "agent.h"
 #include "pitch.h"
 #include "players.h"
-#include "system_conversion.h"
+//#include "system_units.h"
 
 struct Players {
     glm::vec2* attacking;
@@ -26,8 +26,7 @@ private:
     int playerAmount; 
     int nAttacking;
     int nDefending;
-    SystemConversion sysconv;
-    Agent players[];
+    SystemUnits units;
+    Agent* players;
     Agent TestPlayer;
-
 };

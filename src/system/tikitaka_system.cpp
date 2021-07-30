@@ -1,4 +1,5 @@
 #include "tikitaka_system.h"
+
 #define PPTM 11
 
 Tikitaka::Tikitaka(){
@@ -9,15 +10,28 @@ Tikitaka::Tikitaka(){
 
 void Tikitaka::init(){
     TestPlayer = Agent();
+    for (int i = 0; i < nAttacking; i++){
+        players[i] = OffensivePlayer();
+    }
+
+    for (int i = 0; i < nDefending; i++){
+        players[nAttacking + i] = DefensivePlayer();
+    }
 }
 
 void Tikitaka::display(){
     TestPlayer.display();
+    for (int i = 0; i < playerAmount; i++){
+        players[i].display();
+    }
 }
 
 
 void Tikitaka::update(){
     TestPlayer.update();
+    for (int i = 0; i < playerAmount; i++){
+        players[i].update();
+    }
 }
 
 Players Tikitaka::getPlayerPositions(){

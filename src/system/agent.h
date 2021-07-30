@@ -1,14 +1,19 @@
 #pragma once
 #include "ofMain.h"
+#include "system_units.h"
 
 class Agent {
 
 public:
     Agent();
+    Agent(glm::vec2 pos);
     void update();
-    void display();
+    void display(SystemUnits su);
 
 private:
-    glm::vec2 position;
+    
+    void StartOnRandomPosition();
 
+    glm::vec2 position;
+    float size = 10.0f;
 };
