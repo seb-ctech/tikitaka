@@ -1,7 +1,6 @@
 #include "agent.h"
 
 Agent::Agent(){
-    position = glm::vec2(0.0,0.0);
 }
 
 Agent::Agent(Pitch pitch){
@@ -13,8 +12,7 @@ Agent::Agent(glm::vec2 pos){
 }
 
 void Agent::display(SystemUnits su){
-    ofFill();
-    ofDrawCircle(su.getXPosOnScreen(position.x), su.getYPosOnScreen(position.y), size);
+
 }
 
 void Agent::update(){

@@ -5,6 +5,7 @@
 #include "pitch.h"
 #include "players.h"
 #include "system_units.h"
+#include <vector>
 
 struct Players {
     glm::vec2* attacking;
@@ -29,6 +30,6 @@ private:
     int nDefending;
     Pitch pitch;
     SystemUnits units;
-    Agent* players;
+    std::vector<Agent*> players;
     Agent TestPlayer;
 };

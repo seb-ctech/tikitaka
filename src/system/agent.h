@@ -10,12 +10,13 @@ public:
     Agent(Pitch pitch);
     Agent(glm::vec2 pos);
     void update();
-    void display(SystemUnits su);
+    virtual void display(SystemUnits su);
+
+protected:
+    glm::vec2 position;
+    float size = 2.0f;
 
 private:
     
     void StartOnRandomPosition(glm::vec2 bounds);
-
-    glm::vec2 position;
-    float size = 10.0f;
 };
