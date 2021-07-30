@@ -7,18 +7,18 @@ class SystemUnits {
 
 public:
 
-    static float getXPosOnScreen(float x);
+    SystemUnits();
+    SystemUnits(glm::vec2 _size);
 
-    static float getSizeOnScreen(float y);
+    float getXPosOnScreen(float x);
 
-    static float getYPosOnScreen(float s);
+    float getSizeOnScreen(float y);
+
+    float getYPosOnScreen(float s);
     
-    static glm::vec2 getPitchSize();
 
 private:
 
-    //TODO: Refactor to glm::vec2
-    static constexpr float pitchWidth = 100.0;
-    static constexpr float pitchHeight = 100.0;
+    glm::vec2 pitchSize;
 
 };
