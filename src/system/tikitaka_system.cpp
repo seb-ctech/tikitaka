@@ -6,6 +6,7 @@ Tikitaka::Tikitaka(){
     nAttacking = PPTM;
     nDefending = PPTM;
     playerAmount = nAttacking + nDefending;
+    players = new Agent[playerAmount];
     pitchSize = glm::vec2(100.0, 100.0);
     pitch = Pitch(pitchSize.x, pitchSize.y);
     units = SystemUnits(pitchSize);

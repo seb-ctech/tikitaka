@@ -13,9 +13,8 @@ Agent::Agent(glm::vec2 pos){
 }
 
 void Agent::display(SystemUnits su){
-    ofSetColor(255);
     ofFill();
-    ofDrawCircle(position.x, position.y, size);
+    ofDrawCircle(su.getXPosOnScreen(position.x), su.getYPosOnScreen(position.y), size);
 }
 
 void Agent::update(){
