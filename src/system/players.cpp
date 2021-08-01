@@ -8,6 +8,10 @@ OffensivePlayer::OffensivePlayer(Pitch pitch) : Agent(pitch) {
 
 }
 
+OffensivePlayer::OffensivePlayer(glm::vec2 pos) : Agent(pos) {
+
+}
+
 void OffensivePlayer::display(SystemUnits su){
     ofSetColor(220, 220, 30);
     ofFill();
@@ -20,6 +24,10 @@ DefensivePlayer::DefensivePlayer() : Agent(){
 
 DefensivePlayer::DefensivePlayer(Pitch pitch) : Agent(pitch) {
     
+}
+
+DefensivePlayer::DefensivePlayer(glm::vec2 pos) : Agent(pos) {
+
 }
 
 void DefensivePlayer::display(SystemUnits su){

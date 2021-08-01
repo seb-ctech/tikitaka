@@ -23,6 +23,6 @@ float SystemUnits::getYPosOnScreen(float y){
 float SystemUnits::getSizeOnScreen(float s){
     float psize = (pitchSize.x + pitchSize.y) / 2.0;
     float ssize = (ofGetWindowWidth() + ofGetWindowHeight()) / 2.0;
-    float relativeSize = s / psize * ssize;
+    float relativeSize = s / psize * ssize * 0.5;
     return relativeSize;
 }

@@ -7,6 +7,7 @@ class OffensivePlayer : public Agent {
 public:
     OffensivePlayer();
     OffensivePlayer(Pitch pitch);
+    OffensivePlayer(glm::vec2 pos);
     void display(SystemUnits su) override;
 };
 
@@ -15,5 +16,6 @@ class DefensivePlayer : public Agent {
 public:
     DefensivePlayer();
     DefensivePlayer(Pitch pitch);
+    DefensivePlayer(glm::vec2 pos);
     void display(SystemUnits su) override;
 };

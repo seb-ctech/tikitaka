@@ -5,6 +5,7 @@
 #include "pitch.h"
 #include "players.h"
 #include "system_units.h"
+#include "shape.h"
 #include <vector>
 
 struct Players {
@@ -24,6 +25,9 @@ public:
 
 
 private:
+
+    std::vector<glm::vec2> positions_4_3_3(Side s, float, float);
+
     glm::vec2 pitchSize; 
     int playerAmount; 
     int nAttacking;

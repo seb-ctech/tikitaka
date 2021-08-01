@@ -21,6 +21,7 @@ protected:
 
 private:
     
+    void init();
     void locomotion();
     void drive();
     void avoidBounds();
