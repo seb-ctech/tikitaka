@@ -1,6 +1,6 @@
 #include "tikitaka_system.h"
 
-#define PPTM 11
+#define PPTM 10
 
 Tikitaka::Tikitaka(){
     nAttacking = PPTM;
