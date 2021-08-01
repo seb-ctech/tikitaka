@@ -27,7 +27,9 @@ private:
     void avoidBounds();
     void StartOnRandomPosition(glm::vec2 bounds);
 
+    int interval;
     float maxAcc = 0.006;
     float maxSpeed = 0.1;
+    glm::vec2 targetPos;
     Pitch pitch;
 };

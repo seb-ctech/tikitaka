@@ -20,6 +20,7 @@ Agent::Agent(glm::vec2 pos, Pitch _pitch){
 void Agent::init(){
     velocity = glm::vec2(0.0, 0.0);
     acceleration = glm::vec2(0.0, 0.0);
+    targetPos = nextMove();
 }
 
 void Agent::display(SystemUnits su){
@@ -50,14 +51,17 @@ void Agent::locomotion(){
 }
 
 void Agent::drive(){
-    if(ofGetFrameNum() % 200 == 0){
-        glm::vec2 move = nextMove();
-        acceleration = move;
+    if(glm::length((targetPos - position)) <= 2.0){     
+        targetPos = nextMove();
+        maxSpeed = ofRandom(0.004, 0.2);
+    } else {
+        acceleration = glm::normalize(targetPos - position) * ofRandom(0.0001, 0.01);
     }
 }
 
 glm::vec2 Agent::nextMove(){
-    glm::vec2 move = glm::vec2(ofRandomf() * 0.01, ofRandomf() * 0.01);
+    glm::vec2 pitchSize = pitch.getSize();
+    glm::vec2 move = glm::vec2(ofRandom(0.0, pitchSize.x), ofRandom(0.0, pitchSize.y));
     return move;
 }
 

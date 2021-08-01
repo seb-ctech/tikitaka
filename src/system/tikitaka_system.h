@@ -27,6 +27,7 @@ public:
 private:
 
     std::vector<glm::vec2> positions_4_3_3(Side s, float, float);
+    OffensivePlayer* getPlayerInPossession();
 
     glm::vec2 pitchSize; 
     int playerAmount; 
@@ -34,6 +35,8 @@ private:
     int nDefending;
     Pitch pitch;
     SystemUnits units;
+    std::vector<OffensivePlayer*> attackers;
+    std::vector<DefensivePlayer*> defenders;
     std::vector<Agent*> players;
     Agent TestPlayer;
 };

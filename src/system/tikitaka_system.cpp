@@ -16,16 +16,23 @@ void Tikitaka::init(){
     std::vector<glm::vec2> attpos = positions_4_3_3(ATTACK, 1.0, 1.0);
     std::vector<glm::vec2> defpos = positions_4_3_3(DEFENSE, 2.0, 3.0);
     for (int i = 0; i < nAttacking; i++){
-        players.push_back(new OffensivePlayer(attpos[i], pitch));
+        OffensivePlayer* newPlayer = new OffensivePlayer(attpos[i], pitch);
+        players.push_back(newPlayer);
+        attackers.push_back(newPlayer);
     }
 
     for (int i = 0; i < nDefending; i++){
-        players.push_back(new DefensivePlayer(defpos[i], pitch));
+        DefensivePlayer* newPlayer = new DefensivePlayer(defpos[i], pitch);
+        players.push_back(newPlayer);
+        defenders.push_back(newPlayer);
     }
+
+    attackers[0]->getBall();
 
 }
 
 void Tikitaka::display(){
+    ofSetBackgroundColor(3, 5, 5);
     for (int i = 0; i < playerAmount; i++){
         players[i]->display(units);
     }
@@ -33,6 +40,11 @@ void Tikitaka::display(){
 
 
 void Tikitaka::update(){
+    OffensivePlayer* ballowner = getPlayerInPossession();
+    for (int i = 0; i < PPTM; i++){
+        attackers[i]->updateGame(attackers, defenders, ballowner);
+        defenders[i]->updateGame(attackers, defenders, ballowner);
+    }
     for (int i = 0; i < playerAmount; i++){
         players[i]->update(i);
     }
@@ -106,4 +118,13 @@ std::vector<glm::vec2> Tikitaka::positions_4_3_3(Side side, float narrow, float 
     );
 
     return positions;
+}
+
+OffensivePlayer* Tikitaka::getPlayerInPossession(){
+    for (OffensivePlayer* op : attackers){
+        if (op->hasBall()){
+            return op;
+        }
+    }
+    return nullptr;
 }
