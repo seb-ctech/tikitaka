@@ -1,6 +1,6 @@
 #pragma once
 #include "ofMain.h"
 
-namespace Football {
+namespace FootballShape {
     void triangles();
 } 
