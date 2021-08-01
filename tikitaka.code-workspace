@@ -11,6 +11,9 @@
 		},
 		{
 			"path": "../../../examples"
+		},
+		{
+			"path": "../../../../../ctech/tiki-taka-c2"
 		}
 	],
 	"settings": {}
