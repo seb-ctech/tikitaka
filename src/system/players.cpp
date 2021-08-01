@@ -8,7 +8,7 @@ OffensivePlayer::OffensivePlayer(Pitch pitch) : Agent(pitch) {
 
 }
 
-OffensivePlayer::OffensivePlayer(glm::vec2 pos) : Agent(pos) {
+OffensivePlayer::OffensivePlayer(glm::vec2 pos, Pitch pitch) : Agent(pos, pitch) {
 
 }
 
@@ -26,7 +26,7 @@ DefensivePlayer::DefensivePlayer(Pitch pitch) : Agent(pitch) {
     
 }
 
-DefensivePlayer::DefensivePlayer(glm::vec2 pos) : Agent(pos) {
+DefensivePlayer::DefensivePlayer(glm::vec2 pos, Pitch pitch) : Agent(pos, pitch) {
 
 }
 

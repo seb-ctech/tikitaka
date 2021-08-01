@@ -12,21 +12,20 @@ Tikitaka::Tikitaka(){
 }
 
 void Tikitaka::init(){
-    TestPlayer = OffensivePlayer(pitch);
+
     std::vector<glm::vec2> attpos = positions_4_3_3(ATTACK, 1.0, 1.0);
     std::vector<glm::vec2> defpos = positions_4_3_3(DEFENSE, 2.0, 3.0);
     for (int i = 0; i < nAttacking; i++){
-        players.push_back(new OffensivePlayer(attpos[i]));
+        players.push_back(new OffensivePlayer(attpos[i], pitch));
     }
 
     for (int i = 0; i < nDefending; i++){
-        players.push_back(new DefensivePlayer(defpos[i]));
+        players.push_back(new DefensivePlayer(defpos[i], pitch));
     }
 
 }
 
 void Tikitaka::display(){
-    TestPlayer.display(units);
     for (int i = 0; i < playerAmount; i++){
         players[i]->display(units);
     }
@@ -34,9 +33,8 @@ void Tikitaka::display(){
 
 
 void Tikitaka::update(){
-    TestPlayer.update();
     for (int i = 0; i < playerAmount; i++){
-        players[i]->update();
+        players[i]->update(i);
     }
 }
 

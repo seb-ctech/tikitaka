@@ -8,8 +8,8 @@ class Agent {
 public:
     Agent();
     Agent(Pitch pitch);
-    Agent(glm::vec2 pos);
-    void update();
+    Agent(glm::vec2 pos, Pitch pitch);
+    void update(int i);
     virtual void display(SystemUnits su);
 
 protected:
@@ -27,7 +27,7 @@ private:
     void avoidBounds();
     void StartOnRandomPosition(glm::vec2 bounds);
 
-    float maxAcc = 0.06;
-    float maxSpeed = 0.3;
+    float maxAcc = 0.006;
+    float maxSpeed = 0.1;
     Pitch pitch;
 };
