@@ -98,6 +98,8 @@ void DefensivePlayer::display(SystemUnits su){
     ofSetColor(40, 80, 200);
     ofFill();
     ofDrawPlane(su.getXPosOnScreen(position.x), su.getYPosOnScreen(position.y), su.getSizeOnScreen(size) * 2.0, su.getSizeOnScreen(size) * 2.0);
+    ofSetColor(255);
+    myfont.drawString(std::to_string(glm::distance(moveTowardsBallCarrier(), position)), su.getXPosOnScreen(position.x), su.getYPosOnScreen(position.y) - 20);
 }
 
 void DefensivePlayer::updateGame(std::vector<OffensivePlayer*> _opponents, std::vector<DefensivePlayer*> _team, OffensivePlayer* _ballowner){
@@ -107,5 +109,14 @@ void DefensivePlayer::updateGame(std::vector<OffensivePlayer*> _opponents, std::
 }
 
 glm::vec2 DefensivePlayer::nextMove(){
-    return(this->position);
+    if(ofRandom(0, 1) < 0.95){
+        return moveTowardsBallCarrier();
+    }
+    return Agent::nextMove();
+}
+
+glm::vec2 DefensivePlayer::moveTowardsBallCarrier(){
+    float distance = glm::distance(ballowner->getPos(), position);
+    float influence = 1.0 - distance / 100.0;
+    return glm::mix(ballowner->getPos(), position, influence);
 }

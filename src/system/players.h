@@ -48,7 +48,7 @@ private:
     std::vector<OffensivePlayer*> opponents;
     std::vector<DefensivePlayer*> team;
     OffensivePlayer* ballowner;
-
+    glm::vec2 moveTowardsBallCarrier();
     // Approach closest opposing Player
     // Move towards ball carrier
     // keep cohesion with team
