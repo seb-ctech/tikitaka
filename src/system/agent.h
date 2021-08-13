@@ -18,7 +18,9 @@ protected:
     glm::vec2 acceleration;
     glm::vec2 velocity;
     glm::vec2 position;
+    glm::vec2 targetPos;
     float size = 2.0f;
+    ofTrueTypeFont myfont;
     virtual glm::vec2 nextMove();
     std::vector<Agent*> getClosestAgents(std::vector<Agent*> otherAgents, float Range);
 
@@ -30,11 +32,9 @@ private:
     void avoidBounds();
     void StartOnRandomPosition(glm::vec2 bounds);
     
-
     int interval;
     float maxAcc = 0.006;
     float maxSpeed = 0.1;
-    glm::vec2 targetPos;
     Pitch pitch;
 };
 

@@ -14,6 +14,7 @@ Agent::Agent(Pitch _pitch){
 Agent::Agent(glm::vec2 pos, Pitch _pitch){
     position = pos;
     pitch = _pitch;
+		myfont.load("Roboto-Light.ttf", 6);
     init();
 }
 
@@ -53,9 +54,10 @@ void Agent::locomotion(){
 void Agent::drive(){
     if(glm::length((targetPos - position)) <= 2.0){     
         targetPos = nextMove();
-        maxSpeed = ofRandom(0.004, 0.2);
+				float speedVariation = 0.02;
+        maxSpeed = 0.06 + ofRandom(speedVariation * -1, speedVariation);
     } else {
-        acceleration = glm::normalize(targetPos - position) * ofRandom(0.0001, 0.01);
+        acceleration = glm::normalize(targetPos - position) * 0.01 * (1 - 1 / glm::distance(targetPos, position)) ;
     }
 }
 

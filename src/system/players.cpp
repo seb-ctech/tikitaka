@@ -17,11 +17,13 @@ void OffensivePlayer::display(SystemUnits su){
     ofFill();
     ofSetColor(220, 100, 50);
     ofDrawCircle(su.getXPosOnScreen(position.x), su.getYPosOnScreen(position.y), su.getSizeOnScreen(size));
-    if(hasBall()){
+    if(ball){
         ofNoFill();
         ofSetColor(220, 200, 80);
         ofDrawCircle(su.getXPosOnScreen(position.x), su.getYPosOnScreen(position.y), su.getSizeOnScreen(size) * 1.2);
     }
+    ofSetColor(255);
+    myfont.drawString(std::to_string(glm::length(targetPos - position)), su.getXPosOnScreen(position.x), su.getYPosOnScreen(position.y) - 20);
 }
 
 void OffensivePlayer::updateGame(std::vector<OffensivePlayer*> _team, std::vector<DefensivePlayer*> _opponents, OffensivePlayer* _ballowner){
@@ -45,9 +47,25 @@ glm::vec2 OffensivePlayer::nextMove(){
     if (ofRandom(0, 1) < 0.04){
         return Agent::nextMove();
     }
+    if (ofRandom(0, 1) < 0.8 && ball){
+        passBall(getClosestMate());
+    }
     glm::vec2 nextMove {0.0, 0.0};
     nextMove += keepCohesion();
     return nextMove;
+}
+
+OffensivePlayer* OffensivePlayer::getClosestMate(){
+    OffensivePlayer* closest = nullptr;
+    float shortestDist = 100;
+    for (OffensivePlayer* mate : team){
+        float currentDistance = glm::distance(mate->getPos(), this->position);
+        if (currentDistance < shortestDist && mate != this){
+            closest = mate;
+            shortestDist = currentDistance;
+        }
+    }
+    return closest;
 }
 
 glm::vec2 OffensivePlayer::keepCohesion(){

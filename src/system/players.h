@@ -21,6 +21,7 @@ private:
     void passBall(OffensivePlayer* target);
     virtual glm::vec2 nextMove();
     glm::vec2 keepCohesion();
+    OffensivePlayer* getClosestMate();
     std::vector<OffensivePlayer*> team;
     std::vector<DefensivePlayer*> opponents;
     OffensivePlayer* ballowner;
