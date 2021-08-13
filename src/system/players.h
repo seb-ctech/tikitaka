@@ -27,11 +27,8 @@ private:
     OffensivePlayer* ballowner;
     bool ball = false;
     
-    // Keep Moving
     // Form Triangles
-    // Distribute evenly is space
-    // Move into Space
-    // Keep Passing the Ball 
+    // Move into free spaces
     // Keep Cohesion
 
 
@@ -52,10 +49,7 @@ private:
     std::vector<DefensivePlayer*> team;
     OffensivePlayer* ballowner;
 
-    // Keep Moving
-    // Keep Cohesion
-    // Keep Formation
-    // Close Space
-    // Attack Ball Owning Player
-    // Mark other players
+    // Approach closest opposing Player
+    // Move towards ball carrier
+    // keep cohesion with team
 };

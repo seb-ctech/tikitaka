@@ -3,6 +3,9 @@
 #include "system_units.h"
 #include "pitch.h"
 
+//TODO: Refactor to Player and implement All Player-Relative Logic
+//TODO: Get next sorrounding teammates and opponents
+
 class Agent {
 
 public:
