@@ -9,7 +9,6 @@ enum Side {
 };
 
 namespace FootballShape {
-    
     void triangles();
-
+    glm::vec2 center(glm::vec2 Origin, std::vector<glm::vec2> Positions);
 } 

@@ -76,3 +76,15 @@ void Agent::avoidBounds(){
             acceleration *= 0.0;
         }
 }
+
+
+std::vector<Agent*> Agent::getClosestAgents(std::vector<Agent*> otherAgents, float Range){
+    std::vector<Agent*> closest = std::vector<Agent*>();
+    for (Agent* a : otherAgents){
+        float distance = glm::distance(this->position, a->position);
+        if (distance <= Range){
+            closest.push_back(a);
+        }
+    }
+    return closest;
+}

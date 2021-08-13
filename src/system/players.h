@@ -19,10 +19,20 @@ public:
 
 private:
     void passBall(OffensivePlayer* target);
+    virtual glm::vec2 nextMove();
+    glm::vec2 keepCohesion();
     std::vector<OffensivePlayer*> team;
     std::vector<DefensivePlayer*> opponents;
     OffensivePlayer* ballowner;
     bool ball = false;
+    
+    // Keep Moving
+    // Form Triangles
+    // Distribute evenly is space
+    // Move into Space
+    // Keep Passing the Ball 
+    // Keep Cohesion
+
 
 };
 
@@ -36,7 +46,15 @@ public:
     void updateGame(std::vector<OffensivePlayer*> opponents, std::vector<DefensivePlayer*> team, OffensivePlayer* ballowner);
 
 private:
+    virtual glm::vec2 nextMove();
     std::vector<OffensivePlayer*> opponents;
     std::vector<DefensivePlayer*> team;
     OffensivePlayer* ballowner;
+
+    // Keep Moving
+    // Keep Cohesion
+    // Keep Formation
+    // Close Space
+    // Attack Ball Owning Player
+    // Mark other players
 };

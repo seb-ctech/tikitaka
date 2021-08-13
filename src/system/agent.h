@@ -11,6 +11,8 @@ public:
     Agent(glm::vec2 pos, Pitch pitch);
     void update(int i);
     virtual void display(SystemUnits su);
+    glm::vec2 getPos(){ return position; };
+    glm::vec2 getTargetPos(){ return targetPos; }
 
 protected:
     glm::vec2 acceleration;
@@ -18,6 +20,7 @@ protected:
     glm::vec2 position;
     float size = 2.0f;
     virtual glm::vec2 nextMove();
+    std::vector<Agent*> getClosestAgents(std::vector<Agent*> otherAgents, float Range);
 
 private:
     
@@ -26,6 +29,7 @@ private:
     void drive();
     void avoidBounds();
     void StartOnRandomPosition(glm::vec2 bounds);
+    
 
     int interval;
     float maxAcc = 0.006;
@@ -33,3 +37,4 @@ private:
     glm::vec2 targetPos;
     Pitch pitch;
 };
+

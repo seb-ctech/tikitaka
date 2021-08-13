@@ -1,4 +1,5 @@
 #include "players.h"
+#include "shape.h"
 
 OffensivePlayer::OffensivePlayer() : Agent(){
 
@@ -38,6 +39,31 @@ void OffensivePlayer::passBall(OffensivePlayer* target){
     target->getBall();
 }
 
+
+glm::vec2 OffensivePlayer::nextMove(){
+
+    if (ofRandom(0, 1) < 0.04){
+        return Agent::nextMove();
+    }
+    glm::vec2 nextMove {0.0, 0.0};
+    nextMove += keepCohesion();
+    return nextMove;
+}
+
+glm::vec2 OffensivePlayer::keepCohesion(){
+    std::vector<Agent*> teamAgents;
+    for (Agent* a : team){
+        teamAgents.push_back(a);
+    }
+    std::vector<Agent*> closeTeamMates =  getClosestAgents(teamAgents, 30.0);
+    std::vector<glm::vec2> positions;
+    for(Agent* a : closeTeamMates){
+        positions.push_back(a->getPos());
+    }
+    glm::vec2 center = FootballShape::center(this->position, positions);
+    return center;
+}
+
 DefensivePlayer::DefensivePlayer() : Agent(){
 
 }
@@ -60,4 +86,8 @@ void DefensivePlayer::updateGame(std::vector<OffensivePlayer*> _opponents, std::
     team = _team;
     opponents = _opponents;
     ballowner = _ballowner;
+}
+
+glm::vec2 DefensivePlayer::nextMove(){
+    return(this->position);
 }
