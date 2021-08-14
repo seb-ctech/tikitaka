@@ -2,44 +2,28 @@
 
 Agent::Agent(){
     position = glm::vec2(0.0, 0.0);
-    init();
+    init_locomotion();
 }
 
-Agent::Agent(Pitch _pitch){
-    StartOnRandomPosition(_pitch.getSize());
-    pitch = _pitch;
-    init();
-}
-
-Agent::Agent(glm::vec2 pos, Pitch _pitch){
+Agent::Agent(glm::vec2 pos){
     position = pos;
-    pitch = _pitch;
-		myfont.load("Roboto-Light.ttf", 6);
-    init();
+    init_locomotion();
 }
 
-void Agent::init(){
+void Agent::init_locomotion(){
     velocity = glm::vec2(0.0, 0.0);
     acceleration = glm::vec2(0.0, 0.0);
-    targetPos = nextMove();
 }
 
-void Agent::display(SystemUnits su){
-
-}
-
-void Agent::update(int i){
+void Agent::update(){
     locomotion();
 }
 
 void Agent::StartOnRandomPosition(glm::vec2 bounds){
-
-    glm::vec2 pitchSize = glm::vec2(bounds.x, bounds.y);
-    position = glm::vec2(ofRandom(pitchSize.x), ofRandom(pitchSize.y));
+    position = glm::vec2(ofRandom(bounds.x), ofRandom(bounds.y));
 }
 
 void Agent::locomotion(){
-    drive();
     if (glm::length(acceleration) >= maxAcc){
         acceleration = glm::normalize(acceleration) * maxAcc;
     }
@@ -47,46 +31,13 @@ void Agent::locomotion(){
     if (glm::length(velocity) >= maxSpeed){
         velocity = glm::normalize(velocity) * maxSpeed;
     }
-    avoidBounds();
     position += velocity;
 }
 
-void Agent::drive(){
-    if(glm::length((targetPos - position)) <= 2.0){     
-        targetPos = nextMove();
-				float speedVariation = 0.02;
-        maxSpeed = 0.06 + ofRandom(speedVariation * -1, speedVariation);
-    } else {
-        acceleration = glm::normalize(targetPos - position) * 0.01 * (1 - 1 / glm::distance(targetPos, position)) ;
-    }
-}
-
-glm::vec2 Agent::nextMove(){
-    glm::vec2 pitchSize = pitch.getSize();
-    glm::vec2 move = glm::vec2(ofRandom(0.0, pitchSize.x), ofRandom(0.0, pitchSize.y));
-    return move;
-}
-
-void Agent::avoidBounds(){
-    glm::vec2 nextPos = position + velocity;
-    glm::vec2 pitchSize = pitch.getSize();
-    if (nextPos.x >= pitchSize.x
-        || nextPos.x <= 0 
-        || nextPos.y >= pitchSize.y 
-        || nextPos.y <= 0){
-            velocity *= -1.0;
-            acceleration *= 0.0;
-        }
+void Agent::steer(glm::vec2 force){
+    acceleration += force;
 }
 
 
-std::vector<Agent*> Agent::getClosestAgents(std::vector<Agent*> otherAgents, float Range){
-    std::vector<Agent*> closest = std::vector<Agent*>();
-    for (Agent* a : otherAgents){
-        float distance = glm::distance(this->position, a->position);
-        if (distance <= Range){
-            closest.push_back(a);
-        }
-    }
-    return closest;
-}
+
+

@@ -3,41 +3,29 @@
 #include "system_units.h"
 #include "pitch.h"
 
-//TODO: Refactor to Player and implement All Player-Relative Logic
-//TODO: Get next sorrounding teammates and opponents
+// This is an Agent class.
+// Agents are Entities that have a basic locomotion loop and an intrinsic drive.
 
 class Agent {
 
 public:
-    Agent();
-    Agent(Pitch pitch);
-    Agent(glm::vec2 pos, Pitch pitch);
-    void update(int i);
-    virtual void display(SystemUnits su);
-    glm::vec2 getPos(){ return position; };
-    glm::vec2 getTargetPos(){ return targetPos; }
+	Agent();
+	Agent(glm::vec2 pos);
+	virtual void update();
+	glm::vec2 getPos(){ return position; };
 
 protected:
-    glm::vec2 acceleration;
-    glm::vec2 velocity;
-    glm::vec2 position;
-    glm::vec2 targetPos;
-    float size = 2.0f;
-    ofTrueTypeFont myfont;
-    virtual glm::vec2 nextMove();
-    std::vector<Agent*> getClosestAgents(std::vector<Agent*> otherAgents, float Range);
+	void steer(glm::vec2 force);
+
+	glm::vec2 acceleration;
+	glm::vec2 velocity;
+	glm::vec2 position;
+	float maxAcc = 0.006;
+	float maxSpeed = 0.1;
 
 private:
-    
-    void init();
-    void locomotion();
-    void drive();
-    void avoidBounds();
-    void StartOnRandomPosition(glm::vec2 bounds);
-    
-    int interval;
-    float maxAcc = 0.006;
-    float maxSpeed = 0.1;
-    Pitch pitch;
+	void init_locomotion();
+	void locomotion();
+	void StartOnRandomPosition(glm::vec2 bounds);
 };
 

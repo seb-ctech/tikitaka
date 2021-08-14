@@ -1,9 +1,10 @@
 #pragma once
 
 #include "ofMain.h"
-#include "agent.h"
+#include "player.h"
 #include "pitch.h"
-#include "players.h"
+#include "offense.h"
+#include "defense.h"
 #include "system_units.h"
 #include "shape.h"
 #include <vector>
@@ -11,7 +12,7 @@
 struct Players {
     glm::vec2* attacking;
     glm::vec2* defending;
-    glm::vec2 playerWithBall;
+    glm::vec2 ballcarry;
 };
 
 class Tikitaka {
@@ -37,6 +38,5 @@ private:
     SystemUnits units;
     std::vector<OffensivePlayer*> attackers;
     std::vector<DefensivePlayer*> defenders;
-    std::vector<Agent*> players;
-    Agent TestPlayer;
+    std::vector<Player*> players;
 };
