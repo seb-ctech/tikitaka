@@ -17,11 +17,23 @@ void Player::update(Player* ballcarry){
 };
 
 void Player::display(SystemUnits su){
-  ofSetColor(220, 220, 230);
+  // ofSetColor(220, 220, 230);
+  // ofFill();
+  // std::stringstream debug;
+  // debug << std::to_string(acceleration.x) << " : " << std::to_string(acceleration.y);
+  // infoFont.drawString(debug.str(), su.getXPosOnScreen(position.x), su.getYPosOnScreen(position.y) - 20);
+  ofSetColor(30, 35, 35);
   ofFill();
-  std::stringstream debug;
-  debug << std::to_string(acceleration.x) << " : " << std::to_string(acceleration.y);
-  infoFont.drawString(debug.str(), su.getXPosOnScreen(position.x), su.getYPosOnScreen(position.y) - 20);
+  ofCircle(su.getXPosOnScreen(targetSpace.x), su.getYPosOnScreen(targetSpace.y), su.getSizeOnScreen(1));
+  ofNoFill();
+  ofSetLineWidth(1);
+  ofDrawLine(su.getXPosOnScreen(position.x), su.getYPosOnScreen(position.y), 
+         su.getXPosOnScreen(targetSpace.x), su.getYPosOnScreen(targetSpace.y));
+  glm::vec2 visAcc = position + acceleration * 1000;
+  ofSetColor(60, 65, 65);
+  ofSetLineWidth(6);
+  ofDrawLine(su.getXPosOnScreen(position.x), su.getYPosOnScreen(position.y), 
+         su.getXPosOnScreen(visAcc.x), su.getYPosOnScreen(visAcc.y));
 }
 
 void Player::Action(){
@@ -81,7 +93,6 @@ glm::vec2 Player::MoveAdjustments(glm::vec2 move){
 
 void Player::NextMove(){
   glm::vec2 move = MoveToTarget();
-  move += KeepCohesion() * 0.8;
   move = MoveAdjustments(move);
   move += AvoidOutOfBounds();
   steer(move);
@@ -95,7 +106,9 @@ glm::vec2 Player::CourseCorrection(glm::vec2 oldTarget){
 }
 
 glm::vec2 Player::NextTargetSpace(){
-  return RandomLocation();
+  glm::vec2 next = RandomLocation();
+  glm::vec2 cohesion = KeepCohesion();
+  return ((next + cohesion) / 2 + next) / 2;
 }
 
 glm::vec2 Player::MoveToTarget(){
@@ -109,7 +122,7 @@ glm::vec2 Player::MoveToTarget(){
 };
 
 glm::vec2 Player::KeepCohesion(){
-  std::vector<Player*> closeTeamMates = getAllPlayersInRange(OWN, 60.0);
+  std::vector<Player*> closeTeamMates = getAllPlayersInRange(OWN, 40.0);
   std::vector<glm::vec2> positions;
   for(Player* p : closeTeamMates){
     positions.push_back(p->getPos());
@@ -122,7 +135,7 @@ glm::vec2 Player::KeepCohesion(){
     center += p;
   }
   center = center / (positions.size());
-  return glm::normalize(center - position) * accFactor;
+  return center;
 };
 
 glm::vec2 Player::AvoidOutOfBounds(){

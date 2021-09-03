@@ -18,15 +18,16 @@ void OffensivePlayer::setMatch(std::vector<Player*> Attackers, std::vector<Playe
 }
 
 void OffensivePlayer::display(SystemUnits su){
+  Player::display(su);
   ofFill();
   ofSetColor(220, 100, 50);
   ofDrawCircle(su.getXPosOnScreen(position.x), su.getYPosOnScreen(position.y), su.getSizeOnScreen(size));
   if(ball){
       ofNoFill();
       ofSetColor(220, 200, 80);
+      ofSetLineWidth(1);
       ofDrawCircle(su.getXPosOnScreen(position.x), su.getYPosOnScreen(position.y), su.getSizeOnScreen(size) * 1.2);
-  }
-  Player::display(su);	
+  }	
 }
 
 void OffensivePlayer::ReceiveBall(){
@@ -46,7 +47,7 @@ glm::vec2 OffensivePlayer::NextTargetSpace(){
 
 // TODO: Reevaluate spaces and retarget new Space
 glm::vec2 OffensivePlayer::CourseCorrection(glm::vec2 currentTargetSpace){
-  return currentTargetSpace;
+  return Player::CourseCorrection(currentTargetSpace);
 }
 
 //TODO: Implement spacing, avoid running into defender, Adjustments to position in space
