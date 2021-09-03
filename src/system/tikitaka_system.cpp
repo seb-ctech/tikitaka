@@ -38,7 +38,7 @@ void Tikitaka::init(){
         p->setMatch(attackingPlayers, defendingPlayers);
     }
 
-    attackers[0]->receiveBall();
+    attackers[0]->ReceiveBall();
 
 }
 

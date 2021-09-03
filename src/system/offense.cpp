@@ -1,6 +1,8 @@
 #include "offense.h"
 #include "shape.h"
 
+//TODO: Replace Randomness -> ofRandom() with Decision Making and Algorithms
+
 OffensivePlayer::OffensivePlayer() : Player(){
 
 }
@@ -24,30 +26,44 @@ void OffensivePlayer::display(SystemUnits su){
         ofSetColor(220, 200, 80);
         ofDrawCircle(su.getXPosOnScreen(position.x), su.getYPosOnScreen(position.y), su.getSizeOnScreen(size) * 1.2);
     }
+    infoFont.drawString(std::to_string(glm::length(targetPos - position)), su.getXPosOnScreen(position.x), su.getYPosOnScreen(position.y) - 20);
 }
 
-void OffensivePlayer::receiveBall(){
+void OffensivePlayer::ReceiveBall(){
     ball = true;
 }
 
-void OffensivePlayer::passBallTo(OffensivePlayer* target){
+void OffensivePlayer::PassBallTo(OffensivePlayer* target){
     ball = false;
-    target->receiveBall();
+    target->ReceiveBall();
+}
+
+
+// TODO: Implement the main Space seeking Rules, Triangles, Passing options for mates, etc...
+glm::vec2 OffensivePlayer::NextTargetSpace(){
+  return Player::NextTargetSpace();
+}
+
+// TODO: Reevaluate spaces and retarget new Space
+glm::vec2 OffensivePlayer::CourseCorrection(glm::vec2 currentTargetSpace){
+  return currentTargetSpace;
+}
+
+//TODO: Implement spacing, avoid running into defender, Adjustments to position in space
+glm::vec2 OffensivePlayer::MoveAdjustments(glm::vec2 nextMove){
+  return nextMove;
 }
 
 //TODO: Implement passing behavior based on line of sight.
-// Ray Cast to closest team mates, check for abstruction and target pos.
-glm::vec2 OffensivePlayer::nextMove(){
-
-    if (ofRandom(0, 1) < 0.04){
-        return Player::nextMove();
+// Ray Cast to closest team mates -> check for obstruction and target pos.
+void OffensivePlayer::Action(){
+  if(ball){
+    if(ofRandom(0, 1) < 0.008){
+      PassBallTo(getClosestMate());
+      return;
     }
-    if (ofRandom(0, 1) < 0.8 && ball){
-        passBallTo(getClosestMate());
-    }
-    glm::vec2 nextMove {0.0, 0.0};
-    nextMove += keepCohesion();
-    return nextMove;
+  }
+  NextMove();
 }
 
 OffensivePlayer* OffensivePlayer::getClosestMate(){

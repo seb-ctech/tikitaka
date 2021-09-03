@@ -1,6 +1,7 @@
 #include "defense.h"
 #include "shape.h"
 
+//TODO: Replace Randomness -> ofRandom() with Decision Making and Algorithms
 
 DefensivePlayer::DefensivePlayer() : Player(){
 
@@ -11,26 +12,45 @@ DefensivePlayer::DefensivePlayer(glm::vec2 pos, Pitch pitch) : Player(pos, pitch
 }
 
 void DefensivePlayer::display(SystemUnits su){
-    ofSetColor(40, 80, 200);
-    ofFill();
-    ofDrawPlane(su.getXPosOnScreen(position.x), su.getYPosOnScreen(position.y), su.getSizeOnScreen(size) * 2.0, su.getSizeOnScreen(size) * 2.0);
+	ofSetColor(40, 80, 200);
+	ofFill();
+	ofDrawPlane(su.getXPosOnScreen(position.x), 
+							su.getYPosOnScreen(position.y), 
+							su.getSizeOnScreen(size) * 2.0, 
+							su.getSizeOnScreen(size) * 2.0);
+	infoFont.drawString(std::to_string(glm::length(targetPos - position)), su.getXPosOnScreen(position.x), su.getYPosOnScreen(position.y) - 20);
 }
 
 void DefensivePlayer::setMatch(std::vector<Player*> Attackers, std::vector<Player*> Defenders){
-  Player::setMatch(Attackers, Defenders);
-  OwnTeam = Attackers;
-  OpponentTeam = Defenders;
+	Player::setMatch(Attackers, Defenders);
+	OwnTeam = Attackers;
+	OpponentTeam = Defenders;
 }
 
-glm::vec2 DefensivePlayer::nextMove(){
-    if(ofRandom(0, 1) < 0.95){
-        return moveTowardsBallCarrier();
-    }
-    return Player::nextMove();
+
+// TODO: Implement Closing Spaces and Keep Formation
+glm::vec2 DefensivePlayer::NextTargetSpace(){
+	return Player::NextTargetSpace();
 }
 
-glm::vec2 DefensivePlayer::moveTowardsBallCarrier(){
-    float distance = glm::distance(BallCarry->getPos(), position);
-    float influence = 1.0 - distance / 100.0;
-    return glm::mix(BallCarry->getPos(), position, influence);
+// TODO: Reevaluate Space
+glm::vec2 DefensivePlayer::CourseCorrection(glm::vec2 currentTargetSpace){
+	return currentTargetSpace;
+}
+
+// TODO: Hold Position, Press the Ball Carrier
+glm::vec2 DefensivePlayer::MoveAdjustments(glm::vec2 nextMove){
+	glm::vec2 finalMove = nextMove + MoveTowardsBallCarrier() * 0.1;
+	return finalMove;
+}
+
+glm::vec2 DefensivePlayer::MoveTowardsBallCarrier(){
+	float range = 30.0;
+	float distance = glm::distance(BallCarry->getPos(), position);
+	if(distance <= range){
+		float influence = 1.0 - distance / range;
+		return glm::normalize(BallCarry->getPos() - position) * accFactor * influence;
+	} else {
+		return glm::vec2(0,0);
+	}
 }

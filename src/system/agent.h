@@ -3,8 +3,10 @@
 #include "system_units.h"
 #include "pitch.h"
 
-// This is an Agent class.
-// Agents are Entities that have a basic locomotion loop and an intrinsic drive.
+/* This is an Agent class.
+Agents are Entities that have a basic locomotion loop and implement seeking behavior, 
+a force that adds to velocity to steer it to a target location.
+Conceptually this is the bridge between higher concepts such as "Players" and the representation inside of openFrameworks. */
 
 class Agent {
 
@@ -22,10 +24,13 @@ protected:
 	glm::vec2 position;
 	float maxAcc = 0.006;
 	float maxSpeed = 0.1;
+	float accFactor = 0.0001;
 
 private:
-	void init_locomotion();
+	void init();
+ 	void init_locomotion();
 	void locomotion();
 	void StartOnRandomPosition(glm::vec2 bounds);
+	ofFont infoFont;
 };
 

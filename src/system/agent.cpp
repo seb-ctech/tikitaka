@@ -2,11 +2,16 @@
 
 Agent::Agent(){
     position = glm::vec2(0.0, 0.0);
-    init_locomotion();
+    init();
 }
 
 Agent::Agent(glm::vec2 pos){
     position = pos;
+    init();
+}
+
+void Agent::init(){
+    infoFont.load("Roboto-Light.ttf", 6);
     init_locomotion();
 }
 
