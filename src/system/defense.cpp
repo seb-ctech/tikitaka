@@ -18,7 +18,7 @@ void DefensivePlayer::display(SystemUnits su){
 							su.getYPosOnScreen(position.y), 
 							su.getSizeOnScreen(size) * 2.0, 
 							su.getSizeOnScreen(size) * 2.0);
-	infoFont.drawString(std::to_string(glm::length(targetPos - position)), su.getXPosOnScreen(position.x), su.getYPosOnScreen(position.y) - 20);
+	Player::display(su);	
 }
 
 void DefensivePlayer::setMatch(std::vector<Player*> Attackers, std::vector<Player*> Defenders){
@@ -40,7 +40,8 @@ glm::vec2 DefensivePlayer::CourseCorrection(glm::vec2 currentTargetSpace){
 
 // TODO: Hold Position, Press the Ball Carrier
 glm::vec2 DefensivePlayer::MoveAdjustments(glm::vec2 nextMove){
-	glm::vec2 finalMove = nextMove + MoveTowardsBallCarrier() * 0.1;
+	glm::vec2 finalMove = nextMove;
+	finalMove += MoveTowardsBallCarrier();
 	return finalMove;
 }
 

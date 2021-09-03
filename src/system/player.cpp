@@ -16,6 +16,14 @@ void Player::update(Player* ballcarry){
   Agent::update();
 };
 
+void Player::display(SystemUnits su){
+  ofSetColor(220, 220, 230);
+  ofFill();
+  std::stringstream debug;
+  debug << std::to_string(acceleration.x) << " : " << std::to_string(acceleration.y);
+  infoFont.drawString(debug.str(), su.getXPosOnScreen(position.x), su.getYPosOnScreen(position.y) - 20);
+}
+
 void Player::Action(){
   NextMove();
 }
@@ -58,10 +66,9 @@ std::vector<Player*> Player::getAllPlayersInRange(Team team, float Range){
   return closestPlayers;
 };
 
-glm::vec2 Player::EvaluateMovement(glm::vec2 move, int steps = 1){
-  glm::vec2 evaluatedAcceleration = move;
-  glm::vec2 evaluatedVelocity = velocity + evaluatedAcceleration;
-  glm::vec2 evaluatedMovement = position + evaluatedVelocity * steps;
+glm::vec2 Player::EvaluateMovement(){
+  glm::vec2 evaluatedVelocity = velocity;
+  glm::vec2 evaluatedMovement = position + evaluatedVelocity;
   return evaluatedMovement;
 }
 
@@ -71,11 +78,12 @@ glm::vec2 Player::MoveAdjustments(glm::vec2 move){
 
 // This is were a players makes decisions on every frame;
 // He follows the course to a target space, makes MoveAdjustments based on the movement of other player
+
 void Player::NextMove(){
   glm::vec2 move = MoveToTarget();
-  move += KeepCohesion() * 0.4;
+  move += KeepCohesion() * 0.8;
   move = MoveAdjustments(move);
-  move = AvoidOutOfBounds(move);
+  move += AvoidOutOfBounds();
   steer(move);
 };
 
@@ -101,27 +109,53 @@ glm::vec2 Player::MoveToTarget(){
 };
 
 glm::vec2 Player::KeepCohesion(){
-  std::vector<Player*> closeTeamMates = getAllPlayersInRange(OWN, 40.0);
+  std::vector<Player*> closeTeamMates = getAllPlayersInRange(OWN, 60.0);
   std::vector<glm::vec2> positions;
   for(Player* p : closeTeamMates){
     positions.push_back(p->getPos());
   }
-  glm::vec2 center = FootballShape::center(position, positions);
+  if (positions.size() <= 1){
+    return glm::vec2(0,0);
+  }
+  glm::vec2 center = position;
+  for (glm::vec2 p : positions){
+    center += p;
+  }
+  center = center / (positions.size());
   return glm::normalize(center - position) * accFactor;
 };
 
-glm::vec2 Player::AvoidOutOfBounds(glm::vec2 move){
-    glm::vec2 nextPos = EvaluateMovement(move);
-    glm::vec2 pitchSize = pitch.getSize();
-    if (nextPos.x >= pitchSize.x
-     || nextPos.x <= 0){
-       move.x *= -1.0;
-     }
-    if (nextPos.y >= pitchSize.y 
-     || nextPos.y <= 0){
-      move.y *= -1.0;
+glm::vec2 Player::AvoidOutOfBounds(){
+  float tolerance = 2.0;
+  glm::vec2 nextPosition = EvaluateMovement();
+  glm::vec2 bounds = pitch.getSize();
+  glm::vec2 correction(0,0);
+  // TODO: Think about moving this to the Pitch object, with a tolerance;
+  float dToRightBounds = glm::distance(nextPosition, glm::vec2(bounds.x, position.y));
+  float dToTopBounds = glm::distance(nextPosition, glm::vec2(position.x, bounds.y)); 
+  float dToLeftBounds = glm::distance(nextPosition, glm::vec2(0, position.y)); 
+  float dToBottomBounds = glm::distance(nextPosition, glm::vec2(position.x, 0)); 
+  if (dToRightBounds <= tolerance 
+    || dToTopBounds <= tolerance
+    || dToLeftBounds <= tolerance 
+    || dToBottomBounds <= tolerance){
+    float minDistance = bounds.x;
+    if (dToRightBounds < minDistance){
+      minDistance = dToRightBounds;
     }
-    return move;
+    if (dToLeftBounds < minDistance){
+      minDistance = dToLeftBounds;
+    }
+    if (dToTopBounds < minDistance){
+      minDistance = dToTopBounds;
+    }
+    if (dToBottomBounds < minDistance){
+      minDistance = dToBottomBounds;
+    }
+    glm::vec2 difference = nextPosition - position;
+    correction += glm::normalize(difference) * -1.0 * accFactor * minDistance;
+  }
+  return correction;
 };
 
 glm::vec2 Player::RandomLocation(){

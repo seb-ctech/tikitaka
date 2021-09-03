@@ -18,15 +18,15 @@ void OffensivePlayer::setMatch(std::vector<Player*> Attackers, std::vector<Playe
 }
 
 void OffensivePlayer::display(SystemUnits su){
-    ofFill();
-    ofSetColor(220, 100, 50);
-    ofDrawCircle(su.getXPosOnScreen(position.x), su.getYPosOnScreen(position.y), su.getSizeOnScreen(size));
-    if(ball){
-        ofNoFill();
-        ofSetColor(220, 200, 80);
-        ofDrawCircle(su.getXPosOnScreen(position.x), su.getYPosOnScreen(position.y), su.getSizeOnScreen(size) * 1.2);
-    }
-    infoFont.drawString(std::to_string(glm::length(targetPos - position)), su.getXPosOnScreen(position.x), su.getYPosOnScreen(position.y) - 20);
+  ofFill();
+  ofSetColor(220, 100, 50);
+  ofDrawCircle(su.getXPosOnScreen(position.x), su.getYPosOnScreen(position.y), su.getSizeOnScreen(size));
+  if(ball){
+      ofNoFill();
+      ofSetColor(220, 200, 80);
+      ofDrawCircle(su.getXPosOnScreen(position.x), su.getYPosOnScreen(position.y), su.getSizeOnScreen(size) * 1.2);
+  }
+  Player::display(su);	
 }
 
 void OffensivePlayer::ReceiveBall(){
@@ -63,7 +63,7 @@ void OffensivePlayer::Action(){
       return;
     }
   }
-  NextMove();
+  Player::NextMove();
 }
 
 OffensivePlayer* OffensivePlayer::getClosestMate(){

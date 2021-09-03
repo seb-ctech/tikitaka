@@ -20,7 +20,7 @@ public:
   Player();
   Player(glm::vec2 pos, Pitch pitch);
   virtual void update(Player* ballcarry);
-	virtual void display(SystemUnits su) = 0;
+	virtual void display(SystemUnits su);
   virtual void setMatch(std::vector<Player*> Attackers, std::vector<Player*> Defenders);
  
 protected:
@@ -29,7 +29,7 @@ protected:
   virtual glm::vec2 MoveAdjustments(glm::vec2 nextMove);
   virtual void Action(); // This is an action a Player can take. The default behavior is a steering move, but he can also pass the Ball.
   void NextMove();
-  glm::vec2 EvaluateMovement(glm::vec2 move, int steps);
+  glm::vec2 EvaluateMovement();
   glm::vec2 KeepCohesion();
   glm::vec2 getTargetSpace(){ return targetSpace; }
   std::vector<Player*> getAllPlayersInRange(Team side, float Range);
@@ -43,7 +43,7 @@ protected:
   float size = 2.0f;
 
 private:
-  glm::vec2 AvoidOutOfBounds(glm::vec2 move);
+  glm::vec2 AvoidOutOfBounds();
   glm::vec2 MoveToTarget();
   glm::vec2 RandomLocation();
   Pitch pitch;

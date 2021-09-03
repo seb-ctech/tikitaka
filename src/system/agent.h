@@ -22,6 +22,7 @@ protected:
 	glm::vec2 acceleration;
 	glm::vec2 velocity;
 	glm::vec2 position;
+	ofTrueTypeFont infoFont;
 	float maxAcc = 0.006;
 	float maxSpeed = 0.1;
 	float accFactor = 0.0001;
@@ -31,6 +32,5 @@ private:
  	void init_locomotion();
 	void locomotion();
 	void StartOnRandomPosition(glm::vec2 bounds);
-	ofFont infoFont;
 };
 
