@@ -29,6 +29,7 @@ protected:
   virtual glm::vec2 MoveAdjustments(glm::vec2 nextMove);
   virtual void Action(); // This is an action a Player can take. The default behavior is a steering move, but he can also pass the Ball.
   void NextMove();
+  void AdjustWalkingSpeed();
   glm::vec2 EvaluateMovement();
   glm::vec2 KeepCohesion();
   glm::vec2 getTargetSpace(){ return targetSpace; }

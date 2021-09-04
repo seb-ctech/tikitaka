@@ -20,7 +20,7 @@ void Player::display(SystemUnits su){
   ofSetColor(220, 220, 230);
   ofFill();
   std::stringstream debug;
-  debug << std::to_string(glm::length(maxSpeed));
+  debug << std::to_string(speed * 100) << "/" << std::to_string(speedLimit * 100);
   infoFont.drawString(debug.str(), su.getXPosOnScreen(position.x), su.getYPosOnScreen(position.y) - 20);
   ofSetColor(30, 35, 35);
   ofFill();
@@ -97,20 +97,28 @@ void Player::NextMove(){
 // Move to Target allows for Target Corrections and sets the Acceleration
 glm::vec2 Player::MoveToTarget(){
   targetSpace = CourseCorrection(targetSpace);
-  float distanceFactor = glm::distance(targetSpace, position) / 100;
+  float distanceFactor = glm::distance(targetSpace, position) / 50;
   return glm::normalize(targetSpace - position) * accFactor * distanceFactor;
 };
 
 glm::vec2 Player::CourseCorrection(glm::vec2 oldTarget){
   if(ofRandom(0, 1) > 0.88){
     //TODO: Refactor to method;
-    float speedVariation = 2;
-    maxSpeed = (speedVariation + ofRandom(speedVariation * -1, speedVariation) + (glm::distance(targetSpace, position) / 4)) * 0.01;
+    AdjustWalkingSpeed();
   }
   return oldTarget;
 }
 
+void Player::AdjustWalkingSpeed(){
+  float distanceFactor = glm::distance(targetSpace, position) / 4;
+  float distanceModifier = distanceFactor - 5 * (speed / speedLimit);
+  float speedVariation = distanceFactor / 2;
+  float randomness = ofRandom(speedVariation * -1, speedVariation);
+  speed += (distanceModifier + randomness) * 0.001;
+}
+
 void Player::NewTargetSpace(){
+  speed = 0.05;
   glm::vec2 next = RandomLocation();
   glm::vec2 cohesion = KeepCohesion();
   targetSpace = (next + cohesion) / 2;
@@ -144,7 +152,7 @@ glm::vec2 Player::KeepCohesion(){
 };
 
 glm::vec2 Player::AvoidOutOfBounds(){
-  float tolerance = 2.0;
+  float tolerance = 0.5;
   glm::vec2 nextPosition = EvaluateMovement();
   glm::vec2 bounds = pitch.getSize();
   glm::vec2 correction(0,0);
@@ -171,7 +179,7 @@ glm::vec2 Player::AvoidOutOfBounds(){
       minDistance = dToBottomBounds;
     }
     glm::vec2 difference = nextPosition - position;
-    correction += glm::normalize(difference) * -1.0 * accFactor * minDistance;
+    correction += glm::normalize(difference) * -1.0 * accFactor * minDistance / 4;
   }
   return correction;
 };

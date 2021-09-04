@@ -29,12 +29,14 @@ void Agent::StartOnRandomPosition(glm::vec2 bounds){
 }
 
 void Agent::locomotion(){
+    if(speed > speedLimit) speed = speedLimit;
+    if(speed <= speedMin) speed = speedMin;
     if (glm::length(acceleration) >= maxAcc){
         acceleration = glm::normalize(acceleration) * maxAcc;
     }
     velocity += acceleration;
-    if (glm::length(velocity) >= maxSpeed){
-        velocity = glm::normalize(velocity) * maxSpeed;
+    if (glm::length(velocity) >= speed){
+        velocity = glm::normalize(velocity) * speed;
     }
     position += velocity;
 }

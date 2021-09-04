@@ -41,16 +41,16 @@ glm::vec2 DefensivePlayer::CourseCorrection(glm::vec2 currentTargetSpace){
 // TODO: Hold Position, Press the Ball Carrier
 glm::vec2 DefensivePlayer::MoveAdjustments(glm::vec2 nextMove){
 	glm::vec2 finalMove = nextMove;
-	finalMove += MoveTowardsBallCarrier() * 0.6;
+	finalMove += MoveTowardsBallCarrier() * 0.2;
 	return finalMove;
 }
 
 glm::vec2 DefensivePlayer::MoveTowardsBallCarrier(){
-	float range = 60.0;
+	float range = 40.0;
 	float distance = glm::distance(BallCarry->getPos(), position);
 	if(distance <= range){
 		float influence = 1.0 - distance / range;
-		return glm::normalize(BallCarry->getPos() - position) * accFactor * influence;
+		return glm::normalize(BallCarry->getPos() - position) * accFactor * influence * 2;
 	} else {
 		return glm::vec2(0,0);
 	}
