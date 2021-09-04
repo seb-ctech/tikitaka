@@ -41,8 +41,8 @@ void OffensivePlayer::PassBallTo(OffensivePlayer* target){
 
 
 // TODO: Implement the main Space seeking Rules, Triangles, Passing options for mates, etc...
-glm::vec2 OffensivePlayer::NextTargetSpace(){
-  return Player::NextTargetSpace();
+void OffensivePlayer::NewTargetSpace(){
+  Player::NewTargetSpace();
 }
 
 // TODO: Reevaluate spaces and retarget new Space
@@ -64,7 +64,7 @@ void OffensivePlayer::Action(){
       return;
     }
   }
-  Player::NextMove();
+  Player::Action();
 }
 
 OffensivePlayer* OffensivePlayer::getClosestMate(){

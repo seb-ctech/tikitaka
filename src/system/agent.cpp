@@ -40,6 +40,7 @@ void Agent::locomotion(){
 }
 
 void Agent::steer(glm::vec2 force){
+    // Acceleration must be direct linear value and not accumulate over time.
     acceleration = force;
 }
 

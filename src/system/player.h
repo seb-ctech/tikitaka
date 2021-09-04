@@ -24,7 +24,7 @@ public:
   virtual void setMatch(std::vector<Player*> Attackers, std::vector<Player*> Defenders);
  
 protected:
-  virtual glm::vec2 NextTargetSpace();
+  virtual void NewTargetSpace();
   virtual glm::vec2 CourseCorrection(glm::vec2 currentTargetSpace);
   virtual glm::vec2 MoveAdjustments(glm::vec2 nextMove);
   virtual void Action(); // This is an action a Player can take. The default behavior is a steering move, but he can also pass the Ball.

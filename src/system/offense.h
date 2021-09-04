@@ -19,7 +19,7 @@ public:
     bool hasBall(){ return ball; };
 
 private:
-    virtual glm::vec2 NextTargetSpace();
+    virtual void NewTargetSpace();
     virtual glm::vec2 CourseCorrection(glm::vec2 currentTargetSpace);
     virtual glm::vec2 MoveAdjustments(glm::vec2 nextMove);
     virtual void Action();

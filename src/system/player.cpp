@@ -36,7 +36,12 @@ void Player::display(SystemUnits su){
          su.getXPosOnScreen(visAcc.x), su.getYPosOnScreen(visAcc.y));
 }
 
+// This is where Players make decisions on every frame.
+
 void Player::Action(){
+  if(ofRandom(0, 1) < 0.001){
+    NewTargetSpace();
+  }
   NextMove();
 }
 
@@ -78,6 +83,39 @@ std::vector<Player*> Player::getAllPlayersInRange(Team team, float Range){
   return closestPlayers;
 };
 
+
+// This is where all Movement system merge together into a final acceleration that is used to steer the Player
+// He follows the course to a target space, makes MoveAdjustments based on the movement of other players
+
+void Player::NextMove(){
+  glm::vec2 move = MoveToTarget();
+  move = MoveAdjustments(move);
+  move += AvoidOutOfBounds();
+  steer(move);
+};
+
+// Move to Target allows for Target Corrections and sets the Acceleration
+glm::vec2 Player::MoveToTarget(){
+  targetSpace = CourseCorrection(targetSpace);
+  float distanceFactor = glm::distance(targetSpace, position) / 100;
+  return glm::normalize(targetSpace - position) * accFactor * distanceFactor;
+};
+
+glm::vec2 Player::CourseCorrection(glm::vec2 oldTarget){
+  if(ofRandom(0, 1) > 0.88){
+    //TODO: Refactor to method;
+    float speedVariation = 2;
+    maxSpeed = (speedVariation + ofRandom(speedVariation * -1, speedVariation) + (glm::distance(targetSpace, position) / 4)) * 0.01;
+  }
+  return oldTarget;
+}
+
+void Player::NewTargetSpace(){
+  glm::vec2 next = RandomLocation();
+  glm::vec2 cohesion = KeepCohesion();
+  targetSpace = (next + cohesion) / 2;
+} 
+
 glm::vec2 Player::EvaluateMovement(){
   glm::vec2 evaluatedVelocity = velocity;
   glm::vec2 evaluatedMovement = position + evaluatedVelocity;
@@ -87,40 +125,6 @@ glm::vec2 Player::EvaluateMovement(){
 glm::vec2 Player::MoveAdjustments(glm::vec2 move){
   return move;
 }
-
-// This is were a players makes decisions on every frame;
-// He follows the course to a target space, makes MoveAdjustments based on the movement of other player
-
-void Player::NextMove(){
-  glm::vec2 move = MoveToTarget();
-  move = MoveAdjustments(move);
-  move += AvoidOutOfBounds();
-  steer(move);
-};
-
-glm::vec2 Player::CourseCorrection(glm::vec2 oldTarget){
-  if(ofRandom(0, 1) > 0.88){
-    return NextTargetSpace();
-  }
-  return oldTarget;
-}
-
-glm::vec2 Player::NextTargetSpace(){
-  glm::vec2 next = RandomLocation();
-  glm::vec2 cohesion = KeepCohesion();
-  return ((next + cohesion) / 2 + next) / 2;
-}
-
-glm::vec2 Player::MoveToTarget(){
-  if(glm::length((targetSpace - position)) <= 2.0){  
-    targetSpace = NextTargetSpace();
-    float speedVariation = 2;
-    maxSpeed = (speedVariation + ofRandom(speedVariation * -1, speedVariation) + (glm::distance(targetSpace, position) / 4)) * 0.01;
-  }
-  glm::vec2 finalTargetSpace = CourseCorrection(targetSpace);
-  float completionModifier = 1 - glm::distance(finalTargetSpace, position) / 100 + 0.01;
-  return glm::normalize(finalTargetSpace - position) * accFactor * completionModifier;
-};
 
 glm::vec2 Player::KeepCohesion(){
   std::vector<Player*> closeTeamMates = getAllPlayersInRange(OWN, 40.0);

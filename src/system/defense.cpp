@@ -29,8 +29,8 @@ void DefensivePlayer::setMatch(std::vector<Player*> Attackers, std::vector<Playe
 
 
 // TODO: Implement Closing Spaces and Keep Formation
-glm::vec2 DefensivePlayer::NextTargetSpace(){
-	return Player::NextTargetSpace();
+void DefensivePlayer::NewTargetSpace(){
+	Player::NewTargetSpace();
 }
 
 // TODO: Reevaluate Space
@@ -41,7 +41,7 @@ glm::vec2 DefensivePlayer::CourseCorrection(glm::vec2 currentTargetSpace){
 // TODO: Hold Position, Press the Ball Carrier
 glm::vec2 DefensivePlayer::MoveAdjustments(glm::vec2 nextMove){
 	glm::vec2 finalMove = nextMove;
-	finalMove += MoveTowardsBallCarrier();
+	finalMove += MoveTowardsBallCarrier() * 0.6;
 	return finalMove;
 }
 
