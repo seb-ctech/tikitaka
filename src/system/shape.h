@@ -1,7 +1,9 @@
 #pragma once
 #include "ofMain.h"
 #include "pitch.h"
+#include "helper_math.h"
 #include <vector>
+
 
 enum Side {
     ATTACK,

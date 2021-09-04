@@ -1,7 +1,5 @@
 #include "player.h"
 
-// TODO: Implement and Test with different Adjustment Ratios, both for Offensive and Defensive.
-
 Player::Player() : Agent(){
 };
 
@@ -103,7 +101,6 @@ glm::vec2 Player::MoveToTarget(){
 
 glm::vec2 Player::CourseCorrection(glm::vec2 oldTarget){
   if(ofRandom(0, 1) > 0.88){
-    //TODO: Refactor to method;
     AdjustWalkingSpeed();
   }
   return oldTarget;
