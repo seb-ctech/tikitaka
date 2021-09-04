@@ -17,11 +17,11 @@ void Player::update(Player* ballcarry){
 };
 
 void Player::display(SystemUnits su){
-  // ofSetColor(220, 220, 230);
-  // ofFill();
-  // std::stringstream debug;
-  // debug << std::to_string(acceleration.x) << " : " << std::to_string(acceleration.y);
-  // infoFont.drawString(debug.str(), su.getXPosOnScreen(position.x), su.getYPosOnScreen(position.y) - 20);
+  ofSetColor(220, 220, 230);
+  ofFill();
+  std::stringstream debug;
+  debug << std::to_string(glm::length(maxSpeed));
+  infoFont.drawString(debug.str(), su.getXPosOnScreen(position.x), su.getYPosOnScreen(position.y) - 20);
   ofSetColor(30, 35, 35);
   ofFill();
   ofCircle(su.getXPosOnScreen(targetSpace.x), su.getYPosOnScreen(targetSpace.y), su.getSizeOnScreen(1));
@@ -112,13 +112,14 @@ glm::vec2 Player::NextTargetSpace(){
 }
 
 glm::vec2 Player::MoveToTarget(){
-  if(glm::length((targetSpace - position)) <= 2.0){     
+  if(glm::length((targetSpace - position)) <= 2.0){  
     targetSpace = NextTargetSpace();
-    float speedVariation = 0.02;
-    maxSpeed = 0.06 + ofRandom(speedVariation * -1, speedVariation);
+    float speedVariation = 2;
+    maxSpeed = (speedVariation + ofRandom(speedVariation * -1, speedVariation) + (glm::distance(targetSpace, position) / 4)) * 0.01;
   }
   glm::vec2 finalTargetSpace = CourseCorrection(targetSpace);
-  return glm::normalize(finalTargetSpace - position) * accFactor;
+  float completionModifier = 1 - glm::distance(finalTargetSpace, position) / 100 + 0.01;
+  return glm::normalize(finalTargetSpace - position) * accFactor * completionModifier;
 };
 
 glm::vec2 Player::KeepCohesion(){

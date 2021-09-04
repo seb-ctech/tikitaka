@@ -25,7 +25,7 @@ protected:
 	ofTrueTypeFont infoFont;
 	float maxAcc = 0.006;
 	float maxSpeed = 0.1;
-	float accFactor = 0.0001;
+	float accFactor = 0.01;
 
 private:
 	void init();

@@ -11,7 +11,7 @@ Agent::Agent(glm::vec2 pos){
 }
 
 void Agent::init(){
-    infoFont.load("Roboto-Light.ttf", 6);
+    infoFont.load("Roboto-Light.ttf", 8);
     init_locomotion();
 }
 
@@ -40,7 +40,7 @@ void Agent::locomotion(){
 }
 
 void Agent::steer(glm::vec2 force){
-    acceleration += force;
+    acceleration = force;
 }
 
 
