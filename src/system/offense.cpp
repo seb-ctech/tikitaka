@@ -8,13 +8,14 @@ OffensivePlayer::OffensivePlayer() : Player(){
 }
 
 
-OffensivePlayer::OffensivePlayer(glm::vec2 pos, Pitch pitch) : Player(pos, pitch) {
+OffensivePlayer::OffensivePlayer(glm::vec2 pos, Pitch pitch, int index) : Player(pos, pitch, index) {
 
 }
 
 void OffensivePlayer::setMatch(std::vector<Player*> Attackers, std::vector<Player*> Defenders){
   OwnTeam = Attackers;
   OpponentTeam = Defenders;
+  Player::setMatch(Attackers, Defenders);
 }
 
 void OffensivePlayer::display(SystemUnits su){
@@ -27,6 +28,7 @@ void OffensivePlayer::display(SystemUnits su){
       ofSetColor(220, 200, 80);
       ofSetLineWidth(1);
       ofDrawCircle(su.getXPosOnScreen(position.x), su.getYPosOnScreen(position.y), su.getSizeOnScreen(size) * 1.2);
+      Player::DisplaySpace(su);
   }	
 }
 

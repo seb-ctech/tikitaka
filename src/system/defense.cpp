@@ -7,7 +7,7 @@ DefensivePlayer::DefensivePlayer() : Player(){
 
 }
 
-DefensivePlayer::DefensivePlayer(glm::vec2 pos, Pitch pitch) : Player(pos, pitch) {
+DefensivePlayer::DefensivePlayer(glm::vec2 pos, Pitch pitch, int index) : Player(pos, pitch, index) {
 
 }
 
@@ -22,9 +22,9 @@ void DefensivePlayer::display(SystemUnits su){
 }
 
 void DefensivePlayer::setMatch(std::vector<Player*> Attackers, std::vector<Player*> Defenders){
+	OwnTeam = Defenders;
+	OpponentTeam = Attackers;
 	Player::setMatch(Attackers, Defenders);
-	OwnTeam = Attackers;
-	OpponentTeam = Defenders;
 }
 
 

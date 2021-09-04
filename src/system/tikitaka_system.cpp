@@ -16,13 +16,13 @@ void Tikitaka::init(){
     std::vector<glm::vec2> attpos = positions_4_3_3(ATTACK, 1.0, 1.0);
     std::vector<glm::vec2> defpos = positions_4_3_3(DEFENSE, 2.0, 3.0);
     for (int i = 0; i < nAttacking; i++){
-        OffensivePlayer* newPlayer = new OffensivePlayer(attpos[i], pitch);
+        OffensivePlayer* newPlayer = new OffensivePlayer(attpos[i], pitch, i);
         players.push_back(newPlayer);
         attackers.push_back(newPlayer);
     }
 
     for (int i = 0; i < nDefending; i++){
-        DefensivePlayer* newPlayer = new DefensivePlayer(defpos[i], pitch);
+        DefensivePlayer* newPlayer = new DefensivePlayer(defpos[i], pitch, PPTM + i);
         players.push_back(newPlayer);
         defenders.push_back(newPlayer);
     }

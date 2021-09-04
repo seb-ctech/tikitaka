@@ -3,9 +3,10 @@
 Player::Player() : Agent(){
 };
 
-Player::Player(glm::vec2 _pos, Pitch _pitch) : Agent(_pos){
+Player::Player(glm::vec2 _pos, Pitch _pitch, int _index) : Agent(_pos){
   pitch = _pitch;
   targetSpace = RandomLocation();
+  index = _index;
 };
 
 void Player::update(Player* ballcarry){
@@ -32,6 +33,26 @@ void Player::display(SystemUnits su){
   ofSetLineWidth(6);
   ofDrawLine(su.getXPosOnScreen(position.x), su.getYPosOnScreen(position.y), 
          su.getXPosOnScreen(visAcc.x), su.getYPosOnScreen(visAcc.y));
+}
+
+void Player::DisplaySpace(SystemUnits su){
+  ofSetColor(220, 250, 30);
+    std::vector<glm::vec2> positions;
+    for(Player* p : OpponentTeam){
+      if(!(p->position == position)){
+        positions.push_back(p->position);
+      }
+    }
+    // ofFill();
+    std::vector<glm::vec2> Boundaries = FootballShape::ScanSpace(position, pitch, positions);
+    ofBeginShape();
+    for (glm::vec2 point : Boundaries){
+      float x = su.getXPosOnScreen(point.x);
+      float y = su.getYPosOnScreen(point.y);
+      ofDrawRectangle(su.getXPosOnScreen(position.x), su.getYPosOnScreen(position.y), su.getSizeOnScreen(1), su.getSizeOnScreen(1));
+      ofVertex(x, y);
+    }
+    ofEndShape();
 }
 
 // This is where Players make decisions on every frame.

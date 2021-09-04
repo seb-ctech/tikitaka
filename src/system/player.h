@@ -18,7 +18,7 @@ class Player : public Agent {
 
 public:
   Player();
-  Player(glm::vec2 pos, Pitch pitch);
+  Player(glm::vec2 pos, Pitch pitch, int index);
   virtual void update(Player* ballcarry);
 	virtual void display(SystemUnits su);
   virtual void setMatch(std::vector<Player*> Attackers, std::vector<Player*> Defenders);
@@ -35,7 +35,8 @@ protected:
   glm::vec2 getTargetSpace(){ return targetSpace; }
   std::vector<Player*> getAllPlayersInRange(Team side, float Range);
   std::vector<Player*> getClosestPlayersInArea(Team side);
-
+  void DisplaySpace(SystemUnits su);
+  
   glm::vec2 targetSpace;
   std::vector<Player*> AllPlayers;
   std::vector<Player*> OwnTeam;
@@ -44,6 +45,7 @@ protected:
   float size = 2.0f;
 
 private:
+  int index;
   glm::vec2 AvoidOutOfBounds();
   glm::vec2 MoveToTarget();
   glm::vec2 RandomLocation();
