@@ -1,6 +1,7 @@
 #pragma once
 #include "agent.h"
 #include "shape.h"
+#include "helper_math.h"
 #include "ofMain.h"
 
 /* This is a Player class. 
@@ -37,6 +38,7 @@ protected:
   void DisplaySpace(SystemUnits su);
   
   glm::vec2 targetSpace;
+  Pitch pitch;
   std::vector<Player*> AllPlayers;
   std::vector<Player*> OwnTeam;
   std::vector<Player*> OpponentTeam;
@@ -48,7 +50,7 @@ private:
   glm::vec2 AvoidOutOfBounds();
   glm::vec2 MoveToTarget();
   glm::vec2 RandomLocation();
-  Pitch pitch;
+  std::vector<Player*> RemoveSelfFromGroup(std::vector<Player*> group);
   int interval;
 
 };

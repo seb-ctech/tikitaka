@@ -19,7 +19,8 @@ void Player::display(SystemUnits su){
   ofSetColor(220, 220, 230);
   ofFill();
   std::stringstream debug;
-  debug << std::to_string(speed * 100) << "/" << std::to_string(speedLimit * 100);
+  //debug << std::to_string(speed * 100) << "/" << std::to_string(speedLimit * 100);
+  debug << std::to_string(index);
   infoFont.drawString(debug.str(), su.getXPosOnScreen(position.x), su.getYPosOnScreen(position.y) - 20);
   ofSetColor(30, 35, 35);
   ofFill();
@@ -50,7 +51,7 @@ void Player::DisplaySpace(SystemUnits su){
 
 std::vector<glm::vec2> Player::getOtherPlayersPosition(std::vector<Player*> group){
   std::vector<glm::vec2> positions;
-  for(Player* p : group){
+  for(Player* p : RemoveSelfFromGroup(group)){
     if(!(p->getPos() == position)){
       positions.push_back(p->getPos());
     }
@@ -81,7 +82,7 @@ Player* Player::getPlayerOnPosition(glm::vec2 position, std::vector<Player*> gro
 // This is where Players make decisions on every frame.
 
 void Player::Action(){
-  if(ofRandom(0, 1) < 0.001){
+  if(ofRandom(0, 1) < 0.0002){
     NewTargetSpace();
   }
   NextMove();
@@ -98,13 +99,14 @@ void Player::setMatch(std::vector<Player*> Attackers, std::vector<Player*> Defen
 };
 
 std::vector<Player*> Player::getSorroundingPlayers(std::vector<Player*> group){
-  std::vector<glm::vec2> playerPositions = FootballShape::ScanSpace(position, pitch, getOtherPlayersPosition(group));
+  std::vector<glm::vec2> playerPositions = FootballShape::ScanSpace(position, pitch, getOtherPlayersPosition(RemoveSelfFromGroup(group)));
   return getOtherPlayersByPosition(playerPositions);
 };
 
 std::vector<Player*> Player::getAllPlayersInRange(std::vector<Player*> group, float Range){
+  std::vector<Player*> newGroup = RemoveSelfFromGroup(group);
   std::vector<Player*> playersInRange;
-  for (Player* a : group){
+  for (Player* a : newGroup){
     float distance = glm::distance(position, a->getPos());
     if (distance <= Range){
       playersInRange.push_back(a);
@@ -114,10 +116,11 @@ std::vector<Player*> Player::getAllPlayersInRange(std::vector<Player*> group, fl
 };
 
 Player* Player::getClosestPlayer(std::vector<Player*> group){
-  Player* closest = group[glm::floor(ofRandom(0, group.size()))];
-  for(int i = 0; i < group.size(); i++){
-    if(glm::distance(position, group[i]->getPos()) < glm::distance(position, closest->getPos())){
-      closest = group[i];
+  std::vector<Player*> newGroup = RemoveSelfFromGroup(group);
+  Player* closest = newGroup[glm::floor(ofRandom(0, newGroup.size()))];
+  for(int i = 0; i < newGroup.size(); i++){
+    if(glm::distance(position, newGroup[i]->getPos()) < glm::distance(position, closest->getPos())){
+      closest = newGroup[i];
     }
   }
   return closest;
@@ -159,7 +162,8 @@ void Player::NewTargetSpace(){
   speed = 0.05;
   glm::vec2 next = RandomLocation();
   glm::vec2 cohesion = KeepCohesion();
-  targetSpace = (next + cohesion) / 2;
+  glm::vec2 mean = (next + cohesion) / 2;
+  targetSpace = (next + mean) / 2;
 } 
 
 glm::vec2 Player::EvaluateMovement(){
@@ -226,4 +230,14 @@ glm::vec2 Player::RandomLocation(){
   glm::vec2 pitchSize = pitch.getSize();
   glm::vec2 location = glm::vec2(ofRandom(0.0, pitchSize.x), ofRandom(0.0, pitchSize.y));
   return location;
+}
+
+std::vector<Player*> Player::RemoveSelfFromGroup(std::vector<Player*> group){
+  std::vector<Player*> newGroup;
+  for(Player* p : group){
+    if(!(p == this)){
+      newGroup.push_back(p);
+    }
+  }
+  return newGroup;
 }

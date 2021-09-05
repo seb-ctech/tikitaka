@@ -8,11 +8,13 @@ glm::vec2 HelperMath::PolarToCartesian(float r, float teta){
 }
 
 float HelperMath::CartesianToPolAngle(glm::vec2 v){
-  float ratio = v.y / v.x;
-  return glm::atan(ratio);
+  return glm::atan(v.y, v.x);
 }
 
 float HelperMath::CartesianToPolRadius(glm::vec2 v){
-  return glm::sqrt(v.x * v.x + v.y + v.y);
+  return glm::sqrt(v.x * v.x + v.y * v.y);
 }
 
+float HelperMath::DegreesToRadians(float degree){
+  return degree * (glm::pi<float>() / 180.0);
+}

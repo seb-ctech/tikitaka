@@ -23,11 +23,14 @@ private:
     virtual glm::vec2 CourseCorrection(glm::vec2 currentTargetSpace);
     virtual glm::vec2 MoveAdjustments(glm::vec2 nextMove);
     virtual void Action();
+    bool isFreeLineOfSight(Player* passReceiver);
     void BallPassing();
     void PassBallTo(OffensivePlayer* target);
     bool ball = false;
     bool UnderPressure();
-    
+    float pressureRange = 10.0;
+    float passRange = 50;
+    float passFrequency = 0.005;
     // Form Triangles
     // Move into free spaces
     // Keep Cohesion
