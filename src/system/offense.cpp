@@ -61,23 +61,20 @@ glm::vec2 OffensivePlayer::MoveAdjustments(glm::vec2 nextMove){
 // Ray Cast to closest team mates -> check for obstruction and target pos.
 void OffensivePlayer::Action(){
   if(ball){
-    if(ofRandom(0, 1) < 0.008){
-      PassBallTo(getClosestMate());
-      return;
+    BallPassing();
+    if(!ball && ofRandom(0, 1) > 0.7){
+      NewTargetSpace();
     }
   }
-  Player::Action();
+  NextMove();
 }
 
-OffensivePlayer* OffensivePlayer::getClosestMate(){
-    Player* closest = nullptr;
-    float shortestDist = 100;
-    for (Player* mate : OwnTeam){
-        float currentDistance = glm::distance(mate->getPos(), position);
-        if (currentDistance < shortestDist && mate != this){
-            closest = mate;
-            shortestDist = currentDistance;
-        }
-    }
-    return dynamic_cast<OffensivePlayer*>(closest);
+void OffensivePlayer::BallPassing(){
+  if(UnderPressure() || ofRandom(0, 1) < 0.001){
+    
+  }
+}
+
+bool OffensivePlayer::UnderPressure(){
+
 }

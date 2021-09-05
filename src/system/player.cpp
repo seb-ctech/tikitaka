@@ -37,22 +37,42 @@ void Player::display(SystemUnits su){
 
 void Player::DisplaySpace(SystemUnits su){
   ofSetColor(220, 250, 30);
-    std::vector<glm::vec2> positions;
-    for(Player* p : OpponentTeam){
-      if(!(p->position == position)){
-        positions.push_back(p->position);
-      }
+  std::vector<glm::vec2> Boundaries = FootballShape::ScanSpace(position, pitch, getOtherPlayersPosition(OpponentTeam));
+  ofBeginShape();
+  for (glm::vec2 point : Boundaries){
+    float x = su.getXPosOnScreen(point.x);
+    float y = su.getYPosOnScreen(point.y);
+    ofDrawRectangle(su.getXPosOnScreen(position.x), su.getYPosOnScreen(position.y), su.getSizeOnScreen(1), su.getSizeOnScreen(1));
+    ofVertex(x, y);
+  }
+  ofEndShape();
+}
+
+std::vector<glm::vec2> Player::getOtherPlayersPosition(std::vector<Player*> group){
+  std::vector<glm::vec2> positions;
+  for(Player* p : group){
+    if(!(p->position == position)){
+      positions.push_back(p->position);
     }
-    // ofFill();
-    std::vector<glm::vec2> Boundaries = FootballShape::ScanSpace(position, pitch, positions);
-    ofBeginShape();
-    for (glm::vec2 point : Boundaries){
-      float x = su.getXPosOnScreen(point.x);
-      float y = su.getYPosOnScreen(point.y);
-      ofDrawRectangle(su.getXPosOnScreen(position.x), su.getYPosOnScreen(position.y), su.getSizeOnScreen(1), su.getSizeOnScreen(1));
-      ofVertex(x, y);
+  }
+  return positions;
+}
+
+std::vector<Player*> Player::getOtherPlayersByPosition(std::vector<glm::vec2> positions){
+  std::vector<Player*> players;
+  for (glm::vec2 p : positions){
+    players.push_back(getPlayerOnPosition(p, AllPlayers));
+  }
+  return players;
+}
+
+Player* Player::getPlayerOnPosition(glm::vec2 position, std::vector<Player*> group, float range){
+  for(Player* p : group){
+    if(glm::distance(p->position, position) <= range){
+      return p;
     }
-    ofEndShape();
+  }
+  return nullptr;
 }
 
 // This is where Players make decisions on every frame.
@@ -74,34 +94,33 @@ void Player::setMatch(std::vector<Player*> Attackers, std::vector<Player*> Defen
   }
 };
 
-std::vector<Player*> Player::getClosestPlayersInArea(Team team){
+std::vector<Player*> Player::getClosestPlayersInArea(std::vector<Player*> group){
   std::vector<Player*> SorroundingPlayers;
-  std::vector<Player*> SamplePlayers;
-  switch (team) {
-    case ALL: SamplePlayers = AllPlayers;
-    case OWN: SamplePlayers = OwnTeam;
-    case OPP: SamplePlayers = OpponentTeam;
-  }
+  std::vector<glm::vec2> Boundaries = FootballShape::ScanSpace(position, pitch, getOtherPlayersPosition(group));
+
   return SorroundingPlayers;
 };
 
-std::vector<Player*> Player::getAllPlayersInRange(Team team, float Range){
-  std::vector<Player*> closestPlayers;
-  std::vector<Player*> SamplePlayers;
-  switch (team) {
-    case ALL: SamplePlayers = AllPlayers;
-    case OWN: SamplePlayers = OwnTeam;
-    case OPP: SamplePlayers = OpponentTeam;
+std::vector<Player*> Player::getAllPlayersInRange(std::vector<Player*> group, float Range){
+  std::vector<Player*> playersInRange;
+  for (Player* a : group){
+    float distance = glm::distance(position, a->position);
+    if (distance <= Range){
+      playersInRange.push_back(a);
+    }
   }
-  for (Player* a : SamplePlayers){
-      float distance = glm::distance(position, a->position);
-      if (distance <= Range){
-          closestPlayers.push_back(a);
-      }
-  }
-  return closestPlayers;
+  return playersInRange;
 };
 
+Player* Player::getClosestPlayer(std::vector<Player*> group){
+  Player* closest = group[glm::floor(ofRandom(0, group.size()))];
+  for(int i = 0; i < group.size(); i++){
+    if(glm::distance(position, group[i]->position) < glm::distance(position, closest->position)){
+      closest = group[i];
+    }
+  }
+  return closest;
+}
 
 // This is where all Movement system merge together into a final acceleration that is used to steer the Player
 // He follows the course to a target space, makes MoveAdjustments based on the movement of other players
@@ -153,7 +172,7 @@ glm::vec2 Player::MoveAdjustments(glm::vec2 move){
 }
 
 glm::vec2 Player::KeepCohesion(){
-  std::vector<Player*> closeTeamMates = getAllPlayersInRange(OWN, 40.0);
+  std::vector<Player*> closeTeamMates = getAllPlayersInRange(OwnTeam, 40.0);
   std::vector<glm::vec2> positions;
   for(Player* p : closeTeamMates){
     positions.push_back(p->getPos());

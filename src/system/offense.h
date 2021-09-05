@@ -23,9 +23,10 @@ private:
     virtual glm::vec2 CourseCorrection(glm::vec2 currentTargetSpace);
     virtual glm::vec2 MoveAdjustments(glm::vec2 nextMove);
     virtual void Action();
+    void BallPassing();
     void PassBallTo(OffensivePlayer* target);
-    OffensivePlayer* getClosestMate();
     bool ball = false;
+    bool UnderPressure();
     
     // Form Triangles
     // Move into free spaces

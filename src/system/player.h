@@ -8,12 +8,6 @@ It is an advanced Agent, that also is aware of its team and opponents.
 It knows how to keep cohesion and is aware of the match state and the pitch.
 The steering behavior is composed of a space targeting system which can be changed mid-course aswell as midcourse corrections based on more general rules.*/
 
-enum Team {
-  ALL,
-  OPP,
-  OWN
-};
-
 class Player : public Agent {
 
 public:
@@ -33,8 +27,12 @@ protected:
   glm::vec2 EvaluateMovement();
   glm::vec2 KeepCohesion();
   glm::vec2 getTargetSpace(){ return targetSpace; }
-  std::vector<Player*> getAllPlayersInRange(Team side, float Range);
-  std::vector<Player*> getClosestPlayersInArea(Team side);
+  std::vector<Player*> getAllPlayersInRange(std::vector<Player*> group, float Range);
+  std::vector<Player*> getClosestPlayersInArea(std::vector<Player*> group);
+  std::vector<glm::vec2> getOtherPlayersPosition(std::vector<Player*> group);
+  std::vector<Player*> getOtherPlayersByPosition(std::vector<glm::vec2> positions);
+  Player* getPlayerOnPosition(glm::vec2 position, std::vector<Player*> group, float range = 0.1);
+  Player* getClosestPlayer(std::vector<Player*>);
   void DisplaySpace(SystemUnits su);
   
   glm::vec2 targetSpace;
