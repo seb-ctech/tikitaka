@@ -51,8 +51,8 @@ void Player::DisplaySpace(SystemUnits su){
 std::vector<glm::vec2> Player::getOtherPlayersPosition(std::vector<Player*> group){
   std::vector<glm::vec2> positions;
   for(Player* p : group){
-    if(!(p->position == position)){
-      positions.push_back(p->position);
+    if(!(p->getPos() == position)){
+      positions.push_back(p->getPos());
     }
   }
   return positions;
@@ -61,14 +61,17 @@ std::vector<glm::vec2> Player::getOtherPlayersPosition(std::vector<Player*> grou
 std::vector<Player*> Player::getOtherPlayersByPosition(std::vector<glm::vec2> positions){
   std::vector<Player*> players;
   for (glm::vec2 p : positions){
-    players.push_back(getPlayerOnPosition(p, AllPlayers));
+    Player* player = getPlayerOnPosition(p, AllPlayers);
+    if(!(player == nullptr)){
+      players.push_back(player);
+    }
   }
   return players;
 }
 
 Player* Player::getPlayerOnPosition(glm::vec2 position, std::vector<Player*> group, float range){
   for(Player* p : group){
-    if(glm::distance(p->position, position) <= range){
+    if(glm::distance(p->getPos(), position) <= range){
       return p;
     }
   }
@@ -94,17 +97,15 @@ void Player::setMatch(std::vector<Player*> Attackers, std::vector<Player*> Defen
   }
 };
 
-std::vector<Player*> Player::getClosestPlayersInArea(std::vector<Player*> group){
-  std::vector<Player*> SorroundingPlayers;
-  std::vector<glm::vec2> Boundaries = FootballShape::ScanSpace(position, pitch, getOtherPlayersPosition(group));
-
-  return SorroundingPlayers;
+std::vector<Player*> Player::getSorroundingPlayers(std::vector<Player*> group){
+  std::vector<glm::vec2> playerPositions = FootballShape::ScanSpace(position, pitch, getOtherPlayersPosition(group));
+  return getOtherPlayersByPosition(playerPositions);
 };
 
 std::vector<Player*> Player::getAllPlayersInRange(std::vector<Player*> group, float Range){
   std::vector<Player*> playersInRange;
   for (Player* a : group){
-    float distance = glm::distance(position, a->position);
+    float distance = glm::distance(position, a->getPos());
     if (distance <= Range){
       playersInRange.push_back(a);
     }
@@ -115,7 +116,7 @@ std::vector<Player*> Player::getAllPlayersInRange(std::vector<Player*> group, fl
 Player* Player::getClosestPlayer(std::vector<Player*> group){
   Player* closest = group[glm::floor(ofRandom(0, group.size()))];
   for(int i = 0; i < group.size(); i++){
-    if(glm::distance(position, group[i]->position) < glm::distance(position, closest->position)){
+    if(glm::distance(position, group[i]->getPos()) < glm::distance(position, closest->getPos())){
       closest = group[i];
     }
   }

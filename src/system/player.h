@@ -16,6 +16,11 @@ public:
   virtual void update(Player* ballcarry);
 	virtual void display(SystemUnits su);
   virtual void setMatch(std::vector<Player*> Attackers, std::vector<Player*> Defenders);
+  glm::vec2 EvaluateMovement();
+  glm::vec2 getTargetSpace(){ return targetSpace; }
+  std::vector<Player*> getAllPlayersInRange(std::vector<Player*> group, float Range);
+  std::vector<Player*> getSorroundingPlayers(std::vector<Player*> group);
+  Player* getClosestPlayer(std::vector<Player*>);
  
 protected:
   virtual void NewTargetSpace();
@@ -24,15 +29,11 @@ protected:
   virtual void Action(); // This is an action a Player can take. The default behavior is a steering move, but he can also pass the Ball.
   void NextMove();
   void AdjustWalkingSpeed();
-  glm::vec2 EvaluateMovement();
   glm::vec2 KeepCohesion();
-  glm::vec2 getTargetSpace(){ return targetSpace; }
-  std::vector<Player*> getAllPlayersInRange(std::vector<Player*> group, float Range);
-  std::vector<Player*> getClosestPlayersInArea(std::vector<Player*> group);
   std::vector<glm::vec2> getOtherPlayersPosition(std::vector<Player*> group);
   std::vector<Player*> getOtherPlayersByPosition(std::vector<glm::vec2> positions);
   Player* getPlayerOnPosition(glm::vec2 position, std::vector<Player*> group, float range = 0.1);
-  Player* getClosestPlayer(std::vector<Player*>);
+  
   void DisplaySpace(SystemUnits su);
   
   glm::vec2 targetSpace;

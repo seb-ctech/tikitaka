@@ -114,7 +114,8 @@
 			"*.tcc": "cpp",
 			"string_view": "cpp",
 			"cfenv": "cpp",
-			"cinttypes": "cpp"
+			"cinttypes": "cpp",
+			"*.ipp": "cpp"
 		}
 	}
 }

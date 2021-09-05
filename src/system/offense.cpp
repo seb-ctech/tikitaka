@@ -28,7 +28,17 @@ void OffensivePlayer::display(SystemUnits su){
       ofSetColor(220, 200, 80);
       ofSetLineWidth(1);
       ofDrawCircle(su.getXPosOnScreen(position.x), su.getYPosOnScreen(position.y), su.getSizeOnScreen(size) * 1.2);
-      Player::DisplaySpace(su);
+      //Player::DisplaySpace(su);
+      // Passing options
+      std::vector<Player*> SorroundingMates = getAllPlayersInRange(getSorroundingPlayers(OwnTeam), 40);
+      if(SorroundingMates.size() > 0){
+        for(Player* p : SorroundingMates){
+          ofNoFill();
+          ofSetColor(150, 100, 30);
+          ofSetLineWidth(1);
+          ofDrawLine(su.getXPosOnScreen(position.x), su.getYPosOnScreen(position.y), su.getXPosOnScreen(p->getPos().x), su.getYPosOnScreen(p->getPos().y)) ;
+        }
+      }
   }	
 }
 
@@ -69,12 +79,33 @@ void OffensivePlayer::Action(){
   NextMove();
 }
 
+//TODO: Integrate line of sight rule
+// Raycast to Opponents and Mate, measure the deltaAngle and determine, if it is big enough.
 void OffensivePlayer::BallPassing(){
-  if(UnderPressure() || ofRandom(0, 1) < 0.001){
-    
+  if(UnderPressure() || ofRandom(0, 1) < 0.01){
+    std::vector<Player*> SorroundingMates = getAllPlayersInRange(getSorroundingPlayers(OwnTeam), 40);
+    if(SorroundingMates.size() > 0){
+      Player* freeMate = SorroundingMates[0];
+      for(Player* p : SorroundingMates){
+        ofNoFill();
+        ofSetColor(150, 100, 30);
+        ofSetLineWidth(1);
+        ofDrawLine(position, p->getPos());
+        Player* closestOpponent = p->getClosestPlayer(OpponentTeam);
+        Player* currentClosest = freeMate->getClosestPlayer(OpponentTeam);
+        float distance = glm::distance(closestOpponent->getPos(), p->getPos());
+        float currentDistance = glm::distance(currentClosest->getPos(), freeMate->getPos());
+        if(distance > currentDistance){
+          freeMate = p;
+        }
+      }
+      PassBallTo(dynamic_cast<OffensivePlayer*>(freeMate));
+    }
   }
 }
 
 bool OffensivePlayer::UnderPressure(){
-
+  float minDist = 5.0;
+  Player* closestOpponent = getClosestPlayer(OpponentTeam);
+  return glm::distance(position, closestOpponent->getPos()) < minDist;
 }
