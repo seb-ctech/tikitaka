@@ -193,6 +193,8 @@ glm::vec2 Player::KeepCohesion(){
   return center;
 };
 
+
+//FIXME: Sometimes Players go out of bounds forever!
 glm::vec2 Player::AvoidOutOfBounds(){
   float tolerance = 0.5;
   glm::vec2 nextPosition = EvaluateMovement();

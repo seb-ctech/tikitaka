@@ -26,6 +26,7 @@ private:
     bool isFreeLineOfSight(Player* passReceiver);
     void BallPassing();
     void PassBallTo(OffensivePlayer* target);
+    std::vector<glm::vec2> TrianglePivots();
     bool ball = false;
     bool UnderPressure();
     float pressureRange = 10.0;

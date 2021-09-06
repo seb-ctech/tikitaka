@@ -32,7 +32,18 @@ void OffensivePlayer::display(SystemUnits su){
       //Player::DisplaySpace(su);
       // Passing options
   }
-  
+  if(index == 3){
+    // std::vector<glm::vec2> sample;
+    // sample.push_back(OwnTeam[1]->getPos());
+    // sample.push_back(OwnTeam[2]->getPos());
+    // std::vector<glm::vec2> pivots = FootballShape::TrianglePivots(sample);
+    std::vector<glm::vec2> pivots = TrianglePivots();
+    for (glm::vec2 pivot : pivots){
+      ofFill();
+      ofSetColor(30, 220, 50);
+      ofDrawCircle(su.getXPosOnScreen(pivot.x), su.getYPosOnScreen(pivot.y), su.getSizeOnScreen(size) * 0.7);
+    }
+  }
   std::vector<Player*> SorroundingMates = getAllPlayersInRange(getSorroundingPlayers(OwnTeam), passRange);
   if(SorroundingMates.size() > 0){
     for(Player* p : SorroundingMates){
@@ -60,7 +71,7 @@ void OffensivePlayer::Action(){
     BallPassing();
   }
   NextMove();
-  if(ofRandom(0,1) < 0.001){
+  if(ofRandom(0,1) < 0.0004){
     NewTargetSpace();
   }
 }
@@ -77,7 +88,13 @@ void OffensivePlayer::PassBallTo(OffensivePlayer* target){
 
 // TODO: Implement the main Space seeking Rules, Triangles, Passing options for mates, etc...
 void OffensivePlayer::NewTargetSpace(){
-  Player::NewTargetSpace();
+  std::vector<glm::vec2> pivots = TrianglePivots();
+  if(pivots.size() > 0){
+    int amount = pivots.size() - 1;
+    int random = glm::floor(ofRandom(0, amount));
+    glm::vec2 newPosition = pivots[random];
+    targetSpace = (KeepCohesion() + newPosition) / 2;
+  }
 }
 
 // TODO: Reevaluate spaces and retarget new Space
@@ -122,6 +139,30 @@ void OffensivePlayer::BallPassing(){
       }
     }
   }
+}
+
+std::vector<glm::vec2> OffensivePlayer::TrianglePivots(){
+  std::vector<std::vector<glm::vec2>> pairs;
+  std::vector<glm::vec2> pivots;
+  float tolerance = 10;
+  FootballShape::Pairs(getOtherPlayersPosition(getAllPlayersInRange(OwnTeam, 60)), pairs);
+  for(std::vector<glm::vec2> pair : pairs){
+    std::vector<glm::vec2> localPivots = FootballShape::TrianglePivots(pair);
+    glm::vec2 pitchSize = pitch.getSize();
+    for(glm::vec2 pivot : localPivots){
+      bool add = true;
+      for(glm::vec2 otherPivot : pivots){
+        if(glm::distance(otherPivot, pivot) < tolerance){
+          add = false;
+          break;
+        }
+      }
+      if(add){
+        pivots.push_back(pivot);
+      }
+    }
+  }
+  return pivots;
 }
 
 bool OffensivePlayer::isFreeLineOfSight(Player* potentialPassReceiver){
