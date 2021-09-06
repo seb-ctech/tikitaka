@@ -1,13 +1,55 @@
 #include "shape.h"
 
+glm::vec2 FootballShape::RaycastTo(glm::vec2 origin, glm::vec2 to, std::vector<glm::vec2> positions, float stepSize){
+  float seekDistance = stepSize;
+  glm::vec2 currentPosition = origin;
+  glm::vec2 step = glm::normalize(to - origin) * stepSize ;
+  if(positions.size() > 0){
+    while((currentPosition.x > stepSize && currentPosition.y > stepSize) 
+       && (glm::distance(currentPosition, to) > stepSize)){
+      for(glm::vec2 pos : positions){
+        float distance = glm::distance(currentPosition, pos);
+        if (distance <= seekDistance){
+          return pos;
+        }
+      }
+      currentPosition += step;
+    }
+    return currentPosition;
+  }
+}
 
-//FIXME: See red line, something does not work in the detection
-glm::vec2 FootballShape::RaycastScan(glm::vec2 origin, glm::vec2 to, std::vector<glm::vec2> positions, float angle, float stepSize){
+std::vector<glm::vec2> FootballShape::RaycastToMany(glm::vec2 origin, glm::vec2 to, std::vector<glm::vec2> positions, float stepSize, int max){
+  std::vector<glm::vec2> results;
+  int count = 0;
+  float seekDistance = stepSize;
+  glm::vec2 currentPosition = origin;
+  glm::vec2 step = glm::normalize(to - origin) * stepSize ;
+  if(positions.size() > 0){
+    while((currentPosition.x > stepSize && currentPosition.y > stepSize) 
+       && (count < max || max < 1) 
+       && (glm::distance(currentPosition, to) > stepSize)){
+      for(glm::vec2 pos : positions){
+        float distance = glm::distance(currentPosition, pos);
+        if (distance <= seekDistance){
+          results.push_back(pos);
+        }
+      }
+      currentPosition += step;
+      count++;
+    }
+  }
+  return results;
+}
+
+glm::vec2 FootballShape::RaycastScan(glm::vec2 origin, Pitch pitch, std::vector<glm::vec2> positions, float angle, float stepSize){
   float seekDistance = stepSize;
   glm::vec2 currentPosition = origin;
   glm::vec2 step = HelperMath::PolarToCartesian(stepSize, angle);
+  glm::vec2 pitchSize = pitch.getSize();
   if(positions.size() > 0){
-    while(currentPosition.x > stepSize && currentPosition.y > stepSize && currentPosition.x < to.x - stepSize && currentPosition.y < to.y - stepSize){
+    while((currentPosition.x > stepSize && currentPosition.y > stepSize) 
+       && (currentPosition.x < pitchSize.x - stepSize && currentPosition.y < pitchSize.y - stepSize)){
       for(glm::vec2 pos : positions){
         float distance = glm::distance(currentPosition, pos);
         if (distance <= seekDistance){
@@ -30,7 +72,7 @@ std::vector<glm::vec2> FootballShape::ScanSpace(glm::vec2 origin, Pitch pitch, s
   std::vector<glm::vec2> foundBounds; 
   float angleStep = glm::two_pi<float>() / steps;
   while (angle < glm::two_pi<float>()){
-    glm::vec2 foundPosition = RaycastScan(origin, pitch.getSize(), positions, angle, 2);
+    glm::vec2 foundPosition = RaycastScan(origin, pitch, positions, angle, 2);
     foundBounds.push_back(foundPosition);
     angle += angleStep;
   }

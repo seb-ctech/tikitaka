@@ -36,18 +36,6 @@ void OffensivePlayer::display(SystemUnits su){
   std::vector<Player*> SorroundingMates = getAllPlayersInRange(getSorroundingPlayers(OwnTeam), passRange);
   if(SorroundingMates.size() > 0){
     for(Player* p : SorroundingMates){
-
-      glm::vec2 toPlayer = p->getPos()-position;
-      float toAngle = HelperMath::CartesianToPolAngle(toPlayer);
-      glm::vec2 to2 = position + HelperMath::PolarToCartesian(5, toAngle);
-      ofNoFill();
-      ofSetColor(220, 220, 80);
-      ofDrawLine(su.getXPosOnScreen(position.x), su.getYPosOnScreen(position.y),su.getXPosOnScreen(to2.x), su.getYPosOnScreen(to2.y));
-
-      glm::vec2 blocking = FootballShape::RaycastScan(position, p->getPos(), getOtherPlayersPosition(OpponentTeam), HelperMath::CartesianToPolAngle(blocking - position), 1);
-      ofNoFill();
-      ofSetColor(220, 0, 80);
-      ofDrawLine(su.getXPosOnScreen(position.x), su.getYPosOnScreen(position.y),su.getXPosOnScreen(blocking.x), su.getYPosOnScreen(blocking.y));
       if(isFreeLineOfSight(p)){
         ofNoFill();
         ofSetColor(220, 120, 30);
@@ -140,15 +128,16 @@ bool OffensivePlayer::isFreeLineOfSight(Player* potentialPassReceiver){
   float tolerance = 5;
   float deltaAngle = HelperMath::DegreesToRadians(10);
   glm::vec2 lineToPlayer = potentialPassReceiver->getPos() - position;
-  glm::vec2 hitPosition = FootballShape::RaycastScan(position, potentialPassReceiver->getPos(), getOtherPlayersPosition(OpponentTeam), HelperMath::CartesianToPolAngle(lineToPlayer), tolerance);
-  if(hitPosition.x == 0 && hitPosition.y == 0 
-  || hitPosition.x >= potentialPassReceiver->getPos().x - 2 && hitPosition.y >= potentialPassReceiver->getPos().y - 2){
-    return true;
-  } else {
-    glm::vec2 lineToOpponent = hitPosition - position;
+  std::vector<glm::vec2> blockingOpponents = FootballShape::RaycastToMany(position, potentialPassReceiver->getPos(), getOtherPlayersPosition(OpponentTeam), tolerance);
+  for(glm::vec2 blocker : blockingOpponents){
+    glm::vec2 lineToOpponent = blocker - position;
     float angleDifference = glm::abs(HelperMath::CartesianToPolAngle(lineToPlayer)) - glm::abs(HelperMath::CartesianToPolAngle(lineToOpponent));
-    return glm::abs(angleDifference) > deltaAngle;
+    float minAngle = deltaAngle * (2 - glm::distance(blocker, position) / glm::distance(potentialPassReceiver->getPos(), position));
+    if(glm::abs(angleDifference) < minAngle){
+      return false;
+    }
   }
+  return true;
 }
 
 bool OffensivePlayer::UnderPressure(){

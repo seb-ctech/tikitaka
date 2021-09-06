@@ -44,9 +44,9 @@ protected:
   std::vector<Player*> OpponentTeam;
   Player* BallCarry;
   float size = 2.0f;
+  int index;
 
 private:
-  int index;
   glm::vec2 AvoidOutOfBounds();
   glm::vec2 MoveToTarget();
   glm::vec2 RandomLocation();
