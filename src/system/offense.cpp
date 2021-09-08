@@ -17,7 +17,7 @@ void OffensivePlayer::InitMatch(std::vector<Player*> Attackers, std::vector<Play
   Player::InitMatch(Attackers, Defenders);
 }
 
-void OffensivePlayer::display(SystemUnits su){
+void OffensivePlayer::display(SystemUnits* su){
   Player::display(su);
   DisplayPlayerPosition(su);
   //DisplayCohesion(su);
@@ -30,35 +30,35 @@ void OffensivePlayer::display(SystemUnits su){
   DisplayClosestOpponent(su);
 }
 
-void OffensivePlayer::DisplayPlayerPosition(SystemUnits su){
+void OffensivePlayer::DisplayPlayerPosition(SystemUnits* su){
   ofFill();
   ofSetColor(220, 100, 50);
-  ofDrawCircle(su.getXPosOnScreen(position.x), su.getYPosOnScreen(position.y), su.getSizeOnScreen(size));
+  ofDrawCircle(su->getXPosOnScreen(position.x), su->getYPosOnScreen(position.y), su->getSizeOnScreen(size));
 }
 
-void OffensivePlayer::DisplayBallPossession(SystemUnits su){
+void OffensivePlayer::DisplayBallPossession(SystemUnits* su){
   ofNoFill();
   ofSetColor(220, 200, 80);
   ofSetLineWidth(3);
-  ofDrawCircle(su.getXPosOnScreen(position.x), su.getYPosOnScreen(position.y), su.getSizeOnScreen(size) * 1.2);
+  ofDrawCircle(su->getXPosOnScreen(position.x), su->getYPosOnScreen(position.y), su->getSizeOnScreen(size) * 1.2);
 }
 
-void OffensivePlayer::DisplayCohesion(SystemUnits su){
+void OffensivePlayer::DisplayCohesion(SystemUnits* su){
   std::stringstream debug;
   debug << std::to_string(getCohesion());
-  infoFont.drawString(debug.str(), su.getXPosOnScreen(position.x), su.getYPosOnScreen(position.y) - 20);
+  infoFont.drawString(debug.str(), su->getXPosOnScreen(position.x), su->getYPosOnScreen(position.y) - 20);
 }
 
-void OffensivePlayer::DisplayTrianglePivots(SystemUnits su){
+void OffensivePlayer::DisplayTrianglePivots(SystemUnits* su){
   std::vector<glm::vec2> pivots = TrianglePivots();
   for (glm::vec2 pivot : pivots){
     ofFill();
     ofSetColor(30, 220, 50);
-    ofDrawCircle(su.getXPosOnScreen(pivot.x), su.getYPosOnScreen(pivot.y), su.getSizeOnScreen(size) * 0.7);
+    ofDrawCircle(su->getXPosOnScreen(pivot.x), su->getYPosOnScreen(pivot.y), su->getSizeOnScreen(size) * 0.7);
   }
 }
 
-void OffensivePlayer::DisplayPassingOptions(SystemUnits su){
+void OffensivePlayer::DisplayPassingOptions(SystemUnits* su){
   // std::vector<glm::vec2> sample;
   // sample.push_back(OwnTeam[1]->getPos());
   // sample.push_back(OwnTeam[2]->getPos());
@@ -70,20 +70,20 @@ void OffensivePlayer::DisplayPassingOptions(SystemUnits su){
         ofNoFill();
         ofSetColor(220, 120, 30);
         ofSetLineWidth(1);
-        ofDrawLine(su.getXPosOnScreen(position.x), su.getYPosOnScreen(position.y), su.getXPosOnScreen(p->getPos().x), su.getYPosOnScreen(p->getPos().y));
+        ofDrawLine(su->getXPosOnScreen(position.x), su->getYPosOnScreen(position.y), su->getXPosOnScreen(p->getPos().x), su->getYPosOnScreen(p->getPos().y));
       }
     }
   }
 }
 
-void OffensivePlayer::DisplayClosestOpponent(SystemUnits su){
+void OffensivePlayer::DisplayClosestOpponent(SystemUnits* su){
   Player* closestOpponent = getClosestPlayer(OpponentTeam);
   if(glm::distance(closestOpponent->getPos(), position) < pressureRange){
     ofNoFill();
     ofSetColor(50, 30, 180);
     ofSetLineWidth(1);
-    ofDrawLine(su.getXPosOnScreen(position.x), su.getYPosOnScreen(position.y), 
-    su.getXPosOnScreen(closestOpponent->getPos().x), su.getYPosOnScreen(closestOpponent->getPos().y)) ;
+    ofDrawLine(su->getXPosOnScreen(position.x), su->getYPosOnScreen(position.y), 
+    su->getXPosOnScreen(closestOpponent->getPos().x), su->getYPosOnScreen(closestOpponent->getPos().y)) ;
   }
 }
 

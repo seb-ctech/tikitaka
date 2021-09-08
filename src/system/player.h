@@ -18,7 +18,7 @@ public:
   Player();
   Player(glm::vec2 pos, Pitch* pitch, int index);
   virtual void update(OffensivePlayer* ballcarry);
-	virtual void display(SystemUnits su);
+	virtual void display(SystemUnits* su);
   virtual void InitMatch(std::vector<Player*> Attackers, std::vector<Player*> Defenders);
   glm::vec2 EvaluateMovement();
   Space getTargetSpace(){ return targetSpace; }
@@ -38,7 +38,7 @@ protected:
   std::vector<Player*> getOtherPlayersByPosition(std::vector<glm::vec2> positions);
   Player* getPlayerOnPosition(glm::vec2 position, std::vector<Player*> group, float range = 0.1);
   
-  void DisplaySpace(SystemUnits su); 
+  void DisplaySpace(SystemUnits* su); 
   Space targetSpace;
   Pitch* pitch;
   std::vector<Player*> AllPlayers;

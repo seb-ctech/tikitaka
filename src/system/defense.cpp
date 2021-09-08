@@ -11,14 +11,14 @@ DefensivePlayer::DefensivePlayer(glm::vec2 pos, Pitch* pitch, int index) : Playe
 
 }
 
-void DefensivePlayer::display(SystemUnits su){
+void DefensivePlayer::display(SystemUnits* su){
 	Player::display(su);
 	ofSetColor(40, 80, 200);
 	ofFill();
-	ofDrawPlane(su.getXPosOnScreen(position.x), 
-							su.getYPosOnScreen(position.y), 
-							su.getSizeOnScreen(size) * 2.0, 
-							su.getSizeOnScreen(size) * 2.0);	
+	ofDrawPlane(su->getXPosOnScreen(position.x), 
+							su->getYPosOnScreen(position.y), 
+							su->getSizeOnScreen(size) * 2.0, 
+							su->getSizeOnScreen(size) * 2.0);	
 }
 
 void DefensivePlayer::InitMatch(std::vector<Player*> Attackers, std::vector<Player*> Defenders){

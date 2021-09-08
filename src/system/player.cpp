@@ -14,30 +14,30 @@ void Player::update(OffensivePlayer* ballcarry){
   Agent::update();
 };
 
-void Player::display(SystemUnits su){
+void Player::display(SystemUnits* su){
   ofSetColor(220, 220, 230);
   ofFill();
   ofSetColor(30, 35, 35);
   ofFill();
-  ofCircle(su.getXPosOnScreen(targetSpace.getCenter().x), su.getYPosOnScreen(targetSpace.getCenter().y), su.getSizeOnScreen(1));
+  ofCircle(su->getXPosOnScreen(targetSpace.getCenter().x), su->getYPosOnScreen(targetSpace.getCenter().y), su->getSizeOnScreen(1));
   ofNoFill();
   ofSetLineWidth(1);
-  ofDrawLine(su.getXPosOnScreen(position.x), su.getYPosOnScreen(position.y), 
-         su.getXPosOnScreen(targetSpace.getCenter().x), su.getYPosOnScreen(targetSpace.getCenter().y));
+  ofDrawLine(su->getXPosOnScreen(position.x), su->getYPosOnScreen(position.y), 
+         su->getXPosOnScreen(targetSpace.getCenter().x), su->getYPosOnScreen(targetSpace.getCenter().y));
   glm::vec2 visAcc = position + acceleration * 1000;
   ofSetColor(60, 65, 65);
   ofSetLineWidth(6);
-  ofDrawLine(su.getXPosOnScreen(position.x), su.getYPosOnScreen(position.y), 
-         su.getXPosOnScreen(visAcc.x), su.getYPosOnScreen(visAcc.y));
+  ofDrawLine(su->getXPosOnScreen(position.x), su->getYPosOnScreen(position.y), 
+         su->getXPosOnScreen(visAcc.x), su->getYPosOnScreen(visAcc.y));
 }
 
-void Player::DisplaySpace(SystemUnits su){
+void Player::DisplaySpace(SystemUnits* su){
   ofSetColor(220, 250, 30);
   ofBeginShape();
   for (glm::vec2 point : Space(position, pitch, getOtherPlayersPosition(OpponentTeam)).getBoundaries()){
-    float x = su.getXPosOnScreen(point.x);
-    float y = su.getYPosOnScreen(point.y);
-    ofDrawRectangle(su.getXPosOnScreen(position.x), su.getYPosOnScreen(position.y), su.getSizeOnScreen(1), su.getSizeOnScreen(1));
+    float x = su->getXPosOnScreen(point.x);
+    float y = su->getYPosOnScreen(point.y);
+    ofDrawRectangle(su->getXPosOnScreen(position.x), su->getYPosOnScreen(position.y), su->getSizeOnScreen(1), su->getSizeOnScreen(1));
     ofVertex(x, y);
   }
   ofEndShape();

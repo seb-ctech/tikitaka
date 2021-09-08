@@ -13,7 +13,7 @@ class OffensivePlayer : public Player {
 public:
     OffensivePlayer();
     OffensivePlayer(glm::vec2 pos, Pitch* pitch, int index);
-    void display(SystemUnits su) override;
+    void display(SystemUnits* su) override;
     virtual void InitMatch(std::vector<Player*> Attackers, std::vector<Player*> Defenders);
     void ReceiveBall();
     bool hasBall(){ return ball; };
@@ -35,12 +35,12 @@ private:
 
     // DISPLAYING
 
-    void DisplayPlayerPosition(SystemUnits su);
-    void DisplayBallPossession(SystemUnits su);
-    void DisplayCohesion(SystemUnits su);
-    void DisplayTrianglePivots(SystemUnits su);
-    void DisplayPassingOptions(SystemUnits su);
-    void DisplayClosestOpponent(SystemUnits su);
+    void DisplayPlayerPosition(SystemUnits* su);
+    void DisplayBallPossession(SystemUnits* su);
+    void DisplayCohesion(SystemUnits* su);
+    void DisplayTrianglePivots(SystemUnits* su);
+    void DisplayPassingOptions(SystemUnits* su);
+    void DisplayClosestOpponent(SystemUnits* su);
 
     float pressureRange = 10.0;
     float passRange = 50;

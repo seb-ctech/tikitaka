@@ -8,7 +8,7 @@ Tikitaka::Tikitaka(){
     playerAmount = nAttacking + nDefending;
     pitchSize = glm::vec2(100.0, 100.0);
     pitch = new Pitch(pitchSize.x, pitchSize.y);
-    units = SystemUnits(pitchSize);
+    units = new SystemUnits(pitchSize);
 }
 
 void Tikitaka::init(){

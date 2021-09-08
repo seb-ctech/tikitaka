@@ -35,7 +35,7 @@ private:
     int nAttacking;
     int nDefending;
     Pitch* pitch;
-    SystemUnits units;
+    SystemUnits* units;
     std::vector<OffensivePlayer*> attackers;
     std::vector<DefensivePlayer*> defenders;
     std::vector<Player*> players;

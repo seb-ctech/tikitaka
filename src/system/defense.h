@@ -13,7 +13,7 @@ class DefensivePlayer : public Player {
 public:
 	DefensivePlayer();
 	DefensivePlayer(glm::vec2 pos, Pitch* pitch, int index);
-	void display(SystemUnits su) override;
+	void display(SystemUnits* su) override;
 	virtual void InitMatch(std::vector<Player*> Attackers, std::vector<Player*> Defenders);
 
 private:
