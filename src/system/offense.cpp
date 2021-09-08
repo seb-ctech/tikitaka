@@ -92,7 +92,7 @@ void OffensivePlayer::Action(){
     BallPassing();
   }
   NextMove();
-  if(glm::distance(targetSpace, position) < 4){
+  if(glm::distance(targetSpace, position) < 4 && ofRandom(0, 1)){
     NewTargetSpace();
   }
 }
