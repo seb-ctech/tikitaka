@@ -15,8 +15,8 @@ Space::Space(glm::vec2 origin, Pitch* _pitch, std::vector<glm::vec2> positions){
 
 void Space::ScanBoundaries(glm::vec2 origin, std::vector<glm::vec2> positions){
   float angle = 0; 
-  int batchSize = 8;
-  int steps = 64;
+  int batchSize = 20;
+  int steps = 100;
   int n = steps / batchSize;
   std::vector<glm::vec2> foundBounds; 
   float angleStep = glm::two_pi<float>() / steps;
@@ -64,7 +64,8 @@ float Space::getArea(){
     glm::vec2 ab = b - a;
     glm::vec2 ac = c - a;
     //Splitpoint of Triangle
-    glm::vec2 s = a + glm::dot(ac,ab) * ab;
+    float proj = glm::dot(glm::normalize(ac), glm::normalize(ab));
+    glm::vec2 s = a + proj * ab;
     //Area 1
     float height = glm::distance(c, s);
     float base1 = glm::distance(s, a);
@@ -73,7 +74,7 @@ float Space::getArea(){
     float base2 = glm::distance(s, b);
     area += (base2 * height) / 2;
   }
-  return area;
+  return area / boundaries.size();
 }
 
 glm::vec2 Space::getCenter(){

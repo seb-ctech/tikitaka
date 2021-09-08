@@ -32,15 +32,21 @@ void Player::display(SystemUnits* su){
 }
 
 void Player::DisplaySpace(SystemUnits* su){
-  ofSetColor(220, 250, 30);
+  ofSetColor(220, 250, 30, 50);
+  ofFill();
   ofBeginShape();
-  for (glm::vec2 point : Space(position, pitch, getOtherPlayersPosition(OpponentTeam)).getBoundaries()){
+  Space space = Space(position, pitch, getOtherPlayersPosition(OpponentTeam));
+  for (glm::vec2 point : space.getBoundaries()){
     float x = su->getXPosOnScreen(point.x);
     float y = su->getYPosOnScreen(point.y);
     ofDrawRectangle(su->getXPosOnScreen(position.x), su->getYPosOnScreen(position.y), su->getSizeOnScreen(1), su->getSizeOnScreen(1));
     ofVertex(x, y);
   }
   ofEndShape();
+  std::stringstream debug;
+  debug << std::to_string(space.getArea());
+  glm::vec2 c = space.getCenter();
+  infoFont.drawString(debug.str(), su->getXPosOnScreen(c.x), su->getYPosOnScreen(c.y) - 20);
 }
 
 std::vector<glm::vec2> Player::getOtherPlayersPosition(std::vector<Player*> group){

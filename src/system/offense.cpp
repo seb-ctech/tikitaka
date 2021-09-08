@@ -19,12 +19,14 @@ void OffensivePlayer::InitMatch(std::vector<Player*> Attackers, std::vector<Play
 
 void OffensivePlayer::display(SystemUnits* su){
   Player::display(su);
+  if(ball){
+    Player::DisplaySpace(su);
+  }
   DisplayPlayerPosition(su);
   //DisplayCohesion(su);
   if(ball){
     DisplayBallPossession(su);
     DisplayTrianglePivots(su); 
-    //Player::DisplaySpace(su);
   }
   DisplayPassingOptions(su);
   DisplayClosestOpponent(su);
@@ -116,7 +118,7 @@ void OffensivePlayer::NewTargetSpace(){
   float cohesion = getCohesion();
   if (mateOptions < 3){
     options = BallCarry->TrianglePivots();
-  } else if (spaceSize < 20 || cohesion < 10 || cohesion > 50) {
+  } else if (spaceSize < 20 || cohesion > 50) {
     options = NewTrianglePivots();
   }
   
