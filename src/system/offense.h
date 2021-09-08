@@ -32,6 +32,16 @@ private:
     void PassBallTo(OffensivePlayer* target);
     bool ball = false;
     std::vector<glm::vec2> NewTrianglePivots();
+
+    // DISPLAYING
+
+    void DisplayPlayerPosition(SystemUnits su);
+    void DisplayBallPossession(SystemUnits su);
+    void DisplayCohesion(SystemUnits su);
+    void DisplayTrianglePivots(SystemUnits su);
+    void DisplayPassingOptions(SystemUnits su);
+    void DisplayClosestOpponent(SystemUnits su);
+
     float pressureRange = 10.0;
     float passRange = 50;
     float passFrequency = 0.005;
