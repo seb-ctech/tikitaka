@@ -92,7 +92,7 @@ void OffensivePlayer::Action(){
     BallPassing();
   }
   NextMove();
-  if(glm::distance(targetSpace.getCenter(), position) < 4 && ofRandom(0, 1)){
+  if(glm::distance(targetSpace.getCenter(), position) < 4){
     NewTargetSpace();
   }
 }
@@ -138,11 +138,13 @@ void OffensivePlayer::CourseCorrection(){
 }
 
 glm::vec2 OffensivePlayer::MoveAdjustments(glm::vec2 nextMove){
-  Player* clostestOpponent = getClosestPlayer(OpponentTeam);
-  float distance = glm::distance(position, clostestOpponent->getPos());
-  if (distance < pressureRange){
-    float delta = 1 - distance / pressureRange;
-    return glm::normalize(clostestOpponent->getPos() - position) * -1  * delta;
+  if(ball){
+    Player* clostestOpponent = getClosestPlayer(OpponentTeam);
+    float distance = glm::distance(position, clostestOpponent->getPos());
+    if (distance < pressureRange){
+      float delta = 1 - distance / pressureRange;
+      return glm::normalize(clostestOpponent->getPos() - position) * -1  * delta;
+    }
   }
   return nextMove;
 }
