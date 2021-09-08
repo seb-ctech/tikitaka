@@ -9,12 +9,14 @@ It is an advanced Agent, that also is aware of its team and opponents.
 It knows how to keep cohesion and is aware of the match state and the pitch.
 The steering behavior is composed of a space targeting system which can be changed mid-course aswell as midcourse corrections based on more general rules.*/
 
+class OffensivePlayer; // Forward Declaration
+
 class Player : public Agent {
 
 public:
   Player();
   Player(glm::vec2 pos, Pitch pitch, int index);
-  virtual void update(Player* ballcarry);
+  virtual void update(OffensivePlayer* ballcarry);
 	virtual void display(SystemUnits su);
   virtual void setMatch(std::vector<Player*> Attackers, std::vector<Player*> Defenders);
   glm::vec2 EvaluateMovement();
@@ -42,7 +44,7 @@ protected:
   std::vector<Player*> AllPlayers;
   std::vector<Player*> OwnTeam;
   std::vector<Player*> OpponentTeam;
-  Player* BallCarry;
+  OffensivePlayer* BallCarry;
   float size = 2.0f;
   int index;
 

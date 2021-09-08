@@ -1,7 +1,6 @@
 #include "offense.h"
 #include "shape.h"
 
-//TODO: Replace Randomness -> ofRandom() with Decision Making and Algorithms
 
 OffensivePlayer::OffensivePlayer() : Player(){
 
@@ -18,32 +17,35 @@ void OffensivePlayer::setMatch(std::vector<Player*> Attackers, std::vector<Playe
   Player::setMatch(Attackers, Defenders);
 }
 
-//TODO: Refactor Displayed info in separate Methods
+//REFAC: Refactor Displayed info in separate Methods
 void OffensivePlayer::display(SystemUnits su){
   Player::display(su);
   ofFill();
   ofSetColor(220, 100, 50);
   ofDrawCircle(su.getXPosOnScreen(position.x), su.getYPosOnScreen(position.y), su.getSizeOnScreen(size));
+  std::stringstream debug;
+  //debug << std::to_string(speed * 100) << "/" << std::to_string(speedLimit * 100);
+  debug << std::to_string(getCohesion());
+  infoFont.drawString(debug.str(), su.getXPosOnScreen(position.x), su.getYPosOnScreen(position.y) - 20);
   if(ball){
       ofNoFill();
       ofSetColor(220, 200, 80);
       ofSetLineWidth(3);
       ofDrawCircle(su.getXPosOnScreen(position.x), su.getYPosOnScreen(position.y), su.getSizeOnScreen(size) * 1.2);
-      //Player::DisplaySpace(su);
-      // Passing options
-  }
-  if(index == 3){
-    // std::vector<glm::vec2> sample;
-    // sample.push_back(OwnTeam[1]->getPos());
-    // sample.push_back(OwnTeam[2]->getPos());
-    // std::vector<glm::vec2> pivots = FootballShape::TrianglePivots(sample);
-    std::vector<glm::vec2> pivots = TrianglePivots();
-    for (glm::vec2 pivot : pivots){
+      std::vector<glm::vec2> pivots = TrianglePivots();
+      for (glm::vec2 pivot : pivots){
       ofFill();
       ofSetColor(30, 220, 50);
       ofDrawCircle(su.getXPosOnScreen(pivot.x), su.getYPosOnScreen(pivot.y), su.getSizeOnScreen(size) * 0.7);
     }
+      //Player::DisplaySpace(su);
+      // Passing options
   }
+    // std::vector<glm::vec2> sample;
+    // sample.push_back(OwnTeam[1]->getPos());
+    // sample.push_back(OwnTeam[2]->getPos());
+    // std::vector<glm::vec2> pivots = FootballShape::TrianglePivots(sample);
+    
   std::vector<Player*> SorroundingMates = getAllPlayersInRange(getSorroundingPlayers(OwnTeam), passRange);
   if(SorroundingMates.size() > 0){
     for(Player* p : SorroundingMates){
@@ -71,7 +73,7 @@ void OffensivePlayer::Action(){
     BallPassing();
   }
   NextMove();
-  if(ofRandom(0,1) < 0.0004){
+  if(glm::distance(targetSpace, position) < 4){
     NewTargetSpace();
   }
 }
@@ -85,36 +87,50 @@ void OffensivePlayer::PassBallTo(OffensivePlayer* target){
     target->ReceiveBall();
 }
 
-
-// TODO: Implement the main Space seeking Rules, Triangles, Passing options for mates, etc...
 void OffensivePlayer::NewTargetSpace(){
-  std::vector<glm::vec2> pivots = TrianglePivots();
-  if(pivots.size() > 0){
-    int amount = pivots.size() - 1;
-    int random = glm::floor(ofRandom(0, amount));
-    glm::vec2 newPosition = pivots[random];
-    targetSpace = (KeepCohesion() + newPosition) / 2;
+  std::vector<glm::vec2> options;
+  std::vector<glm::vec2> space = FootballShape::ScanSpace(position, pitch, getOtherPlayersPosition(OpponentTeam));
+  float spaceSize = FootballShape::AreaOfSpace(space);
+  int mateOptions = BallCarry->getPassingOptionsAmount();
+  float cohesion = getCohesion();
+  if (mateOptions < 3){
+    options = BallCarry->TrianglePivots();
+  } else if (spaceSize < 20 || cohesion < 10 || cohesion > 40) {
+    options = NewTrianglePivots();
+  }
+  
+  if(options.size() > 0){
+    glm::vec2 closestOption = options[0];
+    for (glm::vec2 option : options){
+      if(glm::distance(option, position) < glm::distance(closestOption, position)){
+        closestOption = option;
+      }
+    }
+    targetSpace = options[glm::floor(ofRandom(0, options.size()))];
   }
 }
 
-// TODO: Reevaluate spaces and retarget new Space
 glm::vec2 OffensivePlayer::CourseCorrection(glm::vec2 currentTargetSpace){
-  return Player::CourseCorrection(currentTargetSpace);
+  float distance = glm::distance(targetSpace, getClosestPlayer(AllPlayers)->getPos());
+  if (distance < 5){
+    AdjustWalkingSpeed();
+    return FootballShape::SpaceCenter(FootballShape::ScanSpace(targetSpace, pitch, getOtherPlayersPosition(OpponentTeam)));
+  }
+  return currentTargetSpace;
 }
 
-//TODO: Implement spacing, avoid running into defender, Adjustments to position in space
 glm::vec2 OffensivePlayer::MoveAdjustments(glm::vec2 nextMove){
+  Player* clostestOpponent = getClosestPlayer(OpponentTeam);
+  float distance = glm::distance(position, clostestOpponent->getPos());
+  if (distance < pressureRange){
+    float delta = 1 - distance / pressureRange;
+    return glm::normalize(clostestOpponent->getPos() - position) * -1  * delta;
+  }
   return nextMove;
 }
 
-//TODO: Implement passing behavior based on line of sight.
-// Ray Cast to closest team mates -> check for obstruction and target pos.
-
-
-//TODO: Integrate line of sight rule
-// Raycast to Opponents and Mate, measure the deltaAngle and determine, if it is big enough.
 void OffensivePlayer::BallPassing(){
-  if(UnderPressure() || ofRandom(0, 1) < passFrequency){
+  if(isUnderPressure() || ofRandom(0, 1) < passFrequency){
     std::vector<Player*> SorroundingMates = getAllPlayersInRange(getSorroundingPlayers(OwnTeam), passRange);
     std::vector<Player*> PlayableMates;
     for (Player* p : SorroundingMates){
@@ -134,7 +150,7 @@ void OffensivePlayer::BallPassing(){
         }
       }
       OffensivePlayer* ballReceiver = dynamic_cast<OffensivePlayer*>(freeMate);
-      if(!ballReceiver->UnderPressure()){
+      if(!ballReceiver->isUnderPressure()){
         PassBallTo(ballReceiver);
       }
     }
@@ -145,7 +161,13 @@ std::vector<glm::vec2> OffensivePlayer::TrianglePivots(){
   std::vector<std::vector<glm::vec2>> pairs;
   std::vector<glm::vec2> pivots;
   float tolerance = 10;
-  FootballShape::Pairs(getOtherPlayersPosition(getAllPlayersInRange(OwnTeam, 60)), pairs);
+  std::vector<glm::vec2> sorroundingMates = getOtherPlayersPosition(getSorroundingPlayers(OwnTeam));
+  for(glm::vec2 otherMate : sorroundingMates){
+    std::vector<glm::vec2> pair;
+    pair.push_back(position);
+    pair.push_back(otherMate);
+    pairs.push_back(pair);
+  }
   for(std::vector<glm::vec2> pair : pairs){
     std::vector<glm::vec2> localPivots = FootballShape::TrianglePivots(pair);
     glm::vec2 pitchSize = pitch.getSize();
@@ -153,6 +175,40 @@ std::vector<glm::vec2> OffensivePlayer::TrianglePivots(){
       bool add = true;
       for(glm::vec2 otherPivot : pivots){
         if(glm::distance(otherPivot, pivot) < tolerance){
+          add = false;
+          break;
+        }
+        float space = FootballShape::AreaOfSpace(FootballShape::ScanSpace(pivot, pitch, getOtherPlayersPosition(OpponentTeam)));
+        if(space < 10){
+          add = false;
+          break;
+        }
+      }
+      if(add){
+        pivots.push_back(pivot);
+      }
+    }
+  }
+  return pivots;
+}
+
+std::vector<glm::vec2> OffensivePlayer::NewTrianglePivots(){
+  std::vector<std::vector<glm::vec2>> pairs;
+  std::vector<glm::vec2> pivots;
+  float tolerance = 10;
+  FootballShape::Pairs(getOtherPlayersPosition(getSorroundingPlayers(OwnTeam)), pairs);
+  for(std::vector<glm::vec2> pair : pairs){
+    std::vector<glm::vec2> localPivots = FootballShape::TrianglePivots(pair);
+    glm::vec2 pitchSize = pitch.getSize();
+    for(glm::vec2 pivot : localPivots){
+      bool add = true;
+      for(glm::vec2 otherPivot : pivots){
+        if(glm::distance(otherPivot, pivot) < tolerance){
+          add = false;
+          break;
+        }
+        float space = FootballShape::AreaOfSpace(FootballShape::ScanSpace(pivot, pitch, getOtherPlayersPosition(OpponentTeam)));
+        if(space < 10){
           add = false;
           break;
         }
@@ -181,7 +237,29 @@ bool OffensivePlayer::isFreeLineOfSight(Player* potentialPassReceiver){
   return true;
 }
 
-bool OffensivePlayer::UnderPressure(){
+bool OffensivePlayer::isUnderPressure(){
   Player* closestOpponent = getClosestPlayer(OpponentTeam);
   return glm::distance(position, closestOpponent->getPos()) < pressureRange;
+}
+
+
+int OffensivePlayer::getPassingOptionsAmount(){
+  std::vector<Player*> sorroundingMates = getSorroundingPlayers(OwnTeam);
+  int count = 0;
+  for(Player* mate : sorroundingMates){
+    if(isFreeLineOfSight(mate)){
+      count++;
+    }
+  }
+  return count;
+}
+
+
+float OffensivePlayer::getCohesion(){
+  std::vector<Player*> sorroundingMates = getSorroundingPlayers(OwnTeam);
+  float distanceSum = 0;
+  for(Player* mate : sorroundingMates){
+    distanceSum += glm::distance(position, mate->getPos());
+  }
+  return distanceSum/sorroundingMates.size();
 }

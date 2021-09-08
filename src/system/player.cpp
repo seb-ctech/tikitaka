@@ -9,7 +9,7 @@ Player::Player(glm::vec2 _pos, Pitch _pitch, int _index) : Agent(_pos){
   index = _index;
 };
 
-void Player::update(Player* ballcarry){
+void Player::update(OffensivePlayer* ballcarry){
   BallCarry = ballcarry;
   Action();
   Agent::update();
@@ -18,10 +18,6 @@ void Player::update(Player* ballcarry){
 void Player::display(SystemUnits su){
   ofSetColor(220, 220, 230);
   ofFill();
-  std::stringstream debug;
-  //debug << std::to_string(speed * 100) << "/" << std::to_string(speedLimit * 100);
-  debug << std::to_string(index);
-  infoFont.drawString(debug.str(), su.getXPosOnScreen(position.x), su.getYPosOnScreen(position.y) - 20);
   ofSetColor(30, 35, 35);
   ofFill();
   ofCircle(su.getXPosOnScreen(targetSpace.x), su.getYPosOnScreen(targetSpace.y), su.getSizeOnScreen(1));
@@ -200,7 +196,7 @@ glm::vec2 Player::AvoidOutOfBounds(){
   glm::vec2 nextPosition = EvaluateMovement();
   glm::vec2 bounds = pitch.getSize();
   glm::vec2 correction(0,0);
-  // TODO: Think about moving this to the Pitch object, with a tolerance;
+  // REFAC: Think about moving this to the Pitch object, with a tolerance;
   float dToRightBounds = glm::distance(nextPosition, glm::vec2(bounds.x, position.y));
   float dToTopBounds = glm::distance(nextPosition, glm::vec2(position.x, bounds.y)); 
   float dToLeftBounds = glm::distance(nextPosition, glm::vec2(0, position.y)); 

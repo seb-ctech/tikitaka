@@ -1,8 +1,7 @@
 #pragma once
 #include "player.h"
 #include "ofMain.h"
-
-class OffensivePlayer; // Forward Declaration
+#include "offense.h"
 
 
 /* This is the class for Player with Defensive Role.

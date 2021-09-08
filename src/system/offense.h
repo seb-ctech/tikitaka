@@ -17,6 +17,10 @@ public:
     virtual void setMatch(std::vector<Player*> Attackers, std::vector<Player*> Defenders);
     void ReceiveBall();
     bool hasBall(){ return ball; };
+    int getPassingOptionsAmount();
+    float getCohesion();
+    bool isUnderPressure();
+    std::vector<glm::vec2> TrianglePivots();
 
 private:
     virtual void NewTargetSpace();
@@ -26,15 +30,9 @@ private:
     bool isFreeLineOfSight(Player* passReceiver);
     void BallPassing();
     void PassBallTo(OffensivePlayer* target);
-    std::vector<glm::vec2> TrianglePivots();
     bool ball = false;
-    bool UnderPressure();
+    std::vector<glm::vec2> NewTrianglePivots();
     float pressureRange = 10.0;
     float passRange = 50;
     float passFrequency = 0.005;
-    // Form Triangles
-    // Move into free spaces
-    // Keep Cohesion
-
-
 };

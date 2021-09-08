@@ -130,3 +130,35 @@ void FootballShape::Pairs(std::vector<glm::vec2> positions, std::vector<std::vec
     }
   }
 }
+
+//REFAC: Space as class?
+
+glm::vec2 FootballShape::SpaceCenter(std::vector<glm::vec2> points){
+  glm::vec2 sum;
+  for(glm::vec2 point : points){
+    sum += point;
+  } 
+  return sum/points.size();
+}
+
+float FootballShape::AreaOfSpace(std::vector<glm::vec2> points){
+  glm::vec2 c = SpaceCenter(points);
+  float area = 0;
+  for(int i = 0; i < points.size() - 1; i++){
+    //Triangles
+    glm::vec2 a = points[i];
+    glm::vec2 b = points[i+1];
+    glm::vec2 ab = b - a;
+    glm::vec2 ac = c - a;
+    //Splitpoint of Triangle
+    glm::vec2 s = a + glm::dot(ac,ab) * ab;
+    //Area 1
+    float height = glm::distance(c, s);
+    float base1 = glm::distance(s, a);
+    area += (base1 * height) / 2;
+    //Area 2
+    float base2 = glm::distance(s, b);
+    area += (base2 * height) / 2;
+  }
+  return area;
+}
