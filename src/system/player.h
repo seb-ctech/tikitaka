@@ -47,11 +47,11 @@ protected:
   OffensivePlayer* BallCarry;
   float size = 2.0f;
   int index;
+  int interval = 10;
 
 private:
   glm::vec2 AvoidOutOfBounds();
   glm::vec2 MoveToTarget();
   Space RandomSpace();
   std::vector<Player*> RemoveSelfFromGroup(std::vector<Player*> group);
-  int interval; // TODO: Move to protected and assign value;
 };

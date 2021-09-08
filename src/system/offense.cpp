@@ -88,12 +88,14 @@ void OffensivePlayer::DisplayClosestOpponent(SystemUnits* su){
 }
 
 void OffensivePlayer::Action(){
-  if(ball){
-    BallPassing();
-  }
-  NextMove();
-  if(glm::distance(targetSpace.getCenter(), position) < 4){
-    NewTargetSpace();
+  if(ofGetFrameNum() % interval == 0){
+    if(ball){
+      BallPassing();
+    }
+    NextMove();
+    if(glm::distance(targetSpace.getCenter(), position) < 4){
+      NewTargetSpace();
+    }
   }
 }
 
@@ -114,7 +116,7 @@ void OffensivePlayer::NewTargetSpace(){
   float cohesion = getCohesion();
   if (mateOptions < 3){
     options = BallCarry->TrianglePivots();
-  } else if (spaceSize < 20 || cohesion < 10 || cohesion > 40) {
+  } else if (spaceSize < 20 || cohesion < 10 || cohesion > 50) {
     options = NewTrianglePivots();
   }
   
