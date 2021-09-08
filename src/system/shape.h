@@ -10,7 +10,7 @@ enum Side {
 };
 
 namespace FootballShape {
-    glm::vec2 RaycastScan(glm::vec2 origin, Pitch pitch, std::vector<glm::vec2> positions, float angle, float radius);
+    glm::vec2 RaycastScan(glm::vec2 origin, Pitch* pitch, std::vector<glm::vec2> positions, float angle, float radius);
     glm::vec2 RaycastTo(glm::vec2 origin, glm::vec2 to, std::vector<glm::vec2> positions, float radius);
     std::vector<glm::vec2> RaycastToMany(glm::vec2 origin, glm::vec2 to, std::vector<glm::vec2> positions, float radius, int max = 0);
     std::vector<glm::vec2> TrianglePivots(std::vector<glm::vec2> PositionPair);

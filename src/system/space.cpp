@@ -8,7 +8,7 @@ Space::Space(){
   boundaries = points;
 }
 
-Space::Space(glm::vec2 origin, Pitch _pitch, std::vector<glm::vec2> positions){
+Space::Space(glm::vec2 origin, Pitch* _pitch, std::vector<glm::vec2> positions){
   pitch = _pitch;
   ScanBoundaries(origin, positions);
 }

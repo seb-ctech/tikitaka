@@ -3,7 +3,7 @@
 Player::Player() : Agent(){
 };
 
-Player::Player(glm::vec2 _pos, Pitch _pitch, int _index) : Agent(_pos){
+Player::Player(glm::vec2 _pos, Pitch* _pitch, int _index) : Agent(_pos){
   pitch = _pitch;
   index = _index;
 };
@@ -192,7 +192,7 @@ glm::vec2 Player::KeepCohesion(){
 glm::vec2 Player::AvoidOutOfBounds(){
   float tolerance = 0.5;
   glm::vec2 nextPosition = EvaluateMovement();
-  glm::vec2 bounds = pitch.getSize();
+  glm::vec2 bounds = pitch->getSize();
   glm::vec2 correction(0,0);
   // REFAC: Think about moving this to the Pitch object, with a tolerance;
   float dToRightBounds = glm::distance(nextPosition, glm::vec2(bounds.x, position.y));
@@ -223,7 +223,7 @@ glm::vec2 Player::AvoidOutOfBounds(){
 };
 
 Space Player::RandomSpace(){
-  glm::vec2 pitchSize = pitch.getSize();
+  glm::vec2 pitchSize = pitch->getSize();
   glm::vec2 location = glm::vec2(ofRandom(0.0, pitchSize.x), ofRandom(0.0, pitchSize.y));
   return Space(location, pitch, getOtherPlayersPosition(OpponentTeam));
 }

@@ -12,7 +12,7 @@ class OffensivePlayer : public Player {
 
 public:
     OffensivePlayer();
-    OffensivePlayer(glm::vec2 pos, Pitch pitch, int index);
+    OffensivePlayer(glm::vec2 pos, Pitch* pitch, int index);
     void display(SystemUnits su) override;
     virtual void InitMatch(std::vector<Player*> Attackers, std::vector<Player*> Defenders);
     void ReceiveBall();

@@ -7,7 +7,7 @@ OffensivePlayer::OffensivePlayer() : Player(){
 }
 
 
-OffensivePlayer::OffensivePlayer(glm::vec2 pos, Pitch pitch, int index) : Player(pos, pitch, index) {
+OffensivePlayer::OffensivePlayer(glm::vec2 pos, Pitch* pitch, int index) : Player(pos, pitch, index) {
 
 }
 
@@ -188,7 +188,7 @@ std::vector<glm::vec2> OffensivePlayer::TrianglePivots(){
   }
   for(std::vector<glm::vec2> pair : pairs){
     std::vector<glm::vec2> localPivots = FootballShape::TrianglePivots(pair);
-    glm::vec2 pitchSize = pitch.getSize();
+    glm::vec2 pitchSize = pitch->getSize();
     for(glm::vec2 pivot : localPivots){
       bool add = true;
       for(glm::vec2 otherPivot : pivots){
@@ -217,7 +217,7 @@ std::vector<glm::vec2> OffensivePlayer::NewTrianglePivots(){
   FootballShape::Pairs(getOtherPlayersPosition(getSorroundingPlayers(OwnTeam)), pairs);
   for(std::vector<glm::vec2> pair : pairs){
     std::vector<glm::vec2> localPivots = FootballShape::TrianglePivots(pair);
-    glm::vec2 pitchSize = pitch.getSize();
+    glm::vec2 pitchSize = pitch->getSize();
     for(glm::vec2 pivot : localPivots){
       bool add = true;
       for(glm::vec2 otherPivot : pivots){

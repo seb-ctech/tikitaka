@@ -7,7 +7,7 @@ DefensivePlayer::DefensivePlayer() : Player(){
 
 }
 
-DefensivePlayer::DefensivePlayer(glm::vec2 pos, Pitch pitch, int index) : Player(pos, pitch, index) {
+DefensivePlayer::DefensivePlayer(glm::vec2 pos, Pitch* pitch, int index) : Player(pos, pitch, index) {
 
 }
 

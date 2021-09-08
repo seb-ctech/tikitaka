@@ -7,7 +7,7 @@ Tikitaka::Tikitaka(){
     nDefending = PPTM;
     playerAmount = nAttacking + nDefending;
     pitchSize = glm::vec2(100.0, 100.0);
-    pitch = Pitch(pitchSize.x, pitchSize.y);
+    pitch = new Pitch(pitchSize.x, pitchSize.y);
     units = SystemUnits(pitchSize);
 }
 
@@ -71,8 +71,8 @@ std::vector<glm::vec2> Tikitaka::positions_4_3_3(Side side, float narrow, float 
     std::vector<glm::vec2> positions;
     positions.reserve(10);
     float padding = 10.0;
-    float width = pitch.getSize().y;
-    float length = pitch.getSize().x;
+    float width = pitch->getSize().y;
+    float length = pitch->getSize().x;
     float w_spacing = width / (4.0 + narrow);
     float l_spacing = length * 0.5 / (3.0 + compressed);
 

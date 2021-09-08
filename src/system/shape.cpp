@@ -42,11 +42,11 @@ std::vector<glm::vec2> FootballShape::RaycastToMany(glm::vec2 origin, glm::vec2 
   return results;
 }
 
-glm::vec2 FootballShape::RaycastScan(glm::vec2 origin, Pitch pitch, std::vector<glm::vec2> positions, float angle, float stepSize){
+glm::vec2 FootballShape::RaycastScan(glm::vec2 origin, Pitch* pitch, std::vector<glm::vec2> positions, float angle, float stepSize){
   float seekDistance = stepSize;
   glm::vec2 currentPosition = origin;
   glm::vec2 step = HelperMath::PolarToCartesian(stepSize, angle);
-  glm::vec2 pitchSize = pitch.getSize();
+  glm::vec2 pitchSize = pitch->getSize();
   if(positions.size() > 0){
     while((currentPosition.x > stepSize && currentPosition.y > stepSize) 
        && (currentPosition.x < pitchSize.x - stepSize && currentPosition.y < pitchSize.y - stepSize)){

@@ -16,7 +16,7 @@ class Player : public Agent {
 
 public:
   Player();
-  Player(glm::vec2 pos, Pitch pitch, int index);
+  Player(glm::vec2 pos, Pitch* pitch, int index);
   virtual void update(OffensivePlayer* ballcarry);
 	virtual void display(SystemUnits su);
   virtual void InitMatch(std::vector<Player*> Attackers, std::vector<Player*> Defenders);
@@ -40,7 +40,7 @@ protected:
   
   void DisplaySpace(SystemUnits su); 
   Space targetSpace;
-  Pitch pitch;
+  Pitch* pitch;
   std::vector<Player*> AllPlayers;
   std::vector<Player*> OwnTeam;
   std::vector<Player*> OpponentTeam;
