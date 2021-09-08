@@ -15,7 +15,4 @@ namespace FootballShape {
     std::vector<glm::vec2> RaycastToMany(glm::vec2 origin, glm::vec2 to, std::vector<glm::vec2> positions, float radius, int max = 0);
     std::vector<glm::vec2> TrianglePivots(std::vector<glm::vec2> PositionPair);
     void Pairs(std::vector<glm::vec2> Positions, std::vector<std::vector<glm::vec2>> &groupList);
-    float AreaOfSpace(std::vector<glm::vec2> Positions);
-    glm::vec2 SpaceCenter(std::vector<glm::vec2> points);
-    std::vector<glm::vec2> ScanSpace(glm::vec2 origin, Pitch pitch, std::vector<glm::vec2> positions);
 } 

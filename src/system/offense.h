@@ -14,7 +14,7 @@ public:
     OffensivePlayer();
     OffensivePlayer(glm::vec2 pos, Pitch pitch, int index);
     void display(SystemUnits su) override;
-    virtual void setMatch(std::vector<Player*> Attackers, std::vector<Player*> Defenders);
+    virtual void InitMatch(std::vector<Player*> Attackers, std::vector<Player*> Defenders);
     void ReceiveBall();
     bool hasBall(){ return ball; };
     int getPassingOptionsAmount();
@@ -24,7 +24,7 @@ public:
 
 private:
     virtual void NewTargetSpace();
-    virtual glm::vec2 CourseCorrection(glm::vec2 currentTargetSpace);
+    virtual void CourseCorrection();
     virtual glm::vec2 MoveAdjustments(glm::vec2 nextMove);
     virtual void Action();
     bool isFreeLineOfSight(Player* passReceiver);

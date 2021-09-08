@@ -1,6 +1,7 @@
 #pragma once
 #include "agent.h"
 #include "shape.h"
+#include "space.h"
 #include "helper_math.h"
 #include "ofMain.h"
 
@@ -18,16 +19,16 @@ public:
   Player(glm::vec2 pos, Pitch pitch, int index);
   virtual void update(OffensivePlayer* ballcarry);
 	virtual void display(SystemUnits su);
-  virtual void setMatch(std::vector<Player*> Attackers, std::vector<Player*> Defenders);
+  virtual void InitMatch(std::vector<Player*> Attackers, std::vector<Player*> Defenders);
   glm::vec2 EvaluateMovement();
-  glm::vec2 getTargetSpace(){ return targetSpace; }
+  Space getTargetSpace(){ return targetSpace; }
   std::vector<Player*> getAllPlayersInRange(std::vector<Player*> group, float Range);
   std::vector<Player*> getSorroundingPlayers(std::vector<Player*> group);
   Player* getClosestPlayer(std::vector<Player*>);
  
 protected:
   virtual void NewTargetSpace();
-  virtual glm::vec2 CourseCorrection(glm::vec2 currentTargetSpace);
+  virtual void CourseCorrection();
   virtual glm::vec2 MoveAdjustments(glm::vec2 nextMove);
   virtual void Action(); // This is an action a Player can take. The default behavior is a steering move, but he can also pass the Ball.
   void NextMove();
@@ -37,9 +38,8 @@ protected:
   std::vector<Player*> getOtherPlayersByPosition(std::vector<glm::vec2> positions);
   Player* getPlayerOnPosition(glm::vec2 position, std::vector<Player*> group, float range = 0.1);
   
-  void DisplaySpace(SystemUnits su);
-  
-  glm::vec2 targetSpace;
+  void DisplaySpace(SystemUnits su); 
+  Space targetSpace;
   Pitch pitch;
   std::vector<Player*> AllPlayers;
   std::vector<Player*> OwnTeam;
@@ -51,8 +51,7 @@ protected:
 private:
   glm::vec2 AvoidOutOfBounds();
   glm::vec2 MoveToTarget();
-  glm::vec2 RandomLocation();
+  Space RandomSpace();
   std::vector<Player*> RemoveSelfFromGroup(std::vector<Player*> group);
-  int interval;
-
+  int interval; // TODO: Move to protected and assign value;
 };

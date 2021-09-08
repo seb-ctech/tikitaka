@@ -21,10 +21,10 @@ void DefensivePlayer::display(SystemUnits su){
 							su.getSizeOnScreen(size) * 2.0);	
 }
 
-void DefensivePlayer::setMatch(std::vector<Player*> Attackers, std::vector<Player*> Defenders){
+void DefensivePlayer::InitMatch(std::vector<Player*> Attackers, std::vector<Player*> Defenders){
 	OwnTeam = Defenders;
 	OpponentTeam = Attackers;
-	Player::setMatch(Attackers, Defenders);
+	Player::InitMatch(Attackers, Defenders);
 }
 
 
@@ -34,8 +34,8 @@ void DefensivePlayer::NewTargetSpace(){
 }
 
 // TODO: Reevaluate Space
-glm::vec2 DefensivePlayer::CourseCorrection(glm::vec2 currentTargetSpace){
-	return Player::CourseCorrection(currentTargetSpace);
+void DefensivePlayer::CourseCorrection(){
+ Player::CourseCorrection();
 }
 
 // TODO: Hold Position, Press the Ball Carrier

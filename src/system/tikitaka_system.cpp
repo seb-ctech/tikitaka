@@ -35,7 +35,7 @@ void Tikitaka::init(){
         for (DefensivePlayer* dp : defenders){
             defendingPlayers.push_back(dp);
         }
-        p->setMatch(attackingPlayers, defendingPlayers);
+        p->InitMatch(attackingPlayers, defendingPlayers);
     }
 
     attackers[0]->ReceiveBall();

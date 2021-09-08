@@ -11,10 +11,10 @@ OffensivePlayer::OffensivePlayer(glm::vec2 pos, Pitch pitch, int index) : Player
 
 }
 
-void OffensivePlayer::setMatch(std::vector<Player*> Attackers, std::vector<Player*> Defenders){
+void OffensivePlayer::InitMatch(std::vector<Player*> Attackers, std::vector<Player*> Defenders){
   OwnTeam = Attackers;
   OpponentTeam = Defenders;
-  Player::setMatch(Attackers, Defenders);
+  Player::InitMatch(Attackers, Defenders);
 }
 
 void OffensivePlayer::display(SystemUnits su){
@@ -92,7 +92,7 @@ void OffensivePlayer::Action(){
     BallPassing();
   }
   NextMove();
-  if(glm::distance(targetSpace, position) < 4 && ofRandom(0, 1)){
+  if(glm::distance(targetSpace.getCenter(), position) < 4 && ofRandom(0, 1)){
     NewTargetSpace();
   }
 }
@@ -108,8 +108,8 @@ void OffensivePlayer::PassBallTo(OffensivePlayer* target){
 
 void OffensivePlayer::NewTargetSpace(){
   std::vector<glm::vec2> options;
-  std::vector<glm::vec2> space = FootballShape::ScanSpace(position, pitch, getOtherPlayersPosition(OpponentTeam));
-  float spaceSize = FootballShape::AreaOfSpace(space);
+  Space space = Space(position, pitch, getOtherPlayersPosition(OpponentTeam));
+  float spaceSize = space.getArea();
   int mateOptions = BallCarry->getPassingOptionsAmount();
   float cohesion = getCohesion();
   if (mateOptions < 3){
@@ -125,17 +125,16 @@ void OffensivePlayer::NewTargetSpace(){
         closestOption = option;
       }
     }
-    targetSpace = options[glm::floor(ofRandom(0, options.size()))];
+    glm::vec2 randomOption = options[glm::floor(ofRandom(0, options.size()))];
+    targetSpace = Space(randomOption, pitch, getOtherPlayersPosition(OpponentTeam));
   }
 }
 
-glm::vec2 OffensivePlayer::CourseCorrection(glm::vec2 currentTargetSpace){
-  float distance = glm::distance(targetSpace, getClosestPlayer(AllPlayers)->getPos());
+void OffensivePlayer::CourseCorrection(){
+  float distance = glm::distance(targetSpace.getCenter(), getClosestPlayer(AllPlayers)->getPos());
   if (distance < 5){
     AdjustWalkingSpeed();
-    return FootballShape::SpaceCenter(FootballShape::ScanSpace(targetSpace, pitch, getOtherPlayersPosition(OpponentTeam)));
   }
-  return currentTargetSpace;
 }
 
 glm::vec2 OffensivePlayer::MoveAdjustments(glm::vec2 nextMove){
@@ -197,8 +196,8 @@ std::vector<glm::vec2> OffensivePlayer::TrianglePivots(){
           add = false;
           break;
         }
-        float space = FootballShape::AreaOfSpace(FootballShape::ScanSpace(pivot, pitch, getOtherPlayersPosition(OpponentTeam)));
-        if(space < 10){
+        Space space = Space(pivot, pitch, getOtherPlayersPosition(OpponentTeam));
+        if(space.getArea() < 10){
           add = false;
           break;
         }
@@ -226,8 +225,8 @@ std::vector<glm::vec2> OffensivePlayer::NewTrianglePivots(){
           add = false;
           break;
         }
-        float space = FootballShape::AreaOfSpace(FootballShape::ScanSpace(pivot, pitch, getOtherPlayersPosition(OpponentTeam)));
-        if(space < 10){
+        Space space = Space(pivot, pitch, getOtherPlayersPosition(OpponentTeam));
+        if(space.getArea() < 10){
           add = false;
           break;
         }
