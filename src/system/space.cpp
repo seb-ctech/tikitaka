@@ -54,6 +54,16 @@ void Space::Update(std::vector<glm::vec2> positions){
   ScanBoundaries(center, positions);
 }
 
+/* 1) For every corner of the space, 
+that corner and the next form a triangle 
+with the center of the space, dividing the space like a Pie.
+2) To get right angled triangles the vector from A to Center is
+projected on the vector AB to get the perpendicular intersection.
+3) The triangle is split into two triangles with different 
+bases and the same height. The area can now be easily computed b*h/2
+4) The areas are summed up and divided by the number of the triangles,
+which is the same as the number of corner points.*/
+
 float Space::getArea(){
   glm::vec2 c = getCenter();
   float area = 0;
