@@ -1,19 +1,28 @@
 {
 	"folders": [
 		{
+			"name": "tikitaka",
 			"path": "."
 		},
 		{
-			"path": "${workspaceRoot}/../../../../libs/openFrameworks"
+			"name": "openFrameworks",
+			"path": "..\\..\\..\\libs\\openFrameworks"
 		},
 		{
-			"path": "${workspaceRoot}/../../../../addons"
+			"name": "addons",
+			"path": "..\\..\\..\\addons"
 		},
 		{
-			"path": "../../../examples"
+			"name": "examples",
+			"path": "..\\..\\..\\examples"
 		},
 		{
-			"path": "../../../../../ctech/tiki-taka-c2/tikitaka.wiki"
+			"name": "tikitaka.wiki",
+			"path": "..\\..\\..\\..\\..\\ctech\\tiki-taka-c2\\tikitaka.wiki"
+		},
+		{
+			"name": "ShaderDynamicPattern",
+			"path": "..\\ShaderDynamicPattern"
 		}
 	],
 	"settings": {

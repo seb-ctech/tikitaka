@@ -57,13 +57,20 @@ void Tikitaka::update(){
     }
 }
 
-Players Tikitaka::getPlayerPositions(){
-    Players player_positions;
-    glm::vec2 attacking_players[PPTM];
-    glm::vec2 defending_players[PPTM];
+Positions Tikitaka::getPlayerPositions(){
+    Positions player_positions;
+    std::vector<glm::vec2> attacking_players;
+    std::vector<glm::vec2> defending_players;
+    for(int i = 0; i < PPTM; i++){
+        attacking_players.push_back(glm::vec2(units->getXPosOnScreen(attackers[i]->getPos().x), 
+                                         units->getYPosOnScreen(attackers[i]->getPos().y)));
+        defending_players.push_back(glm::vec2(units->getXPosOnScreen(defenders[i]->getPos().x), 
+                                         units->getYPosOnScreen(defenders[i]->getPos().y)));
+    }
     player_positions.attacking = attacking_players;
     player_positions.defending = defending_players;
-    player_positions.ballcarry = glm::vec2(20.0, 20.0);
+    player_positions.ballcarry = glm::vec2(units->getXPosOnScreen(getPlayerInPossession()->getPos().x), 
+                                           units->getYPosOnScreen(getPlayerInPossession()->getPos().y));
     return player_positions;
 }
 

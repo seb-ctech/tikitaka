@@ -9,9 +9,9 @@
 #include "shape.h"
 #include <vector>
 
-struct Players {
-    glm::vec2* attacking;
-    glm::vec2* defending;
+struct Positions {
+    std::vector<glm::vec2> attacking;
+    std::vector<glm::vec2> defending;
     glm::vec2 ballcarry;
 };
 
@@ -22,7 +22,7 @@ public:
     void display();
     void update();
     void init();
-    Players getPlayerPositions();
+    Positions getPlayerPositions();
 
 
 private:
