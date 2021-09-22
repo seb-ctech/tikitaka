@@ -21,10 +21,14 @@ class ofApp : public ofBaseApp{
 		void windowResized(int w, int h);
 		void dragEvent(ofDragInfo dragInfo);
 		void gotMessage(ofMessage msg);
-		void passTikiTakaToShader();
+		void passPositionsToShader();
 	
 	private:
 
+		void BufferPositions();
+		ofFbo posFboAtt;
+		ofFbo posFboDef;
+		ofImage renderImage;
 		Tikitaka system;
 		ofShader Shader;
 		bool showShader = true;

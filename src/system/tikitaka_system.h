@@ -22,6 +22,8 @@ public:
     void display();
     void update();
     void init();
+    int getPlayerAmountAtt(){return nAttacking;};
+    int getPlayerAmountDef(){return nDefending;};
     Positions getPlayerPositions();
 
 
