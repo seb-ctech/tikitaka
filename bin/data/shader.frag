@@ -25,6 +25,7 @@ float group_basicSDF(sampler2DRect tex, vec2 st){
 
 void main(){
   vec2 coords = gl_FragCoord.xy / res;
+  coords.y = 1 - coords.y;
   vec2 p = ball / res;
   float out1 = group_basicSDF(tex1, coords);
   float out2 = group_basicSDF(tex2, coords);
