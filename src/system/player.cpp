@@ -19,11 +19,11 @@ void Player::display(SystemUnits* su){
   ofFill();
   ofSetColor(30, 35, 35);
   ofFill();
-  ofCircle(su->getXPosOnScreen(targetSpace.getCenter().x), su->getYPosOnScreen(targetSpace.getCenter().y), su->getSizeOnScreen(1));
+  ofCircle(su->getXPosOnScreen(targetPosition.x), su->getYPosOnScreen(targetPosition.y), su->getSizeOnScreen(1));
   ofNoFill();
   ofSetLineWidth(1);
   ofDrawLine(su->getXPosOnScreen(position.x), su->getYPosOnScreen(position.y), 
-         su->getXPosOnScreen(targetSpace.getCenter().x), su->getYPosOnScreen(targetSpace.getCenter().y));
+         su->getXPosOnScreen(targetPosition.x), su->getYPosOnScreen(targetPosition.y));
   glm::vec2 visAcc = position + acceleration * 1000;
   ofSetColor(60, 65, 65);
   ofSetLineWidth(6);
@@ -83,7 +83,7 @@ Player* Player::getPlayerOnPosition(glm::vec2 position, std::vector<Player*> gro
 
 void Player::Action(){
   if(ofRandom(0, 1) < 0.0002){
-    NewTargetSpace();
+    NewTargetPosition();
   }
   NextMove();
 }
@@ -96,7 +96,7 @@ void Player::InitMatch(std::vector<Player*> Attackers, std::vector<Player*> Defe
   for (Player* p : Defenders) {
     AllPlayers.push_back(p);
   }
-  targetSpace = RandomSpace();
+  targetPosition = RandomPosition();
   ball = _ball;
 };
 
@@ -141,8 +141,8 @@ void Player::NextMove(){
 // Move to Target allows for Target Corrections and sets the Acceleration
 glm::vec2 Player::MoveToTarget(){
   CourseCorrection();
-  float distanceFactor = glm::distance(targetSpace.getCenter(), position) / 50;
-  return glm::normalize(targetSpace.getCenter() - position) * accFactor * distanceFactor;
+  float distanceFactor = glm::distance(targetPosition, position) / 50;
+  return glm::normalize(targetPosition - position) * accFactor * distanceFactor;
 };
 
 void Player::CourseCorrection(){
@@ -152,19 +152,19 @@ void Player::CourseCorrection(){
 }
 
 void Player::AdjustWalkingSpeed(){
-  float distanceFactor = glm::distance(targetSpace.getCenter(), position) / 4;
+  float distanceFactor = glm::distance(targetPosition, position) / 4;
   float distanceModifier = distanceFactor - 5 * (speed / speedLimit);
   float speedVariation = distanceFactor / 2;
   float randomness = ofRandom(speedVariation * -1, speedVariation);
   speed += (distanceModifier + randomness) * 0.001;
 }
 
-void Player::NewTargetSpace(){
+void Player::NewTargetPosition(){
   speed = 0.05;
-  Space next = RandomSpace();
+  glm::vec2 next = RandomPosition();
   glm::vec2 cohesion = KeepCohesion();
-  glm::vec2 mean = (next.getCenter() + cohesion) / 2;
-  targetSpace = pitch->GetSpace((next.getCenter() + mean) / 2, getOtherPlayersPosition(OpponentTeam));
+  glm::vec2 mean = (next + cohesion) / 2;
+  targetPosition = (next + mean) / 2;
 } 
 
 glm::vec2 Player::EvaluateMovement(){
@@ -208,10 +208,8 @@ glm::vec2 Player::AvoidOutOfBounds(){
   return correction;
 };
 
-Space Player::RandomSpace(){
-  glm::vec2 pitchSize = pitch->getSize();
-  glm::vec2 location = glm::vec2(ofRandom(0.0, pitchSize.x), ofRandom(0.0, pitchSize.y));
-  return pitch->GetSpace(location, getOtherPlayersPosition(OpponentTeam));
+glm::vec2 Player::RandomPosition(){
+  return pitch->RandomPosition();
 }
 
 std::vector<Player*> Player::RemoveSelfFromGroup(std::vector<Player*> group){

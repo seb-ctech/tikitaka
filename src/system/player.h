@@ -23,13 +23,13 @@ public:
 	virtual void display(SystemUnits* su);
   virtual void InitMatch(std::vector<Player*> Attackers, std::vector<Player*> Defenders, Ball* ball);
   glm::vec2 EvaluateMovement();
-  Space getTargetSpace(){ return targetSpace; }
+  glm::vec2 getTargetPosition(){ return targetPosition; }
   std::vector<Player*> getAllPlayersInRange(std::vector<Player*> group, float Range);
   std::vector<Player*> getSorroundingPlayers(std::vector<Player*> group);
   Player* getClosestPlayer(std::vector<Player*>);
  
 protected:
-  virtual void NewTargetSpace();
+  virtual void NewTargetPosition();
   virtual void CourseCorrection();
   virtual glm::vec2 MoveAdjustments(glm::vec2 nextMove);
   virtual void Action(); // This is an action a Player can take. The default behavior is a steering move, but he can also pass the Ball.
@@ -41,7 +41,7 @@ protected:
   Player* getPlayerOnPosition(glm::vec2 position, std::vector<Player*> group, float range = 0.1);
   
   void DisplaySpace(SystemUnits* su); 
-  Space targetSpace;
+  glm::vec2 targetPosition;
   Pitch* pitch;
   std::vector<Player*> AllPlayers;
   std::vector<Player*> OwnTeam;
@@ -55,6 +55,6 @@ protected:
 private:
   glm::vec2 AvoidOutOfBounds();
   glm::vec2 MoveToTarget();
-  Space RandomSpace();
+  glm::vec2 RandomPosition();
   std::vector<Player*> RemoveSelfFromGroup(std::vector<Player*> group);
 };

@@ -23,7 +23,7 @@ public:
     std::vector<glm::vec2> TrianglePivots();
 
 private:
-    virtual void NewTargetSpace();
+    virtual void NewTargetPosition();
     virtual void CourseCorrection();
     virtual glm::vec2 MoveAdjustments(glm::vec2 nextMove);
     virtual void Action();

@@ -17,7 +17,7 @@ public:
 	virtual void InitMatch(std::vector<Player*> Attackers, std::vector<Player*> Defenders, Ball* ball);
 
 private:
-	virtual void NewTargetSpace();
+	virtual void NewTargetPosition();
 	virtual void CourseCorrection();
 	virtual glm::vec2 MoveAdjustments(glm::vec2 nextMove);
 	glm::vec2 MoveTowardsBallCarrier();

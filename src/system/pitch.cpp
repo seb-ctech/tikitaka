@@ -33,3 +33,7 @@ float Pitch::closestDistanceToBounds(glm::vec2 position, glm::vec2 location){
 Space Pitch::GetSpace(glm::vec2 location, std::vector<glm::vec2> sorrounding){
 	return Space(location, this, sorrounding);
 }
+
+glm::vec2 Pitch::RandomPosition(){
+	 return glm::vec2(ofRandom(0.0, size.x), ofRandom(0.0, size.y));
+}

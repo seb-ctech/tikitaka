@@ -95,8 +95,8 @@ void OffensivePlayer::Action(){
       BallPassing();
     }
     NextMove();
-    if(glm::distance(targetSpace.getCenter(), position) < 4){
-      NewTargetSpace();
+    if(glm::distance(targetPosition, position) < 4){
+      NewTargetPosition();
     }
   }
 }
@@ -110,7 +110,7 @@ void OffensivePlayer::PassBallTo(OffensivePlayer* target){
     ball->PassTo(target);
 }
 
-void OffensivePlayer::NewTargetSpace(){
+void OffensivePlayer::NewTargetPosition(){
   std::vector<glm::vec2> options;
   Space space = pitch->GetSpace(position, getOtherPlayersPosition(OpponentTeam));
   float spaceSize = space.getArea();
@@ -130,12 +130,12 @@ void OffensivePlayer::NewTargetSpace(){
       }
     }
     glm::vec2 randomOption = options[glm::floor(ofRandom(0, options.size()))];
-    targetSpace = pitch->GetSpace(randomOption, getOtherPlayersPosition(OpponentTeam));
+    targetPosition = randomOption;
   }
 }
 
 void OffensivePlayer::CourseCorrection(){
-  float distance = glm::distance(targetSpace.getCenter(), getClosestPlayer(AllPlayers)->getPos());
+  float distance = glm::distance(targetPosition, getClosestPlayer(AllPlayers)->getPos());
   if (distance < 5){
     AdjustWalkingSpeed();
   }
