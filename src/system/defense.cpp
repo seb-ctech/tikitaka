@@ -30,12 +30,12 @@ void DefensivePlayer::InitMatch(std::vector<Player*> Attackers, std::vector<Play
 
 // TODO: Implement Closing Spaces and Keep Formation
 void DefensivePlayer::NewTargetSpace(){
-	Player::NewTargetSpace();
+	targetSpace = Space(MoveTowardsBallCarrier(), pitch, getOtherPlayersPosition(OpponentTeam));
 }
 
 // TODO: Reevaluate Space
 void DefensivePlayer::CourseCorrection(){
- Player::CourseCorrection();
+	Player::CourseCorrection();
 }
 
 // TODO: Hold Position, Press the Ball Carrier
