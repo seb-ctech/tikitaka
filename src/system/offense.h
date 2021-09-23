@@ -44,6 +44,6 @@ private:
 
     float pressureRange = 10.0;
     float passRange = 50;
-    float passFrequency = 0.005;
+    float passFrequency = 0.05;
     float movementAmount = 0.002;
 };

@@ -23,7 +23,7 @@ void OffensivePlayer::display(SystemUnits* su){
     Player::DisplaySpace(su);
   }
   DisplayPlayerPosition(su);
-  //DisplayCohesion(su);
+  DisplayCohesion(su);
   if(ownsBall){
     DisplayBallPossession(su);
     DisplayTrianglePivots(su); 
@@ -93,7 +93,9 @@ void OffensivePlayer::Action(){
   if(ofGetFrameNum() % interval == 0){
     if(ownsBall){
       BallPassing();
+      moveMode = false;
     }
+    moveMode = true;
     NextMove();
     if(glm::distance(targetPosition, position) < 4){
       NewTargetPosition();
@@ -111,26 +113,29 @@ void OffensivePlayer::PassBallTo(OffensivePlayer* target){
 }
 
 void OffensivePlayer::NewTargetPosition(){
-  std::vector<glm::vec2> options;
-  Space space = pitch->GetSpace(position, getOtherPlayersPosition(OpponentTeam));
-  float spaceSize = space.getArea();
-  int mateOptions = BallCarry->getPassingOptionsAmount();
-  float cohesion = getCohesion();
-  if (mateOptions < 3){
-    options = BallCarry->TrianglePivots();
-  } else if (spaceSize < 20 || cohesion > 50) {
-    options = NewTrianglePivots();
-  }
-  
-  if(options.size() > 0){
-    glm::vec2 closestOption = options[0];
-    for (glm::vec2 option : options){
-      if(glm::distance(option, position) < glm::distance(closestOption, position)){
-        closestOption = option;
-      }
+  if(ownsBall){
+
+  } else {
+    std::vector<glm::vec2> options;
+    Space space = pitch->GetSpace(position, getOtherPlayersPosition(OpponentTeam));
+    float spaceSize = space.getArea();
+    int mateOptions = BallCarry->getPassingOptionsAmount();
+    float cohesion = getCohesion();
+    if (mateOptions < 3){
+      options = BallCarry->TrianglePivots();
+    } else if (spaceSize < 20 || cohesion > 50) {
+      options = NewTrianglePivots();
     }
-    glm::vec2 randomOption = options[glm::floor(ofRandom(0, options.size()))];
-    targetPosition = randomOption;
+    if(options.size() > 0){
+      glm::vec2 closestOption = options[0];
+      for (glm::vec2 option : options){
+        if(glm::distance(option, position) < glm::distance(closestOption, position)){
+          closestOption = option;
+        }
+      }
+      glm::vec2 randomOption = options[glm::floor(ofRandom(0, options.size()))];
+      targetPosition = randomOption;
+    }
   }
 }
 

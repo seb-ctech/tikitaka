@@ -132,7 +132,10 @@ Player* Player::getClosestPlayer(std::vector<Player*> group){
 // He follows the course to a target space, makes MoveAdjustments based on the movement of other players
 
 void Player::NextMove(){
-  glm::vec2 move = MoveToTarget();
+  glm::vec2 move = glm::vec2(0,0);
+  if(moveMode){
+    move = MoveToTarget();
+  }
   move = MoveAdjustments(move);
   move += AvoidOutOfBounds();
   steer(move);

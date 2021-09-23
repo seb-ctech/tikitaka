@@ -51,6 +51,7 @@ protected:
   int index;
   int interval = 10;
   Ball* ball;
+  bool moveMode = true;
 
 private:
   glm::vec2 AvoidOutOfBounds();
