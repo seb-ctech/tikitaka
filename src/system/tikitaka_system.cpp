@@ -9,6 +9,7 @@ Tikitaka::Tikitaka(){
     pitchSize = glm::vec2(100.0, 100.0);
     pitch = new Pitch(pitchSize.x, pitchSize.y);
     units = new SystemUnits(pitchSize);
+    ball = new Ball();
 }
 
 void Tikitaka::init(){
@@ -35,11 +36,10 @@ void Tikitaka::init(){
         for (DefensivePlayer* dp : defenders){
             defendingPlayers.push_back(dp);
         }
-        p->InitMatch(attackingPlayers, defendingPlayers);
+        p->InitMatch(attackingPlayers, defendingPlayers, ball);
     }
-
-    attackers[0]->ReceiveBall();
-
+    OffensivePlayer* first = attackers[0];
+    ball->AttachToPlayer(first);
 }
 
 void Tikitaka::display(){
@@ -47,6 +47,7 @@ void Tikitaka::display(){
     for (int i = 0; i < playerAmount; i++){
         players[i]->display(units);
     }
+    ball->Display(units);
 }
 
 
@@ -55,10 +56,11 @@ void Tikitaka::update(){
     for (Player* p : players){
         p->update(BallCarry);
     }
+    ball->Update();
 }
 
-Positions Tikitaka::getPlayerPositions(){
-    Positions player_positions;
+Positions Tikitaka::getPositions(){
+    Positions positions;
     std::vector<glm::vec2> attacking_players;
     std::vector<glm::vec2> defending_players;
     for(int i = 0; i < PPTM; i++){
@@ -67,11 +69,11 @@ Positions Tikitaka::getPlayerPositions(){
         defending_players.push_back(glm::vec2(units->getXPosOnScreen(defenders[i]->getPos().x), 
                                          units->getYPosOnScreen(defenders[i]->getPos().y)));
     }
-    player_positions.attacking = attacking_players;
-    player_positions.defending = defending_players;
-    player_positions.ballcarry = glm::vec2(units->getXPosOnScreen(getPlayerInPossession()->getPos().x), 
-                                           units->getYPosOnScreen(getPlayerInPossession()->getPos().y));
-    return player_positions;
+    positions.attacking = attacking_players;
+    positions.defending = defending_players;
+    positions.ball = glm::vec2(units->getXPosOnScreen(ball->getPos().x),
+															 units->getYPosOnScreen(ball->getPos().y));
+    return positions;
 }
 
 std::vector<glm::vec2> Tikitaka::positions_4_3_3(Side side, float narrow, float compressed){
@@ -135,10 +137,5 @@ std::vector<glm::vec2> Tikitaka::positions_4_3_3(Side side, float narrow, float 
 }
 
 OffensivePlayer* Tikitaka::getPlayerInPossession(){
-    for (OffensivePlayer* op : attackers){
-        if (op->hasBall()){
-            return op;
-        }
-    }
-    return nullptr;
+    return ball->getOwner();
 }

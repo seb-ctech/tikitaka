@@ -3,6 +3,7 @@
 #include "ofMain.h"
 #include "player.h"
 #include "pitch.h"
+#include "ball.h"
 #include "offense.h"
 #include "defense.h"
 #include "system_units.h"
@@ -12,7 +13,7 @@
 struct Positions {
     std::vector<glm::vec2> attacking;
     std::vector<glm::vec2> defending;
-    glm::vec2 ballcarry;
+    glm::vec2 ball;
 };
 
 class Tikitaka {
@@ -24,7 +25,7 @@ public:
     void init();
     int getPlayerAmountAtt(){return nAttacking;};
     int getPlayerAmountDef(){return nDefending;};
-    Positions getPlayerPositions();
+    Positions getPositions();
 
 
 private:
@@ -38,6 +39,7 @@ private:
     int nDefending;
     Pitch* pitch;
     SystemUnits* units;
+    Ball* ball;
     std::vector<OffensivePlayer*> attackers;
     std::vector<DefensivePlayer*> defenders;
     std::vector<Player*> players;

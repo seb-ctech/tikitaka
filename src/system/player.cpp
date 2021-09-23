@@ -88,7 +88,7 @@ void Player::Action(){
   NextMove();
 }
 
-void Player::InitMatch(std::vector<Player*> Attackers, std::vector<Player*> Defenders){
+void Player::InitMatch(std::vector<Player*> Attackers, std::vector<Player*> Defenders, Ball* _ball){
   AllPlayers.clear();
   for (Player* p : Attackers) {
     AllPlayers.push_back(p);
@@ -97,6 +97,7 @@ void Player::InitMatch(std::vector<Player*> Attackers, std::vector<Player*> Defe
     AllPlayers.push_back(p);
   }
   targetSpace = RandomSpace();
+  ball = _ball;
 };
 
 std::vector<Player*> Player::getSorroundingPlayers(std::vector<Player*> group){

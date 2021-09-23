@@ -89,18 +89,18 @@ void ofApp::dragEvent(ofDragInfo dragInfo){
 }
 
 void ofApp::passPositionsToShader(){
-    Positions positions = system.getPlayerPositions();
+    Positions positions = system.getPositions();
     Shader.setUniform1i("amount", positions.attacking.size());
     Shader.setUniformTexture("tex0", renderImage.getTexture(), 0);
     BufferPositions();
     Shader.setUniformTexture("tex1", posFboAtt.getTextureReference(), 1);
     Shader.setUniformTexture("tex2", posFboDef.getTextureReference(), 2);
     Shader.setUniform2f("res", (float)ofGetWidth(), (float)ofGetHeight());
-    Shader.setUniform2f("ball", positions.ballcarry);   
+    Shader.setUniform2f("ball", positions.ball);   
 }
 
 void ofApp::BufferPositions(){
-    Positions positions = system.getPlayerPositions();
+    Positions positions = system.getPositions();
     ofFloatPixels pixels;
     posFboAtt.readToPixels(pixels);
     for (int i = 0; i < positions.attacking.size(); i++){

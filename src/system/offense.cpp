@@ -1,6 +1,6 @@
 #include "offense.h"
 #include "shape.h"
-
+#include "ball.h"
 
 OffensivePlayer::OffensivePlayer() : Player(){
 
@@ -11,20 +11,20 @@ OffensivePlayer::OffensivePlayer(glm::vec2 pos, Pitch* pitch, int index) : Playe
 
 }
 
-void OffensivePlayer::InitMatch(std::vector<Player*> Attackers, std::vector<Player*> Defenders){
+void OffensivePlayer::InitMatch(std::vector<Player*> Attackers, std::vector<Player*> Defenders, Ball* ball){
   OwnTeam = Attackers;
   OpponentTeam = Defenders;
-  Player::InitMatch(Attackers, Defenders);
+  Player::InitMatch(Attackers, Defenders, ball);
 }
 
 void OffensivePlayer::display(SystemUnits* su){
   Player::display(su);
-  if(ball){
+  if(ownsBall){
     Player::DisplaySpace(su);
   }
   DisplayPlayerPosition(su);
   //DisplayCohesion(su);
-  if(ball){
+  if(ownsBall){
     DisplayBallPossession(su);
     DisplayTrianglePivots(su); 
   }
@@ -91,7 +91,7 @@ void OffensivePlayer::DisplayClosestOpponent(SystemUnits* su){
 
 void OffensivePlayer::Action(){
   if(ofGetFrameNum() % interval == 0){
-    if(ball){
+    if(ownsBall){
       BallPassing();
     }
     NextMove();
@@ -102,12 +102,12 @@ void OffensivePlayer::Action(){
 }
 
 void OffensivePlayer::ReceiveBall(){
-    ball = true;
+    ownsBall = true;
 }
 
 void OffensivePlayer::PassBallTo(OffensivePlayer* target){
-    ball = false;
-    target->ReceiveBall();
+    ownsBall = false;
+    ball->PassTo(target);
 }
 
 void OffensivePlayer::NewTargetSpace(){
@@ -142,7 +142,7 @@ void OffensivePlayer::CourseCorrection(){
 }
 
 glm::vec2 OffensivePlayer::MoveAdjustments(glm::vec2 nextMove){
-  if(ball){
+  if(ownsBall){
     Player* clostestOpponent = getClosestPlayer(OpponentTeam);
     float distance = glm::distance(position, clostestOpponent->getPos());
     if (distance < pressureRange){

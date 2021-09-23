@@ -21,10 +21,10 @@ void DefensivePlayer::display(SystemUnits* su){
 							su->getSizeOnScreen(size) * 2.0);	
 }
 
-void DefensivePlayer::InitMatch(std::vector<Player*> Attackers, std::vector<Player*> Defenders){
+void DefensivePlayer::InitMatch(std::vector<Player*> Attackers, std::vector<Player*> Defenders, Ball* ball){
 	OwnTeam = Defenders;
 	OpponentTeam = Attackers;
-	Player::InitMatch(Attackers, Defenders);
+	Player::InitMatch(Attackers, Defenders, ball);
 }
 
 

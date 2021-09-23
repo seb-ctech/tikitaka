@@ -14,7 +14,7 @@ public:
 	DefensivePlayer();
 	DefensivePlayer(glm::vec2 pos, Pitch* pitch, int index);
 	void display(SystemUnits* su) override;
-	virtual void InitMatch(std::vector<Player*> Attackers, std::vector<Player*> Defenders);
+	virtual void InitMatch(std::vector<Player*> Attackers, std::vector<Player*> Defenders, Ball* ball);
 
 private:
 	virtual void NewTargetSpace();
