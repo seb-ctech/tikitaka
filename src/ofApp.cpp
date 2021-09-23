@@ -93,8 +93,8 @@ void ofApp::passPositionsToShader(){
     Shader.setUniform1i("amount", positions.attacking.size());
     Shader.setUniformTexture("tex0", renderImage.getTexture(), 0);
     BufferPositions();
-    Shader.setUniformTexture("tex1", posFboAtt.getTextureReference(), 1);
-    Shader.setUniformTexture("tex2", posFboDef.getTextureReference(), 2);
+    Shader.setUniformTexture("tex1", posFboAtt.getTexture(), 1);
+    Shader.setUniformTexture("tex2", posFboDef.getTexture(), 2);
     Shader.setUniform2f("res", (float)ofGetWidth(), (float)ofGetHeight());
     Shader.setUniform2f("ball", positions.ball);   
 }
@@ -103,15 +103,15 @@ void ofApp::BufferPositions(){
     Positions positions = system.getPositions();
     ofFloatPixels pixels;
     posFboAtt.readToPixels(pixels);
-    for (int i = 0; i < positions.attacking.size(); i++){
+    for (unsigned int i = 0; i < positions.attacking.size(); i++){
         pixels[i * 3 + 0] = positions.attacking[i].x / ofGetWidth();
         pixels[i * 3 + 1] = positions.attacking[i].y / ofGetHeight();
     }
-    posFboAtt.getTextureReference().loadData(pixels);
+    posFboAtt.getTexture().loadData(pixels);
     posFboDef.readToPixels(pixels);
-    for (int i = 0; i < positions.defending.size(); i++){
+    for (unsigned int i = 0; i < positions.defending.size(); i++){
         pixels[i * 3 + 0] = positions.defending[i].x / ofGetWidth();
         pixels[i * 3 + 1] = positions.defending[i].y / ofGetHeight();
     }
-    posFboDef.getTextureReference().loadData(pixels);
+    posFboDef.getTexture().loadData(pixels);
 }
