@@ -35,7 +35,7 @@ void Player::DisplaySpace(SystemUnits* su){
   ofSetColor(220, 250, 30, 50);
   ofFill();
   ofBeginShape();
-  Space space = Space(position, pitch, getOtherPlayersPosition(OpponentTeam));
+  Space space = pitch->GetSpace(position, getOtherPlayersPosition(OpponentTeam));
   for (glm::vec2 point : space.getBoundaries()){
     float x = su->getXPosOnScreen(point.x);
     float y = su->getYPosOnScreen(point.y);
@@ -100,7 +100,7 @@ void Player::InitMatch(std::vector<Player*> Attackers, std::vector<Player*> Defe
 };
 
 std::vector<Player*> Player::getSorroundingPlayers(std::vector<Player*> group){
-  std::vector<glm::vec2> playerPositions = Space(position, pitch, getOtherPlayersPosition(group)).getBoundaries();
+  std::vector<glm::vec2> playerPositions = pitch->GetSpace(position, getOtherPlayersPosition(group)).getBoundaries();
   return getOtherPlayersByPosition(playerPositions);
 };
 
@@ -163,7 +163,7 @@ void Player::NewTargetSpace(){
   Space next = RandomSpace();
   glm::vec2 cohesion = KeepCohesion();
   glm::vec2 mean = (next.getCenter() + cohesion) / 2;
-  targetSpace = Space((next.getCenter() + mean) / 2, pitch, getOtherPlayersPosition(OpponentTeam));
+  targetSpace = pitch->GetSpace((next.getCenter() + mean) / 2, getOtherPlayersPosition(OpponentTeam));
 } 
 
 glm::vec2 Player::EvaluateMovement(){
@@ -198,30 +198,9 @@ glm::vec2 Player::KeepCohesion(){
 glm::vec2 Player::AvoidOutOfBounds(){
   float tolerance = 0.5;
   glm::vec2 nextPosition = EvaluateMovement();
-  glm::vec2 bounds = pitch->getSize();
   glm::vec2 correction(0,0);
-  // REFAC: Think about moving this to the Pitch object, with a tolerance;
-  float dToRightBounds = glm::distance(nextPosition, glm::vec2(bounds.x, position.y));
-  float dToTopBounds = glm::distance(nextPosition, glm::vec2(position.x, bounds.y)); 
-  float dToLeftBounds = glm::distance(nextPosition, glm::vec2(0, position.y)); 
-  float dToBottomBounds = glm::distance(nextPosition, glm::vec2(position.x, 0)); 
-  if (dToRightBounds <= tolerance 
-    || dToTopBounds <= tolerance
-    || dToLeftBounds <= tolerance 
-    || dToBottomBounds <= tolerance){
-    float minDistance = bounds.x;
-    if (dToRightBounds < minDistance){
-      minDistance = dToRightBounds;
-    }
-    if (dToLeftBounds < minDistance){
-      minDistance = dToLeftBounds;
-    }
-    if (dToTopBounds < minDistance){
-      minDistance = dToTopBounds;
-    }
-    if (dToBottomBounds < minDistance){
-      minDistance = dToBottomBounds;
-    }
+  float minDistance = pitch->closestDistanceToBounds(position, nextPosition);
+  if (minDistance <= tolerance){
     glm::vec2 difference = nextPosition - position;
     correction += glm::normalize(difference) * -1.0 * accFactor * minDistance / 4;
   }
@@ -231,7 +210,7 @@ glm::vec2 Player::AvoidOutOfBounds(){
 Space Player::RandomSpace(){
   glm::vec2 pitchSize = pitch->getSize();
   glm::vec2 location = glm::vec2(ofRandom(0.0, pitchSize.x), ofRandom(0.0, pitchSize.y));
-  return Space(location, pitch, getOtherPlayersPosition(OpponentTeam));
+  return pitch->GetSpace(location, getOtherPlayersPosition(OpponentTeam));
 }
 
 std::vector<Player*> Player::RemoveSelfFromGroup(std::vector<Player*> group){

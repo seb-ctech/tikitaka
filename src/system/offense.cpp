@@ -112,7 +112,7 @@ void OffensivePlayer::PassBallTo(OffensivePlayer* target){
 
 void OffensivePlayer::NewTargetSpace(){
   std::vector<glm::vec2> options;
-  Space space = Space(position, pitch, getOtherPlayersPosition(OpponentTeam));
+  Space space = pitch->GetSpace(position, getOtherPlayersPosition(OpponentTeam));
   float spaceSize = space.getArea();
   int mateOptions = BallCarry->getPassingOptionsAmount();
   float cohesion = getCohesion();
@@ -130,7 +130,7 @@ void OffensivePlayer::NewTargetSpace(){
       }
     }
     glm::vec2 randomOption = options[glm::floor(ofRandom(0, options.size()))];
-    targetSpace = Space(randomOption, pitch, getOtherPlayersPosition(OpponentTeam));
+    targetSpace = pitch->GetSpace(randomOption, getOtherPlayersPosition(OpponentTeam));
   }
 }
 
@@ -202,7 +202,7 @@ std::vector<glm::vec2> OffensivePlayer::TrianglePivots(){
           add = false;
           break;
         }
-        Space space = Space(pivot, pitch, getOtherPlayersPosition(OpponentTeam));
+        Space space = pitch->GetSpace(pivot, getOtherPlayersPosition(OpponentTeam));
         if(space.getArea() < 10){
           add = false;
           break;
@@ -231,7 +231,7 @@ std::vector<glm::vec2> OffensivePlayer::NewTrianglePivots(){
           add = false;
           break;
         }
-        Space space = Space(pivot, pitch, getOtherPlayersPosition(OpponentTeam));
+        Space space = pitch->GetSpace(pivot, getOtherPlayersPosition(OpponentTeam));
         if(space.getArea() < 10){
           add = false;
           break;
