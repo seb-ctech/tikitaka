@@ -20,7 +20,7 @@ public:
     int getPassingOptionsAmount();
     float getCohesion();
     bool isUnderPressure();
-    std::vector<glm::vec2> TrianglePivots();
+    std::vector<glm::vec2> SupportWithTriangle();
 
 private:
     virtual void DecideNextPosition();
@@ -31,19 +31,18 @@ private:
     void BallPassing();
     void PassBallTo(OffensivePlayer* target);
     bool ownsBall = false;
-    std::vector<glm::vec2> NewTrianglePivots();
 
     // DISPLAYING
 
     void DisplayPlayerPosition(SystemUnits* su);
     void DisplayBallPossession(SystemUnits* su);
     void DisplayCohesion(SystemUnits* su);
-    void DisplayTrianglePivots(SystemUnits* su);
+    void DisplaySupportWithTriangle(SystemUnits* su);
     void DisplayPassingOptions(SystemUnits* su);
     void DisplayClosestOpponent(SystemUnits* su);
-
-    float pressureRange = 10.0;
-    float passRange = 50;
-    float passFrequency = 0.05;
+#
+    float pressureRange = 8.0;
+    float passRange = 34;
+    float passFrequency = 0.01;
     float movementAmount = 0.002;
 };

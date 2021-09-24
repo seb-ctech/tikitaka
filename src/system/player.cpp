@@ -153,7 +153,7 @@ void Player::DecideNextPosition(){
 } 
 
 void Player::AdjustWalkingSpeed(){
-  float distanceFactor = glm::distance(targetPosition, position) / 4;
+  float distanceFactor = glm::distance(targetPosition, position) / 2;
   float distanceModifier = distanceFactor - 5 * (speed / speedLimit);
   float speedVariation = distanceFactor / 2;
   float randomness = ofRandom(speedVariation * -1, speedVariation);
@@ -167,7 +167,7 @@ glm::vec2 Player::EvaluateMovement(){
 }
 
 glm::vec2 Player::MoveAdjustments(glm::vec2 move){
-  return AvoidOutOfBounds(move);
+  return StayInBound(move);
 }
 
 glm::vec2 Player::KeepCohesion(){
@@ -186,7 +186,7 @@ glm::vec2 Player::KeepCohesion(){
 };
 
 
-glm::vec2 Player::AvoidOutOfBounds(glm::vec2 move){
+glm::vec2 Player::StayInBound(glm::vec2 move){
   float buffer = 10.0;
   glm::vec2 closestBound = pitch->getClosestBound(position);
   float distance = glm::distance(closestBound, position);

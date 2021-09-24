@@ -93,3 +93,21 @@ void FootballShape::Pairs(std::vector<glm::vec2> positions, std::vector<std::vec
     }
   }
 }
+
+glm::vec2 FootballShape::getClosestPositionFromSelection(std::vector<glm::vec2> options, glm::vec2 target){
+  if(options.size() > 0){
+    glm::vec2 closest = options[0];
+    if (options.size() > 1){
+      float dist = glm::distance(closest, target);
+      for(glm::vec2 option : options){
+        float new_dist = glm::distance(option, target);
+        if (new_dist < dist){
+          dist = new_dist;
+          closest = option;
+        }
+      }
+    }
+    return closest;
+  }
+  return target;
+}

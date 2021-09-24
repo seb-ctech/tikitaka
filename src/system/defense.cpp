@@ -1,8 +1,6 @@
 #include "defense.h"
 #include "shape.h"
 
-//TODO: Replace Randomness -> ofRandom() with Decision Making and Algorithms
-
 DefensivePlayer::DefensivePlayer() : Player(){
 
 }
@@ -27,8 +25,6 @@ void DefensivePlayer::InitMatch(std::vector<Player*> Attackers, std::vector<Play
 	Player::InitMatch(Attackers, Defenders, ball);
 }
 
-
-// TODO: Implement Closing Spaces and Keep Formation
 void DefensivePlayer::DecideNextPosition(){
 	float distance = glm::distance(BallCarry->getPos(), position);
 	if(distance < coverRange){

@@ -26,7 +26,7 @@ class Ball {
   void MoveToNextOwner();
   
   float attachTolerance = 3.0;
-  float passPower = 0.7;
+  float passPower = 0.4;
   glm::vec2 position;
   OffensivePlayer* owner;
   bool attached;

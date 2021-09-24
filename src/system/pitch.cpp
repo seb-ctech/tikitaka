@@ -62,3 +62,31 @@ glm::vec2 Pitch::getClosestBound(glm::vec2 position){
 	}
 	return closest;
 }
+
+glm::vec2 Pitch::getClosestInBoundPosition(glm::vec2 position, glm::vec2 targetPosition){
+	if(targetPosition.x > size.x){
+		return castToBound(glm::vec2(size.x, position.y), position, targetPosition);
+	}
+	if(targetPosition.y > size.y){
+		return castToBound(glm::vec2(position.x, size.y), position, targetPosition);
+	}
+	if(targetPosition.x < 0){
+		return castToBound(glm::vec2(0, position.y), position, targetPosition);
+	}
+	if(targetPosition.y < 0){
+		return castToBound(glm::vec2(position.x, 0), position, targetPosition);
+	}
+	return targetPosition;
+}
+
+
+glm::vec2 Pitch::castToBound(glm::vec2 bound, glm::vec2 position, glm::vec2 target){
+	float stepSize = 1.0;
+	glm::vec2 direction = glm::normalize(target - position);
+	glm::vec2 rayPosition = position;
+	float distance = glm::distance(bound, rayPosition);
+	while(distance < stepSize * 1.1){
+		rayPosition = rayPosition + direction * stepSize;
+	}
+	return rayPosition;
+}
