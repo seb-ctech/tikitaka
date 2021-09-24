@@ -29,13 +29,13 @@ void DefensivePlayer::InitMatch(std::vector<Player*> Attackers, std::vector<Play
 
 
 // TODO: Implement Closing Spaces and Keep Formation
-void DefensivePlayer::NewTargetPosition(){
-	targetPosition = MoveTowardsBallCarrier();
-}
-
-// TODO: Reevaluate Space
-void DefensivePlayer::CourseCorrection(){
-	Player::CourseCorrection();
+void DefensivePlayer::DecideNextPosition(){
+	float distance = glm::distance(BallCarry->getPos(), position);
+	if(distance < coverRange){
+		targetPosition = MoveTowardsBallCarrier();
+	} else {
+		targetPosition = KeepCohesion();
+	}
 }
 
 // TODO: Hold Position, Press the Ball Carrier
@@ -46,12 +46,7 @@ glm::vec2 DefensivePlayer::MoveAdjustments(glm::vec2 nextMove){
 }
 
 glm::vec2 DefensivePlayer::MoveTowardsBallCarrier(){
-	float range = 40.0;
-	float distance = glm::distance(BallCarry->getPos(), position);
-	if(distance <= range){
-		float influence = 1.0 - distance / range;
-		return glm::normalize(BallCarry->getPos() - position) * accFactor * influence * 2;
-	} else {
-		return glm::vec2(0,0);
-	}
+	float pressStrength = 3.0;
+	glm::vec2 direction = glm::normalize(BallCarry->getPos() - position);
+	return position + direction * pressStrength;
 }

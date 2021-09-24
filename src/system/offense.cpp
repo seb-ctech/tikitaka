@@ -93,12 +93,12 @@ void OffensivePlayer::Action(){
   if(ofGetFrameNum() % interval == 0){
     if(ownsBall){
       BallPassing();
-      moveMode = false;
+      repositionMode = false;
     }
-    moveMode = true;
+    repositionMode = true;
     NextMove();
     if(glm::distance(targetPosition, position) < 4){
-      NewTargetPosition();
+      DecideNextPosition();
     }
   }
 }
@@ -112,7 +112,7 @@ void OffensivePlayer::PassBallTo(OffensivePlayer* target){
     ball->PassTo(target);
 }
 
-void OffensivePlayer::NewTargetPosition(){
+void OffensivePlayer::DecideNextPosition(){
   if(ownsBall){
 
   } else {
@@ -136,13 +136,6 @@ void OffensivePlayer::NewTargetPosition(){
       glm::vec2 randomOption = options[glm::floor(ofRandom(0, options.size()))];
       targetPosition = randomOption;
     }
-  }
-}
-
-void OffensivePlayer::CourseCorrection(){
-  float distance = glm::distance(targetPosition, getClosestPlayer(AllPlayers)->getPos());
-  if (distance < 5){
-    AdjustWalkingSpeed();
   }
 }
 
@@ -199,7 +192,6 @@ std::vector<glm::vec2> OffensivePlayer::TrianglePivots(){
   }
   for(std::vector<glm::vec2> pair : pairs){
     std::vector<glm::vec2> localPivots = FootballShape::TrianglePivots(pair);
-    glm::vec2 pitchSize = pitch->getSize();
     for(glm::vec2 pivot : localPivots){
       bool add = true;
       for(glm::vec2 otherPivot : pivots){

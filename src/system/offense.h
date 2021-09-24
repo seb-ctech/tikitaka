@@ -23,8 +23,7 @@ public:
     std::vector<glm::vec2> TrianglePivots();
 
 private:
-    virtual void NewTargetPosition();
-    virtual void CourseCorrection();
+    virtual void DecideNextPosition();
     virtual glm::vec2 MoveAdjustments(glm::vec2 nextMove);
     virtual void Action();
     bool isFreeLineOfSight(Player* passReceiver);

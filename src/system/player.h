@@ -29,8 +29,7 @@ public:
   Player* getClosestPlayer(std::vector<Player*>);
  
 protected:
-  virtual void NewTargetPosition();
-  virtual void CourseCorrection();
+  virtual void DecideNextPosition();
   virtual glm::vec2 MoveAdjustments(glm::vec2 nextMove);
   virtual void Action(); // This is an action a Player can take. The default behavior is a steering move, but he can also pass the Ball.
   void NextMove();
@@ -51,7 +50,8 @@ protected:
   int index;
   int interval = 10;
   Ball* ball;
-  bool moveMode = true;
+  bool repositionMode = true;
+  float cohesionFactor = 20.0;
 
 private:
   glm::vec2 AvoidOutOfBounds();

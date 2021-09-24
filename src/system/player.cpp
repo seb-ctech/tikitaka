@@ -82,9 +82,7 @@ Player* Player::getPlayerOnPosition(glm::vec2 position, std::vector<Player*> gro
 // This is where Players make decisions on every frame.
 
 void Player::Action(){
-  if(ofRandom(0, 1) < 0.0002){
-    NewTargetPosition();
-  }
+  DecideNextPosition();
   NextMove();
 }
 
@@ -133,26 +131,29 @@ Player* Player::getClosestPlayer(std::vector<Player*> group){
 
 void Player::NextMove(){
   glm::vec2 move = glm::vec2(0,0);
-  if(moveMode){
+  if(repositionMode){
     move = MoveToTarget();
   }
   move = MoveAdjustments(move);
+  // TODO: Pass move as argument and reassign;
   move += AvoidOutOfBounds();
   steer(move);
 };
 
 // Move to Target allows for Target Corrections and sets the Acceleration
 glm::vec2 Player::MoveToTarget(){
-  CourseCorrection();
   float distanceFactor = glm::distance(targetPosition, position) / 50;
   return glm::normalize(targetPosition - position) * accFactor * distanceFactor;
 };
 
-void Player::CourseCorrection(){
-  if(ofRandom(0, 1) > 0.88){
-    AdjustWalkingSpeed();
+void Player::DecideNextPosition(){
+  speed = 0.05;
+  if(ofRandom(0, 1) < 0.01){
+    targetPosition = RandomPosition();
+  } else {
+    targetPosition = KeepCohesion();
   }
-}
+} 
 
 void Player::AdjustWalkingSpeed(){
   float distanceFactor = glm::distance(targetPosition, position) / 4;
@@ -161,14 +162,6 @@ void Player::AdjustWalkingSpeed(){
   float randomness = ofRandom(speedVariation * -1, speedVariation);
   speed += (distanceModifier + randomness) * 0.001;
 }
-
-void Player::NewTargetPosition(){
-  speed = 0.05;
-  glm::vec2 next = RandomPosition();
-  glm::vec2 cohesion = KeepCohesion();
-  glm::vec2 mean = (next + cohesion) / 2;
-  targetPosition = (next + mean) / 2;
-} 
 
 glm::vec2 Player::EvaluateMovement(){
   glm::vec2 evaluatedVelocity = velocity;
@@ -181,20 +174,18 @@ glm::vec2 Player::MoveAdjustments(glm::vec2 move){
 }
 
 glm::vec2 Player::KeepCohesion(){
-  std::vector<Player*> closeTeamMates = getAllPlayersInRange(OwnTeam, 40.0);
-  std::vector<glm::vec2> positions;
-  for(Player* p : closeTeamMates){
-    positions.push_back(p->getPos());
+  std::vector<glm::vec2> sorrounding = pitch->GetSpace(position, getOtherPlayersPosition(OwnTeam)).getBoundaries();
+  glm::vec2 worstPosition;
+  float worstDelta = 0;
+  for (glm::vec2 nextPos : sorrounding){
+    float delta = glm::distance(nextPos, position) - cohesionFactor;
+    if (glm::abs(delta) > glm::abs(worstDelta)){
+      worstDelta = delta;
+      worstPosition = nextPos;
+    }
   }
-  if (positions.size() <= 1){
-    return glm::vec2(0,0);
-  }
-  glm::vec2 center = position;
-  for (glm::vec2 p : positions){
-    center += p;
-  }
-  center = center / (positions.size());
-  return center;
+  glm::vec2 direction = glm::normalize(worstPosition - position);
+  return position + direction * worstDelta * 0.6;
 };
 
 

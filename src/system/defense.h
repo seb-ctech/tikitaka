@@ -17,10 +17,10 @@ public:
 	virtual void InitMatch(std::vector<Player*> Attackers, std::vector<Player*> Defenders, Ball* ball);
 
 private:
-	virtual void NewTargetPosition();
-	virtual void CourseCorrection();
+	virtual void DecideNextPosition();
 	virtual glm::vec2 MoveAdjustments(glm::vec2 nextMove);
 	glm::vec2 MoveTowardsBallCarrier();
+	float coverRange = 20.0;
 	// Approach closest opposing Player
 	// Move towards ball carrier
 	// keep cohesion with team
