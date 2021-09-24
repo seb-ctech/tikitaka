@@ -134,10 +134,7 @@ void Player::NextMove(){
   if(repositionMode){
     move = MoveToTarget();
   }
-  move = MoveAdjustments(move);
-  // TODO: Pass move as argument and reassign;
-  move += AvoidOutOfBounds();
-  steer(move);
+  steer(MoveAdjustments(move));
 };
 
 // Move to Target allows for Target Corrections and sets the Acceleration
@@ -170,7 +167,7 @@ glm::vec2 Player::EvaluateMovement(){
 }
 
 glm::vec2 Player::MoveAdjustments(glm::vec2 move){
-  return move;
+  return AvoidOutOfBounds(move);
 }
 
 glm::vec2 Player::KeepCohesion(){
@@ -189,17 +186,19 @@ glm::vec2 Player::KeepCohesion(){
 };
 
 
-//FIXME: Sometimes Players go out of bounds forever!
-glm::vec2 Player::AvoidOutOfBounds(){
-  float tolerance = 0.5;
-  glm::vec2 nextPosition = EvaluateMovement();
-  glm::vec2 correction(0,0);
-  float minDistance = pitch->closestDistanceToBounds(position, nextPosition);
-  if (minDistance <= tolerance){
-    glm::vec2 difference = nextPosition - position;
-    correction += glm::normalize(difference) * -1.0 * accFactor * minDistance / 4;
+glm::vec2 Player::AvoidOutOfBounds(glm::vec2 move){
+  float buffer = 10.0;
+  glm::vec2 closestBound = pitch->getClosestBound(position);
+  float distance = glm::distance(closestBound, position);
+  if(distance < buffer){
+    if(closestBound.x == 100 || closestBound.x == 0){
+      move.x = velocity.x * -1.0 * (1 - distance / buffer);
+    }
+    if(closestBound.y == 100 || closestBound.y == 0){
+      move.y = velocity.y * -1.0 * (1 - distance / buffer);
+    }
   }
-  return correction;
+  return move;
 };
 
 glm::vec2 Player::RandomPosition(){

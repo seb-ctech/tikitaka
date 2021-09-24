@@ -48,13 +48,13 @@ protected:
   OffensivePlayer* BallCarry;
   float size = 2.0f;
   int index;
-  int interval = 10;
+  int interval = 10; //TODO: Make use of this variable
   Ball* ball;
   bool repositionMode = true;
   float cohesionFactor = 20.0;
 
 private:
-  glm::vec2 AvoidOutOfBounds();
+  glm::vec2 AvoidOutOfBounds(glm::vec2 move);
   glm::vec2 MoveToTarget();
   glm::vec2 RandomPosition();
   std::vector<Player*> RemoveSelfFromGroup(std::vector<Player*> group);
