@@ -114,38 +114,49 @@ void OffensivePlayer::PassBallTo(OffensivePlayer* target){
 
 void OffensivePlayer::DecideNextPosition(){
   if(ownsBall){
-
+    targetPosition = KeepCohesion();
   } else {
-    std::vector<glm::vec2> options;
-    Space space = pitch->GetSpace(position, getOtherPlayersPosition(OpponentTeam));
-    float spaceSize = space.getArea();
-    int mateOptions = BallCarry->getPassingOptionsAmount();
     float cohesion = getCohesion();
-    if (mateOptions < 3){
-      options = BallCarry->TrianglePivots();
-    } else if (spaceSize < 20 || cohesion > 50) {
-      options = NewTrianglePivots();
-    }
-    if(options.size() > 0){
-      glm::vec2 closestOption = options[0];
-      for (glm::vec2 option : options){
-        if(glm::distance(option, position) < glm::distance(closestOption, position)){
-          closestOption = option;
-        }
-      }
-      glm::vec2 randomOption = options[glm::floor(ofRandom(0, options.size()))];
-      targetPosition = randomOption;
+    if (cohesion > 30 || cohesion < 10){
+      targetPosition = KeepCohesion();
+    } else {
+      targetPosition = KeepCohesion();
     }
   }
+}
+
+glm::vec2 OffensivePlayer::FormTriangle(){
+  std::vector<glm::vec2> options;
+  Space space = pitch->GetSpace(position, getOtherPlayersPosition(OpponentTeam));
+  float spaceSize = space.getArea();
+  int mateOptions = BallCarry->getPassingOptionsAmount();
+  if (mateOptions < 3){
+    options = BallCarry->TrianglePivots();
+  } else if (spaceSize < 20) {
+    options = NewTrianglePivots();
+  }
+  if(options.size() > 0){
+    glm::vec2 closestOption = options[0];
+    for (glm::vec2 option : options){
+      if(glm::distance(option, position) < glm::distance(closestOption, position)){
+        closestOption = option;
+      }
+    }
+    return options[glm::floor(ofRandom(0, options.size()))];
+  }
+  return targetPosition;
 }
 
 glm::vec2 OffensivePlayer::MoveAdjustments(glm::vec2 nextMove){
   if(ownsBall){
     Player* clostestOpponent = getClosestPlayer(OpponentTeam);
-    float distance = glm::distance(position, clostestOpponent->getPos());
-    if (distance < pressureRange){
-      float delta = 1 - distance / pressureRange;
-      return glm::normalize(clostestOpponent->getPos() - position) * -1  * delta;
+    if (glm::distance(clostestOpponent->getPos(), position) < pressureRange){
+      glm::vec2 difference = clostestOpponent->getPos() - position;
+      if (glm::abs(difference.x) > glm::abs(difference.y)){
+        nextMove.x = velocity.x * -1.0 * (1 - glm::abs(difference.x) / pressureRange);
+      } else {
+        nextMove.y = velocity.y * -1.0 * (1 - glm::abs(difference.y) / pressureRange);
+      }
     }
   }
   return nextMove;

@@ -26,6 +26,7 @@ private:
     virtual void DecideNextPosition();
     virtual glm::vec2 MoveAdjustments(glm::vec2 nextMove);
     virtual void Action();
+    glm::vec2 FormTriangle();
     bool isFreeLineOfSight(Player* passReceiver);
     void BallPassing();
     void PassBallTo(OffensivePlayer* target);
