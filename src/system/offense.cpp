@@ -215,8 +215,8 @@ glm::vec2 OffensivePlayer::FormTriangle(){
       }
     }
   }
-  // Return the optimal pivot to keep cohesion and stay in bound
-  return pitch->getClosestInBoundPosition(position, FootballShape::getClosestPositionFromSelection(pivots, KeepCohesion()));
+  // Return the optimal pivot to keep cohesion
+  return FootballShape::getClosestPositionFromSelection(pivots, KeepCohesion());
 }
 
 bool OffensivePlayer::isFreeLineOfSight(Player* potentialPassReceiver){

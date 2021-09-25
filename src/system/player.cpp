@@ -83,6 +83,7 @@ Player* Player::getPlayerOnPosition(glm::vec2 position, std::vector<Player*> gro
 
 void Player::Action(){
   DecideNextPosition();
+  targetPosition = pitch->getClosestInBoundPosition(position, targetPosition);
   NextMove();
 }
 
