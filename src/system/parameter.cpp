@@ -72,11 +72,11 @@ void Parameter::Update(){
 void Parameter::SwitchParameter(int delta){
   parameterLife = parameterLifeTime;
   index = index + delta;
-  if(index >= parameters.size()){
-    index = 0;
-  }
   if(index < 0){
     index = parameters.size() - 1;
+  }
+  if(index >= parameters.size()){
+    index = 0;
   }
 }
 
