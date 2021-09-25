@@ -109,9 +109,12 @@ void OffensivePlayer::PassBallTo(OffensivePlayer* target){
 }
 
 void OffensivePlayer::DecideNextPosition(){
-  if (glm::distance(position, targetPosition) < 5 || ofRandom(0, 1) < movementAmount){
+  if (glm::distance(position, targetPosition) < 5 || ofRandom(0, 1) < movementFlexibility){
+    targetPosition = KeepCohesion();
+    if(ofRandom(0, 1) < chaosFactor){
+      targetPosition = FormTriangle();
+    } 
     targetPosition = FreeFromCover();
-    targetPosition = FormTriangle();
     AdjustWalkingSpeed();
   }
 }

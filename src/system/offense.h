@@ -41,9 +41,11 @@ private:
     void DisplaySupportWithTriangle(SystemUnits* su);
     void DisplayPassingOptions(SystemUnits* su);
     void DisplayClosestOpponent(SystemUnits* su);
-#
+
+    //** TIKI TAKA PARAMETERS **//
     float pressureRange = 8.0;
-    float passRange = 34;
-    float passFrequency = 0.01;
-    float movementAmount = 0.008;
+    float passRange = 26;
+    float passFrequency = 0.08;
+    float movementFlexibility = 0.4;
+    float chaosFactor = 0.02;
 };
