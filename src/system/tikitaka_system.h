@@ -8,6 +8,7 @@
 #include "defense.h"
 #include "system_units.h"
 #include "shape.h"
+#include "parameter.h"
 #include <vector>
 
 struct Positions {
@@ -26,20 +27,20 @@ public:
     int getPlayerAmountAtt(){return nAttacking;};
     int getPlayerAmountDef(){return nDefending;};
     Positions getPositions();
-
-
+    Parameter* getParameter(){return parameter;};
+    
 private:
 
     std::vector<glm::vec2> positions_4_3_3(Side s, float, float);
     OffensivePlayer* getPlayerInPossession();
-
-    glm::vec2 pitchSize; 
+    glm::vec2 pitchSize;
     int playerAmount; 
     int nAttacking;
     int nDefending;
     Pitch* pitch;
     SystemUnits* units;
     Ball* ball;
+    Parameter* parameter;
     std::vector<OffensivePlayer*> attackers;
     std::vector<DefensivePlayer*> defenders;
     std::vector<Player*> players;

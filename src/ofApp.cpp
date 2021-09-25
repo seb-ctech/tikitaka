@@ -1,4 +1,5 @@
 #include "ofApp.h"
+#include "parameter.h"
 
 //--------------------------------------------------------------
 void ofApp::setup(){
@@ -37,9 +38,17 @@ void ofApp::draw(){
 
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key){
-    if(key == 32){
-        showShader = !showShader;
-    }
+    int spacebar = 32;
+    int arrow_up = 57357;
+    int arrow_down = 57359;
+    int arrow_left = 57356;
+    int arrow_right = 57358;
+    Parameter* parameter = system.getParameter();
+    if(key == spacebar) showShader = !showShader;
+    if(key == arrow_up) parameter->SwitchParameter(1);
+    if(key == arrow_down) parameter->SwitchParameter(-1);
+    if(key == arrow_left) parameter->SwitchParameterValue(-1);
+    if(key == arrow_right) parameter->SwitchParameterValue(1);
 }
 
 //--------------------------------------------------------------

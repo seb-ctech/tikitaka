@@ -20,6 +20,18 @@ public:
     int getPassingOptionsAmount();
     float getCohesion();
     bool isUnderPressure();
+    
+    /** PARAMETER CONTROL **/
+    void setPassRange(float delta){ passRange = glm::min(glm::max(5.0f, passRange + delta), 60.0f);};
+    void setPressureRange(float delta){pressureRange = glm::min(glm::max(2.0f, pressureRange + delta), 40.0f);};
+    void setPassRate(float delta){passRate = glm::min(glm::max(0.0f, passRate + delta * 1.0f / 100.0f), 1.0f);};
+    void setFlexibility(float delta){movementFlexibility = glm::min(glm::max(0.0f, movementFlexibility + delta * 1.0f / 100.0f), 1.0f);};
+    void setChaosRate(float delta){chaosRate = glm::min(glm::max(0.0f, chaosRate + delta * 1.0f / 100.0f), 1.0f);};
+    float getPassRange(){return passRange;};
+    float getPassRate(){return passRate;};
+    float getPressureRange(){return pressureRange;};
+    float getFlexibility(){return movementFlexibility;};
+    float getChaosRate(){return chaosRate;};
 
 private:
     virtual void DecideNextPosition();
@@ -45,7 +57,7 @@ private:
     //** TIKI TAKA PARAMETERS **//
     float pressureRange = 8.0;
     float passRange = 26;
-    float passFrequency = 0.08;
+    float passRate = 0.08;
     float movementFlexibility = 0.4;
-    float chaosFactor = 0.02;
+    float chaosRate = 0.02;
 };

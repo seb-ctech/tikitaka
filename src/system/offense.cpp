@@ -111,7 +111,7 @@ void OffensivePlayer::PassBallTo(OffensivePlayer* target){
 void OffensivePlayer::DecideNextPosition(){
   if (glm::distance(position, targetPosition) < 5 || ofRandom(0, 1) < movementFlexibility){
     targetPosition = KeepCohesion();
-    if(ofRandom(0, 1) < chaosFactor){
+    if(ofRandom(0, 1) < chaosRate){
       targetPosition = FormTriangle();
     } 
     targetPosition = FreeFromCover();
@@ -135,7 +135,7 @@ glm::vec2 OffensivePlayer::MoveAdjustments(glm::vec2 nextMove){
 }
 
 void OffensivePlayer::BallPassing(){
-  if(isUnderPressure() || ofRandom(0, 1) < passFrequency){
+  if(isUnderPressure() || ofRandom(0, 1) < passRate){
     std::vector<Player*> SorroundingMates = getAllPlayersInRange(getSorroundingPlayers(OwnTeam), passRange);
     std::vector<Player*> PlayableMates;
     for (Player* p : SorroundingMates){

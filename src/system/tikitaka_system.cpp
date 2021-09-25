@@ -10,6 +10,7 @@ Tikitaka::Tikitaka(){
     pitch = new Pitch(pitchSize.x, pitchSize.y);
     units = new SystemUnits(pitchSize);
     ball = new Ball();
+    parameter = new Parameter();
 }
 
 void Tikitaka::init(){
@@ -40,6 +41,7 @@ void Tikitaka::init(){
     }
     OffensivePlayer* first = attackers[0];
     ball->AttachToPlayer(first);
+    parameter->Init(attackers);
 }
 
 void Tikitaka::display(){
@@ -48,6 +50,7 @@ void Tikitaka::display(){
         players[i]->display(units);
     }
     ball->Display(units);
+    parameter->Display();
 }
 
 
@@ -57,6 +60,7 @@ void Tikitaka::update(){
         p->update(BallCarry);
     }
     ball->Update();
+    parameter->Update();
 }
 
 Positions Tikitaka::getPositions(){
@@ -138,4 +142,13 @@ std::vector<glm::vec2> Tikitaka::positions_4_3_3(Side side, float narrow, float 
 
 OffensivePlayer* Tikitaka::getPlayerInPossession(){
     return ball->getOwner();
+}
+
+void switchParameter(int delta){
+
+}
+
+
+void switchParameterValue(int delta){
+
 }
