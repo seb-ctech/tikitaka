@@ -29,6 +29,7 @@ void DefensivePlayer::DecideNextPosition(){
 	float distance = glm::distance(BallCarry->getPos(), position);
 	if(distance < coverRange){
 		targetPosition = MoveTowardsBallCarrier();
+		AdjustWalkingSpeed();
 	} else {
 		targetPosition = KeepCohesion();
 	}

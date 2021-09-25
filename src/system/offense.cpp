@@ -114,6 +114,7 @@ void OffensivePlayer::DecideNextPosition(){
   if (glm::distance(position, targetPosition) < 5 || ofRandom(0, 1) < movementAmount){
     targetPosition = FreeFromCover();
     targetPosition = FormTriangle();
+    AdjustWalkingSpeed();
   }
 }
 
