@@ -24,11 +24,9 @@ void OffensivePlayer::display(SystemUnits* su){
   }
   DisplayPlayerPosition(su);
   if(ownsBall){
-    DisplayBallPossession(su);
-    if(getPassingOptionsAmount() < 3){
-      DisplaySupportWithTriangle(su); 
-    }
+    DisplayBallPossession(su); 
   }
+  DisplaySupportWithTriangle(su);
   DisplayPassingOptions(su);
   DisplayClosestOpponent(su);
 }
@@ -53,12 +51,13 @@ void OffensivePlayer::DisplayCohesion(SystemUnits* su){
 }
 
 void OffensivePlayer::DisplaySupportWithTriangle(SystemUnits* su){
-  std::vector<glm::vec2> pivots = SupportWithTriangle();
-  for (glm::vec2 pivot : pivots){
-    ofFill();
-    ofSetColor(30, 220, 50);
-    ofDrawCircle(su->getXPosOnScreen(pivot.x), su->getYPosOnScreen(pivot.y), su->getSizeOnScreen(size) * 0.7);
-  }
+  glm::vec2 pivot = FormTriangle();
+  ofFill();
+  ofSetColor(30, 220, 50);
+  ofDrawCircle(su->getXPosOnScreen(pivot.x), su->getYPosOnScreen(pivot.y), su->getSizeOnScreen(size) * 0.7);
+  ofNoFill();
+  ofDrawLine(su->getXPosOnScreen(position.x), su->getYPosOnScreen(position.y), 
+         su->getXPosOnScreen(pivot.x), su->getYPosOnScreen(pivot.y));
 }
 
 void OffensivePlayer::DisplayPassingOptions(SystemUnits* su){
@@ -112,36 +111,10 @@ void OffensivePlayer::PassBallTo(OffensivePlayer* target){
 }
 
 void OffensivePlayer::DecideNextPosition(){
-  if(ownsBall){
-    targetPosition = KeepCohesion();
+  if (glm::distance(position, targetPosition) < 5 || ofRandom(0, 1) < movementAmount){
     targetPosition = FreeFromCover();
-  } else {
-    if (glm::distance(position, targetPosition) < 4 || ofRandom(0, 1) < movementAmount){
-      targetPosition = KeepCohesion();
-      targetPosition = FreeFromCover();
-      targetPosition = FormTriangle();
-    }
+    targetPosition = FormTriangle();
   }
-}
-
-glm::vec2 OffensivePlayer::FormTriangle(){
-  int passoptions = BallCarry->getPassingOptionsAmount();
-  if (passoptions < 3) {
-    std::vector<glm::vec2> options;
-    std::vector<Player*> carryMates = BallCarry->getSorroundingPlayers(OwnTeam);
-    Space space = pitch->GetSpace(position, getOtherPlayersPosition(OpponentTeam));
-    float spaceSize = space.getArea();
-    for (Player* mate : carryMates){
-      if ( (mate == this || spaceSize < 100) && !isFreeLineOfSight(BallCarry) ){
-        options = SupportWithTriangle();
-        glm::vec2 targetPosition = FootballShape::getClosestPositionFromSelection(options, KeepCohesion());
-        if (glm::distance(targetPosition, position) < 50){
-          return pitch->getClosestInBoundPosition(position, targetPosition);
-        }
-      }
-    }
-  }
-  return targetPosition;
 }
 
 glm::vec2 OffensivePlayer::MoveAdjustments(glm::vec2 nextMove){
@@ -197,17 +170,27 @@ bool OffensivePlayer::isFreeFromCover(){
   return glm::distance(closestOpponentPosition, position) >= pressureRange;
 }
 
-std::vector<glm::vec2> OffensivePlayer::SupportWithTriangle(){
-  float tolerance = 15.0; 
+glm::vec2 OffensivePlayer::FormTriangle(){
+  float tolerance = 10.0; 
   std::vector<std::vector<glm::vec2>> pairs;
   std::vector<glm::vec2> pivots;
-  std::vector<glm::vec2> targetPlayers = getOtherPlayersPosition(BallCarry->getSorroundingPlayers(OwnTeam));
-  for(glm::vec2 player : targetPlayers){
-    std::vector<glm::vec2> pair;
-    pair.push_back(BallCarry->getPos());
-    pair.push_back(player);
-    pairs.push_back(pair);
+
+  // Make Pairs of Possible Link Up Players, that are nearby
+  std::vector<Player*> targetPlayers = getSorroundingPlayers(OwnTeam);
+  for(Player* player : targetPlayers){
+    std::vector<Player*> otherPlayers = player->getSorroundingPlayers(OwnTeam);
+    for(Player* other : otherPlayers){
+      if(other != this){
+        std::vector<glm::vec2> pair;
+        pair.push_back(player->getPos());
+        pair.push_back(other->getPos());
+        pairs.push_back(pair);
+      }
+    }
   }
+  
+  // Get possible Triangle Pivots for every pair, 
+  // that do not overlap with existing team mates or other pivots
   for(std::vector<glm::vec2> pair : pairs){
     std::vector<glm::vec2> localPivots = FootballShape::TrianglePivots(pair);
     for(glm::vec2 pivot : localPivots){
@@ -230,7 +213,8 @@ std::vector<glm::vec2> OffensivePlayer::SupportWithTriangle(){
       }
     }
   }
-  return pivots;
+  // Return the optimal pivot to keep cohesion and stay in bound
+  return pitch->getClosestInBoundPosition(position, FootballShape::getClosestPositionFromSelection(pivots, KeepCohesion()));
 }
 
 bool OffensivePlayer::isFreeLineOfSight(Player* potentialPassReceiver){

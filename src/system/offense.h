@@ -20,7 +20,6 @@ public:
     int getPassingOptionsAmount();
     float getCohesion();
     bool isUnderPressure();
-    std::vector<glm::vec2> SupportWithTriangle();
 
 private:
     virtual void DecideNextPosition();
@@ -46,5 +45,5 @@ private:
     float pressureRange = 8.0;
     float passRange = 34;
     float passFrequency = 0.01;
-    float movementAmount = 0.002;
+    float movementAmount = 0.02;
 };
