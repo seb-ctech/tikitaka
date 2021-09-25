@@ -93,9 +93,7 @@ void OffensivePlayer::Action(){
   if(ofGetFrameNum() % interval == 0){
     if(ownsBall){
       BallPassing();
-      repositionMode = false;
     }
-    repositionMode = true;
     NextMove();
     DecideNextPosition();
   }

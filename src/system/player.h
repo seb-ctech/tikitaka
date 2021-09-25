@@ -50,7 +50,6 @@ protected:
   int index;
   int interval = 10; //TODO: Make use of this variable
   Ball* ball;
-  bool repositionMode = true;
   float cohesionFactor = 20.0;
 
 private:

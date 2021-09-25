@@ -81,11 +81,11 @@ glm::vec2 Pitch::getClosestInBoundPosition(glm::vec2 position, glm::vec2 targetP
 
 
 glm::vec2 Pitch::castToBound(glm::vec2 bound, glm::vec2 position, glm::vec2 target){
-	float stepSize = 1.0;
+	float stepSize = 2.0;
 	glm::vec2 direction = glm::normalize(target - position);
 	glm::vec2 rayPosition = position;
 	float distance = glm::distance(bound, rayPosition);
-	while(distance < stepSize * 1.1){
+	while(distance < stepSize * 2){
 		rayPosition = rayPosition + direction * stepSize;
 	}
 	return rayPosition;

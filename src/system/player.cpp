@@ -131,10 +131,8 @@ Player* Player::getClosestPlayer(std::vector<Player*> group){
 
 void Player::NextMove(){
   glm::vec2 move = glm::vec2(0,0);
-  if(repositionMode){
-    move = MoveToTarget();
-  }
-  steer(MoveAdjustments(move));
+  move = MoveToTarget();
+  steer(move);
 };
 
 // Move to Target allows for Target Corrections and sets the Acceleration
