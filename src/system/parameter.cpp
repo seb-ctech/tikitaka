@@ -46,7 +46,7 @@ void Parameter::Display(){
     }
     ofSetLineWidth(12);
     ofNoFill();
-    ofDrawLine(x, ofGetHeight() / 2.0 + 50, x + width * value, ofGetHeight() / 2.0 + 20);
+    ofDrawLine(x, ofGetHeight() / 2.0 + 20, x + width * value, ofGetHeight() / 2.0 + 20);
   }
 }
 
