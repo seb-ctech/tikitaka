@@ -118,15 +118,15 @@ void OffensivePlayer::DecideNextPosition(){
   } else {
     if (glm::distance(position, targetPosition) < 4 || ofRandom(0, 1) < movementAmount){
       targetPosition = KeepCohesion();
-      targetPosition = FormTriangle();
       targetPosition = FreeFromCover();
+      targetPosition = FormTriangle();
     }
   }
 }
 
 glm::vec2 OffensivePlayer::FormTriangle(){
   int passoptions = BallCarry->getPassingOptionsAmount();
-  if (passoptions < 3 && ofRandom(0, 1) < 0.4) {
+  if (passoptions < 3) {
     std::vector<glm::vec2> options;
     std::vector<Player*> carryMates = BallCarry->getSorroundingPlayers(OwnTeam);
     Space space = pitch->GetSpace(position, getOtherPlayersPosition(OpponentTeam));
@@ -135,7 +135,9 @@ glm::vec2 OffensivePlayer::FormTriangle(){
       if ( (mate == this || spaceSize < 100) && !isFreeLineOfSight(BallCarry) ){
         options = SupportWithTriangle();
         glm::vec2 targetPosition = FootballShape::getClosestPositionFromSelection(options, KeepCohesion());
-        return pitch->getClosestInBoundPosition(position, targetPosition);
+        if (glm::distance(targetPosition, position) < 50){
+          return pitch->getClosestInBoundPosition(position, targetPosition);
+        }
       }
     }
   }
@@ -196,7 +198,7 @@ bool OffensivePlayer::isFreeFromCover(){
 }
 
 std::vector<glm::vec2> OffensivePlayer::SupportWithTriangle(){
-  float tolerance = 5.0; 
+  float tolerance = 15.0; 
   std::vector<std::vector<glm::vec2>> pairs;
   std::vector<glm::vec2> pivots;
   std::vector<glm::vec2> targetPlayers = getOtherPlayersPosition(BallCarry->getSorroundingPlayers(OwnTeam));
@@ -215,11 +217,13 @@ std::vector<glm::vec2> OffensivePlayer::SupportWithTriangle(){
           add = false;
           break;
         }
-        Space space = pitch->GetSpace(pivot, getOtherPlayersPosition(OpponentTeam));
-        if(space.getArea() < 80){
-          add = false;
-          break;
-        }
+        std::vector<glm::vec2> matePositions = getOtherPlayersPosition(OwnTeam);
+        for (glm::vec2 matePosition : matePositions){
+          if(glm::distance(pivot, matePosition) < tolerance){
+            add = false;
+            break;
+          }
+        } 
       }
       if(add){
         pivots.push_back(pivot);
