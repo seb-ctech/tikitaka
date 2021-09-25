@@ -19,21 +19,23 @@ void Parameter::Init(std::vector<OffensivePlayer*> _players){
 void Parameter::Display(){
   ofFill();
   ofSetColor(255);
+  float width = fontMain.stringWidth(parameters[index]);
+  float x = ((float)ofGetWidth() - width) / 2;
   if(parameterLife > 0){
-    fontMain.drawString(parameters[index], ofGetWidth() / 4.0, ofGetHeight() / 2.0);
+    fontMain.drawString(parameters[index], x, ofGetHeight() / 2.0);
   }
   if(valueLife > 0){
     OffensivePlayer* offPlayer = players[0];
     float value;
     switch(index){
       case 0:
-      value = offPlayer->getPassRange();
+      value = 1- ((100.0 - offPlayer->getPassRange()) / 100.0);
       break;
       case 1:
       value = offPlayer->getPassRate();
       break;
       case 2:
-      value = offPlayer->getPressureRange();
+      value = 1 - ((100.0 - offPlayer->getPressureRange()) / 100.0);
       break;
       case 3:
       value = offPlayer->getFlexibility();
@@ -42,8 +44,14 @@ void Parameter::Display(){
       value = offPlayer->getChaosRate();
       break;
     }
-    fontSecondary.drawString(std::to_string(value), ofGetWidth() / 4.0, ofGetHeight() / 2.0 + 40);
+    ofSetLineWidth(12);
+    ofNoFill();
+    ofDrawLine(x, ofGetHeight() / 2.0 + 50, x + width * value, ofGetHeight() / 2.0 + 20);
   }
+}
+
+float Parameter::getParameterWidth(){
+  return fontMain.getGlyphBBox().getWidth() * parameters[index].size();
 }
 
 void Parameter::Update(){
@@ -73,6 +81,7 @@ void Parameter::SwitchParameter(int delta){
 }
 
 void Parameter::SwitchParameterValue(int delta){
+  parameterLife = valueLifeTime;
   valueLife = valueLifeTime;
   for (OffensivePlayer* player : players){
     switch(index){

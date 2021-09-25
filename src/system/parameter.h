@@ -16,10 +16,11 @@ class Parameter {
   void Init(std::vector<OffensivePlayer*> players);
 
   private:
+  float getParameterWidth();
   ofTrueTypeFont fontMain;
   ofTrueTypeFont fontSecondary;
   std::vector<string> parameters;
-  float valueLifeTime = 2.0;
+  float valueLifeTime = 1.8;
   float parameterLifeTime = 2.0;
   float valueLife;
   float parameterLife;
