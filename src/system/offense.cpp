@@ -61,12 +61,10 @@ void OffensivePlayer::DisplayCohesion(SystemUnits* su){
 
 void OffensivePlayer::DisplaySupportWithTriangle(SystemUnits* su){
   glm::vec2 pivot = FormTriangle();
-  ofFill();
-  ofSetColor(30, 220, 50);
-  ofDrawCircle(su->getXPosOnScreen(pivot.x), su->getYPosOnScreen(pivot.y), su->getSizeOnScreen(size) * 0.7);
+  ofSetColor(160, 220, 50);
   ofNoFill();
-  ofDrawLine(su->getXPosOnScreen(position.x), su->getYPosOnScreen(position.y), 
-         su->getXPosOnScreen(pivot.x), su->getYPosOnScreen(pivot.y));
+  ofSetLineWidth(2);
+  ofDrawCircle(su->getXPosOnScreen(pivot.x), su->getYPosOnScreen(pivot.y), su->getSizeOnScreen(size) * 0.7);
 }
 
 void OffensivePlayer::DisplayPassingOptions(SystemUnits* su){
