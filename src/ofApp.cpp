@@ -6,10 +6,9 @@ void ofApp::setup(){
     system = Tikitaka();
     system.init();
     infoFont.load("Roboto-Light.ttf", 8);
-    Shader = ofShader();
-    // Shader.load("shader");
-    Shader.setupShaderFromFile(GL_FRAGMENT_SHADER, "shader.frag");
-    Shader.linkProgram();
+    Shader = new ofShader();
+    Shader->setupShaderFromFile(GL_FRAGMENT_SHADER, "shader.frag");
+    Shader->linkProgram();
     posFboAtt.allocate(system.getPlayerAmountAtt(), 1, GL_RGB32F);
     posFboDef.allocate(system.getPlayerAmountDef(), 1, GL_RGB32F);
     renderImage.allocate(ofGetWidth(), ofGetHeight(), OF_IMAGE_COLOR);
@@ -23,11 +22,11 @@ void ofApp::update(){
 //--------------------------------------------------------------
 void ofApp::draw(){
     if(showShader){
-        Shader.begin();
+        Shader->begin();
         passPositionsToShader();
         renderImage.resize(ofGetWidth(), ofGetHeight());
         renderImage.draw(0, 0);
-        Shader.end();
+        Shader->end();
     } else {
         ofFill();
         ofSetColor(200);
@@ -103,13 +102,13 @@ void ofApp::dragEvent(ofDragInfo dragInfo){
 
 void ofApp::passPositionsToShader(){
     Positions positions = system.getPositions();
-    Shader.setUniform1i("amount", positions.attacking.size());
-    Shader.setUniformTexture("tex0", renderImage.getTexture(), 0);
+    Shader->setUniform1i("amount", positions.attacking.size());
+    Shader->setUniformTexture("tex0", renderImage.getTexture(), 0);
     BufferPositions();
-    Shader.setUniformTexture("tex1", posFboAtt.getTexture(), 1);
-    Shader.setUniformTexture("tex2", posFboDef.getTexture(), 2);
-    Shader.setUniform2f("res", (float)ofGetWidth(), (float)ofGetHeight());
-    Shader.setUniform2f("ball", positions.ball);   
+    Shader->setUniformTexture("tex1", posFboAtt.getTexture(), 1);
+    Shader->setUniformTexture("tex2", posFboDef.getTexture(), 2);
+    Shader->setUniform2f("res", (float)ofGetWidth(), (float)ofGetHeight());
+    Shader->setUniform2f("ball", positions.ball);   
 }
 
 void ofApp::BufferPositions(){

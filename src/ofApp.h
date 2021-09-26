@@ -30,7 +30,7 @@ class ofApp : public ofBaseApp{
 		ofFbo posFboDef;
 		ofImage renderImage;
 		Tikitaka system;
-		ofShader Shader;
+		ofShader* Shader;
 		ofTrueTypeFont infoFont;
 		bool showShader = true;
 };
