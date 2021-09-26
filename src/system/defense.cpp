@@ -36,7 +36,7 @@ void DefensivePlayer::DecideNextPosition(){
 }
 
 glm::vec2 DefensivePlayer::MoveTowardsBallCarrier(){
-	float pressStrength = 3.0;
+	float pressStrength = 6.0;
 	glm::vec2 direction = glm::normalize(BallCarry->getPos() - position);
 	return position + direction * pressStrength;
 }
