@@ -8,13 +8,21 @@ Player::Player(glm::vec2 _pos, Pitch* _pitch, int _index) : Agent(_pos){
   index = _index;
 };
 
-void Player::update(OffensivePlayer* ballcarry){
+void Player::Update(OffensivePlayer* ballcarry){
   BallCarry = ballcarry;
   Action();
-  Agent::update();
+  Agent::Update();
 };
 
-void Player::display(SystemUnits* su){
+// This is where Players make decisions on every frame.
+
+void Player::Action(){
+  DecideNextPosition();
+  targetPosition = pitch->getClosestInBoundPosition(position, targetPosition);
+  NextMove();
+}
+
+void Player::Display(SystemUnits* su){
   ofSetColor(220, 220, 230);
   ofFill();
   ofSetColor(30, 35, 35);
@@ -31,11 +39,56 @@ void Player::display(SystemUnits* su){
          su->getXPosOnScreen(visAcc.x), su->getYPosOnScreen(visAcc.y));
 }
 
+void Player::NextMove(){
+  glm::vec2 move = glm::vec2(0,0);
+  move = MoveToTarget();
+  StayInBound();
+  steer(move);
+};
+
+void Player::InitMatch(std::vector<Player*> Attackers, std::vector<Player*> Defenders, Ball* _ball){
+  AllPlayers.clear();
+  for (Player* p : Attackers) {
+    AllPlayers.push_back(p);
+  }
+  for (Player* p : Defenders) {
+    AllPlayers.push_back(p);
+  }
+  targetPosition = getRandomPosition();
+  ball = _ball;
+};
+
+glm::vec2 Player::MoveToTarget(){
+  float distanceToTarget = glm::distance(targetPosition, position);
+  if (distanceToTarget > 0){
+    float distanceFactor = glm::distance(targetPosition, position) / 50;
+    return glm::normalize(targetPosition - position) * accFactor * distanceFactor;
+  }
+  return glm::vec2(0,0);
+};
+
+void Player::DecideNextPosition(){
+  speed = 0.05;
+  if(ofRandom(0, 1) < 0.01){
+    targetPosition = getRandomPosition();
+  } else {
+    targetPosition = KeepCohesion();
+  }
+} 
+
+void Player::AdjustWalkingSpeed(){
+  float distanceFactor = glm::distance(targetPosition, position) / 2;
+  float distanceModifier = distanceFactor - 5 * (speed / speedLimit);
+  float speedVariation = distanceFactor / 2;
+  float randomness = ofRandom(speedVariation * -1, speedVariation);
+  speed += (distanceModifier + randomness) * 0.001;
+}
+
 void Player::DisplaySpace(SystemUnits* su){
   ofSetColor(220, 250, 30, 50);
   ofFill();
   ofBeginShape();
-  Space space = pitch->GetSpace(position, getOtherPlayersPosition(OpponentTeam));
+  Space space = pitch->getSpace(position, getOtherPlayersPosition(OpponentTeam));
   for (glm::vec2 point : space.getBoundaries()){
     float x = su->getXPosOnScreen(point.x);
     float y = su->getYPosOnScreen(point.y);
@@ -79,28 +132,8 @@ Player* Player::getPlayerOnPosition(glm::vec2 position, std::vector<Player*> gro
   return nullptr;
 }
 
-// This is where Players make decisions on every frame.
-
-void Player::Action(){
-  DecideNextPosition();
-  targetPosition = pitch->getClosestInBoundPosition(position, targetPosition);
-  NextMove();
-}
-
-void Player::InitMatch(std::vector<Player*> Attackers, std::vector<Player*> Defenders, Ball* _ball){
-  AllPlayers.clear();
-  for (Player* p : Attackers) {
-    AllPlayers.push_back(p);
-  }
-  for (Player* p : Defenders) {
-    AllPlayers.push_back(p);
-  }
-  targetPosition = RandomPosition();
-  ball = _ball;
-};
-
 std::vector<Player*> Player::getSorroundingPlayers(std::vector<Player*> group){
-  std::vector<glm::vec2> playerPositions = pitch->GetSpace(position, getOtherPlayersPosition(group)).getBoundaries();
+  std::vector<glm::vec2> playerPositions = pitch->getSpace(position, getOtherPlayersPosition(group)).getBoundaries();
   return getOtherPlayersByPosition(playerPositions);
 };
 
@@ -127,55 +160,14 @@ Player* Player::getClosestPlayer(std::vector<Player*> group){
   return closest;
 }
 
-// This is where all Movement system merge together into a final acceleration that is used to steer the Player
-// He follows the course to a target space, makes MoveAdjustments based on the movement of other players
-
-void Player::NextMove(){
-  glm::vec2 move = glm::vec2(0,0);
-  move = MoveToTarget();
-  StayInBound();
-  steer(move);
-};
-
-// Move to Target allows for Target Corrections and sets the Acceleration
-glm::vec2 Player::MoveToTarget(){
-  float distanceToTarget = glm::distance(targetPosition, position);
-  if (distanceToTarget > 0){
-    float distanceFactor = glm::distance(targetPosition, position) / 50;
-    return glm::normalize(targetPosition - position) * accFactor * distanceFactor;
-  }
-  return glm::vec2(0,0);
-};
-
-void Player::DecideNextPosition(){
-  speed = 0.05;
-  if(ofRandom(0, 1) < 0.01){
-    targetPosition = RandomPosition();
-  } else {
-    targetPosition = KeepCohesion();
-  }
-} 
-
-void Player::AdjustWalkingSpeed(){
-  float distanceFactor = glm::distance(targetPosition, position) / 2;
-  float distanceModifier = distanceFactor - 5 * (speed / speedLimit);
-  float speedVariation = distanceFactor / 2;
-  float randomness = ofRandom(speedVariation * -1, speedVariation);
-  speed += (distanceModifier + randomness) * 0.001;
-}
-
 glm::vec2 Player::EvaluateMovement(){
   glm::vec2 evaluatedVelocity = velocity;
   glm::vec2 evaluatedMovement = position + evaluatedVelocity;
   return evaluatedMovement;
 }
 
-glm::vec2 Player::MoveAdjustments(glm::vec2 move){
-  return move;
-}
-
 glm::vec2 Player::KeepCohesion(){
-  std::vector<glm::vec2> sorrounding = pitch->GetSpace(position, getOtherPlayersPosition(OwnTeam)).getBoundaries();
+  std::vector<glm::vec2> sorrounding = pitch->getSpace(position, getOtherPlayersPosition(OwnTeam)).getBoundaries();
   glm::vec2 worstPosition;
   float worstDelta = 0;
   if(sorrounding.size() > 1){
@@ -208,9 +200,8 @@ void Player::StayInBound(){
   }
 };
 
-
-glm::vec2 Player::RandomPosition(){
-  return pitch->RandomPosition();
+glm::vec2 Player::getRandomPosition(){
+  return pitch->getRandomPosition();
 }
 
 std::vector<Player*> Player::RemoveSelfFromGroup(std::vector<Player*> group){

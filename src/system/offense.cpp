@@ -17,8 +17,17 @@ void OffensivePlayer::InitMatch(std::vector<Player*> Attackers, std::vector<Play
   Player::InitMatch(Attackers, Defenders, ball);
 }
 
-void OffensivePlayer::display(SystemUnits* su){
-  Player::display(su);
+void OffensivePlayer::Action(){
+  if(ofGetFrameNum() % interval == 0){
+    if(ownsBall){
+      BallPassing();
+    }
+    Player::Action();
+  }
+}
+
+void OffensivePlayer::Display(SystemUnits* su){
+  Player::Display(su);
   if(ownsBall){
     Player::DisplaySpace(su);
   }
@@ -89,15 +98,6 @@ void OffensivePlayer::DisplayClosestOpponent(SystemUnits* su){
   }
 }
 
-void OffensivePlayer::Action(){
-  if(ofGetFrameNum() % interval == 0){
-    if(ownsBall){
-      BallPassing();
-    }
-    Player::Action();
-  }
-}
-
 void OffensivePlayer::ReceiveBall(){
     ownsBall = true;
 }
@@ -114,26 +114,8 @@ void OffensivePlayer::DecideNextPosition(){
     if(ofRandom(0, 1) < chaosRate){
       targetPosition = FormTriangle();
     }
-    if(!pitch->checkInBounds(targetPosition)){
-      float hiad = 1.0;
-    }
     AdjustWalkingSpeed();
   }
-}
-
-glm::vec2 OffensivePlayer::MoveAdjustments(glm::vec2 nextMove){
-  if(ownsBall){
-    Player* clostestOpponent = getClosestPlayer(OpponentTeam);
-    if (glm::distance(clostestOpponent->getPos(), position) < pressureRange){
-      glm::vec2 difference = clostestOpponent->getPos() - position;
-      if (glm::abs(difference.x) > glm::abs(difference.y)){
-        nextMove.x = velocity.x * -1.0 * (1 - glm::abs(difference.x) / pressureRange);
-      } else {
-        nextMove.y = velocity.y * -1.0 * (1 - glm::abs(difference.y) / pressureRange);
-      }
-    }
-  }
-  return nextMove;
 }
 
 void OffensivePlayer::BallPassing(){
@@ -163,7 +145,7 @@ void OffensivePlayer::BallPassing(){
 
 glm::vec2 OffensivePlayer::FreeFromCover(){
   if(!isFreeFromCover()){
-    Space space = pitch->GetSpace(position, getOtherPlayersPosition(OpponentTeam));
+    Space space = pitch->getSpace(position, getOtherPlayersPosition(OpponentTeam));
     if(space.getArea() < 80){
       return FormTriangle();
     }

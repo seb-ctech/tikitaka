@@ -13,7 +13,7 @@ class OffensivePlayer : public Player {
 public:
     OffensivePlayer();
     OffensivePlayer(glm::vec2 pos, Pitch* pitch, int index);
-    void display(SystemUnits* su) override;
+    void Display(SystemUnits* su) override;
     virtual void InitMatch(std::vector<Player*> Attackers, std::vector<Player*> Defenders, Ball* ball);
     void ReceiveBall();
     bool hasBall(){ return ball; };
@@ -35,7 +35,6 @@ public:
 
 private:
     virtual void DecideNextPosition();
-    virtual glm::vec2 MoveAdjustments(glm::vec2 nextMove);
     virtual void Action();
     glm::vec2 FormTriangle();
     glm::vec2 FreeFromCover();

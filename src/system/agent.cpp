@@ -2,33 +2,33 @@
 
 Agent::Agent(){
     position = glm::vec2(0.0, 0.0);
-    init();
+    Init();
 }
 
 Agent::Agent(glm::vec2 pos){
     position = pos;
-    init();
+    Init();
 }
 
-void Agent::init(){
+void Agent::Init(){
     infoFont.load("Roboto-Light.ttf", 8);
-    init_locomotion();
+    InitLocomotion();
 }
 
-void Agent::init_locomotion(){
+void Agent::InitLocomotion(){
     velocity = glm::vec2(0.0, 0.0);
     acceleration = glm::vec2(0.0, 0.0);
 }
 
-void Agent::update(){
-    locomotion();
+void Agent::Update(){
+    Locomotion();
 }
 
 void Agent::StartOnRandomPosition(glm::vec2 bounds){
     position = glm::vec2(ofRandom(bounds.x), ofRandom(bounds.y));
 }
 
-void Agent::locomotion(){
+void Agent::Locomotion(){
     if(speed > speedLimit) speed = speedLimit;
     if(speed <= speedMin) speed = speedMin;
     if (glm::length(acceleration) >= maxAcc){

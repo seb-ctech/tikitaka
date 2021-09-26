@@ -10,10 +10,8 @@ and reattaches to the new player */
 
 class Ball {
 
-  public:
-
+public:
   Ball();
-  
   void PassTo(OffensivePlayer* target);
   void AttachToPlayer(OffensivePlayer* target);
   void Update();
@@ -21,8 +19,7 @@ class Ball {
   glm::vec2 getPos(){ return position; };
   OffensivePlayer* getOwner(){ return owner; };
 
-  private:
-
+private:
   void MoveToNextOwner();
   
   float attachTolerance = 3.0;

@@ -4,7 +4,7 @@
 #include "pitch.h"
 
 /* This is an Agent class.
-Agents are Entities that have a basic locomotion loop and implement seeking behavior, 
+Agents are Entities that have a basic Locomotion loop and implement seeking behavior, 
 a force that adds to velocity to steer it to a target location.
 Conceptually this is the bridge between higher concepts such as "Players" and the representation inside of openFrameworks. */
 
@@ -13,7 +13,7 @@ class Agent {
 public:
 	Agent();
 	Agent(glm::vec2 pos);
-	virtual void update();
+	virtual void Update();
 	glm::vec2 getPos(){ return position; };
 
 protected:
@@ -30,9 +30,9 @@ protected:
 	float accFactor = 0.01;
 
 private:
-	void init();
- 	void init_locomotion();
-	void locomotion();
+	void Init();
+ 	void InitLocomotion();
+	void Locomotion();
 	void StartOnRandomPosition(glm::vec2 bounds);
 };
 

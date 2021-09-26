@@ -4,8 +4,8 @@ Parameter::Parameter(){
   parameters.push_back("PASS RANGE");
   parameters.push_back("PASS RATE");
   parameters.push_back("PRESSURE RANGE");
-  parameters.push_back("FLEXIBILITY");
-  parameters.push_back("CHAOS RATE");
+  parameters.push_back("RESPONSIVENESS");
+  parameters.push_back("FLUIDITY");
   parameterLife = 0;
   valueLife = 0;
   fontMain.load("Roboto-Light.ttf", 60);
@@ -48,10 +48,6 @@ void Parameter::Display(){
     ofNoFill();
     ofDrawLine(x, ofGetHeight() / 2.0 + 20, x + width * value, ofGetHeight() / 2.0 + 20);
   }
-}
-
-float Parameter::getParameterWidth(){
-  return fontMain.getGlyphBBox().getWidth() * parameters[index].size();
 }
 
 void Parameter::Update(){

@@ -5,9 +5,13 @@
 #include "system_units.h"
 #include "ofMain.h"
 
+/* This is a Parameter class.
+It holds and displays a parameter collection 
+that can be controlled from within the ofApp*/
+
 class Parameter {
 
-  public:
+public:
   Parameter();
   void SwitchParameter(int delta);
   void SwitchParameterValue(int delta);
@@ -15,8 +19,7 @@ class Parameter {
   void Update();
   void Init(std::vector<OffensivePlayer*> players);
 
-  private:
-  float getParameterWidth();
+private:
   ofTrueTypeFont fontMain;
   ofTrueTypeFont fontSecondary;
   std::vector<string> parameters;

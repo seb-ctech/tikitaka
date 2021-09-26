@@ -19,8 +19,8 @@ class Player : public Agent {
 public:
   Player();
   Player(glm::vec2 pos, Pitch* pitch, int index);
-  virtual void update(OffensivePlayer* ballcarry);
-	virtual void display(SystemUnits* su);
+  virtual void Update(OffensivePlayer* ballcarry);
+	virtual void Display(SystemUnits* su);
   virtual void InitMatch(std::vector<Player*> Attackers, std::vector<Player*> Defenders, Ball* ball);
   glm::vec2 EvaluateMovement();
   glm::vec2 getTargetPosition(){ return targetPosition; }
@@ -30,16 +30,15 @@ public:
  
 protected:
   virtual void DecideNextPosition();
-  virtual glm::vec2 MoveAdjustments(glm::vec2 nextMove);
-  virtual void Action(); // This is an action a Player can take. The default behavior is a steering move, but he can also pass the Ball.
+  virtual void Action();
   void NextMove();
   void AdjustWalkingSpeed();
   glm::vec2 KeepCohesion();
   std::vector<glm::vec2> getOtherPlayersPosition(std::vector<Player*> group);
   std::vector<Player*> getOtherPlayersByPosition(std::vector<glm::vec2> positions);
   Player* getPlayerOnPosition(glm::vec2 position, std::vector<Player*> group, float range = 0.1);
-  
   void DisplaySpace(SystemUnits* su); 
+  
   glm::vec2 targetPosition;
   Pitch* pitch;
   std::vector<Player*> AllPlayers;
@@ -48,13 +47,13 @@ protected:
   OffensivePlayer* BallCarry;
   float size = 2.0f;
   int index;
-  int interval = 10; //TODO: Make use of this variable
   Ball* ball;
   float cohesionFactor = 20.0;
+  int interval = 20;
 
 private:
   void StayInBound();
   glm::vec2 MoveToTarget();
-  glm::vec2 RandomPosition();
+  glm::vec2 getRandomPosition();
   std::vector<Player*> RemoveSelfFromGroup(std::vector<Player*> group);
 };

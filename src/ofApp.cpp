@@ -4,7 +4,6 @@
 //--------------------------------------------------------------
 void ofApp::setup(){
     system = Tikitaka();
-    system.init();
     infoFont.load("Roboto-Light.ttf", 8);
     Shader = new ofShader();
     Shader->setupShaderFromFile(GL_FRAGMENT_SHADER, "shader.frag");
@@ -16,7 +15,7 @@ void ofApp::setup(){
 
 //--------------------------------------------------------------
 void ofApp::update(){
-    system.update();
+    system.Update();
 }
 
 //--------------------------------------------------------------
@@ -31,7 +30,7 @@ void ofApp::draw(){
         ofFill();
         ofSetColor(200);
         infoFont.drawString(std::to_string(ofGetFrameRate()), ofGetWidth() - 100, ofGetHeight() - 20);
-        system.display();
+        system.Display();
     }
 }
 

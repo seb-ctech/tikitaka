@@ -9,8 +9,8 @@ DefensivePlayer::DefensivePlayer(glm::vec2 pos, Pitch* pitch, int index) : Playe
 
 }
 
-void DefensivePlayer::display(SystemUnits* su){
-	Player::display(su);
+void DefensivePlayer::Display(SystemUnits* su){
+	Player::Display(su);
 	ofSetColor(40, 80, 200);
 	ofFill();
 	ofDrawPlane(su->getXPosOnScreen(position.x), 

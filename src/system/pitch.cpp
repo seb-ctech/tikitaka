@@ -9,7 +9,7 @@ Pitch::Pitch(float x, float y){
     size = glm::vec2(x, y);
 }
 
-float Pitch::closestDistanceToBounds(glm::vec2 position, glm::vec2 location){
+float Pitch::getClosestDistanceToBounds(glm::vec2 position, glm::vec2 location){
 	float dToRightBounds = glm::distance(location, glm::vec2(size.x, position.y));
   float dToTopBounds = glm::distance(location, glm::vec2(position.x, size.y)); 
   float dToLeftBounds = glm::distance(location, glm::vec2(0, position.y)); 
@@ -30,11 +30,11 @@ float Pitch::closestDistanceToBounds(glm::vec2 position, glm::vec2 location){
 	return minDistance;
 }
 
-Space Pitch::GetSpace(glm::vec2 location, std::vector<glm::vec2> sorrounding){
+Space Pitch::getSpace(glm::vec2 location, std::vector<glm::vec2> sorrounding){
 	return Space(location, this, sorrounding);
 }
 
-glm::vec2 Pitch::RandomPosition(){
+glm::vec2 Pitch::getRandomPosition(){
 	 return glm::vec2(ofRandom(0.0, size.x), ofRandom(0.0, size.y));
 }
 
@@ -65,22 +65,22 @@ glm::vec2 Pitch::getClosestBound(glm::vec2 position){
 
 glm::vec2 Pitch::getClosestInBoundPosition(glm::vec2 position, glm::vec2 targetPosition){
 	if(targetPosition.x > size.x){
-		return castToBound(glm::vec2(size.x, -1), position, targetPosition);
+		return getNextApproximatedBound(glm::vec2(size.x, -1), position, targetPosition);
 	}
 	if(targetPosition.y > size.y){
-		return castToBound(glm::vec2(-1, size.y), position, targetPosition);
+		return getNextApproximatedBound(glm::vec2(-1, size.y), position, targetPosition);
 	}
 	if(targetPosition.x < 0){
-		return castToBound(glm::vec2(0, -1), position, targetPosition);
+		return getNextApproximatedBound(glm::vec2(0, -1), position, targetPosition);
 	}
 	if(targetPosition.y < 0){
-		return castToBound(glm::vec2(-1, 0), position, targetPosition);
+		return getNextApproximatedBound(glm::vec2(-1, 0), position, targetPosition);
 	}
 	return targetPosition;
 }
 
 
-glm::vec2 Pitch::castToBound(glm::vec2 bound, glm::vec2 position, glm::vec2 target){
+glm::vec2 Pitch::getNextApproximatedBound(glm::vec2 bound, glm::vec2 position, glm::vec2 target){
 	glm::vec2 direction = glm::normalize(target - position);
 	glm::vec2 rayPosition = position;
 	float stepSize = 1.0;

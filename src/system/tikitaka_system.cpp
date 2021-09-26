@@ -11,9 +11,10 @@ Tikitaka::Tikitaka(){
     units = new SystemUnits(pitchSize);
     ball = new Ball();
     parameter = new Parameter();
+    Init();
 }
 
-void Tikitaka::init(){
+void Tikitaka::Init(){
 
     std::vector<glm::vec2> attpos = positions_4_3_3(ATTACK, 1.0, 1.0);
     std::vector<glm::vec2> defpos = positions_4_3_3(DEFENSE, 2.0, 3.0);
@@ -44,20 +45,20 @@ void Tikitaka::init(){
     parameter->Init(attackers);
 }
 
-void Tikitaka::display(){
+void Tikitaka::Display(){
     ofSetBackgroundColor(3, 5, 5);
     for (int i = 0; i < playerAmount; i++){
-        players[i]->display(units);
+        players[i]->Display(units);
     }
     ball->Display(units);
     parameter->Display();
 }
 
 
-void Tikitaka::update(){
+void Tikitaka::Update(){
     OffensivePlayer* BallCarry = getPlayerInPossession();
     for (Player* p : players){
-        p->update(BallCarry);
+        p->Update(BallCarry);
     }
     ball->Update();
     parameter->Update();

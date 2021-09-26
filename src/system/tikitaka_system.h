@@ -11,6 +11,9 @@
 #include "parameter.h"
 #include <vector>
 
+/* This is the main class holding the Tikitaka System, updating the players and initializing the simulation.
+It comunicates with the ofApp and provides it the positions necessary for the shader.*/
+
 struct Positions {
     std::vector<glm::vec2> attacking;
     std::vector<glm::vec2> defending;
@@ -21,18 +24,18 @@ class Tikitaka {
 
 public:
     Tikitaka();
-    void display();
-    void update();
-    void init();
+    void Display();
+    void Update();
     int getPlayerAmountAtt(){return nAttacking;};
     int getPlayerAmountDef(){return nDefending;};
     Positions getPositions();
     Parameter* getParameter(){return parameter;};
     
 private:
-
+    void Init();
     std::vector<glm::vec2> positions_4_3_3(Side s, float, float);
     OffensivePlayer* getPlayerInPossession();
+
     glm::vec2 pitchSize;
     int playerAmount; 
     int nAttacking;
