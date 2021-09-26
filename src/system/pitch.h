@@ -17,7 +17,10 @@ class Pitch {
 				return size;
 		}
 		glm::vec2 getClosestInBoundPosition(glm::vec2 position, glm::vec2 targetPosition);
+		bool checkInBound(glm::vec2 bound, glm::vec2 target);
+		bool checkInBounds(glm::vec2 target);
 	private:
 		glm::vec2 size;
 		glm::vec2 castToBound(glm::vec2 Bound, glm::vec2 Position, glm::vec2 Target);
+		
 };

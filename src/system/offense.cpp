@@ -94,8 +94,7 @@ void OffensivePlayer::Action(){
     if(ownsBall){
       BallPassing();
     }
-    NextMove();
-    DecideNextPosition();
+    Player::Action();
   }
 }
 
@@ -110,11 +109,14 @@ void OffensivePlayer::PassBallTo(OffensivePlayer* target){
 
 void OffensivePlayer::DecideNextPosition(){
   if (glm::distance(position, targetPosition) < 5 || ofRandom(0, 1) < movementFlexibility){
-    targetPosition = KeepCohesion();
+    targetPosition = KeepCohesion(); 
+    targetPosition = FreeFromCover();
     if(ofRandom(0, 1) < chaosRate){
       targetPosition = FormTriangle();
-    } 
-    targetPosition = FreeFromCover();
+    }
+    if(!pitch->checkInBounds(targetPosition)){
+      float hiad = 1.0;
+    }
     AdjustWalkingSpeed();
   }
 }
@@ -161,8 +163,12 @@ void OffensivePlayer::BallPassing(){
 
 glm::vec2 OffensivePlayer::FreeFromCover(){
   if(!isFreeFromCover()){
+    Space space = pitch->GetSpace(position, getOtherPlayersPosition(OpponentTeam));
+    if(space.getArea() < 80){
+      return FormTriangle();
+    }
     glm::vec2 directionToOpponent = glm::normalize(getClosestPlayer(OpponentTeam)->getPos() - position);
-    return position + directionToOpponent * -1.0 * pressureRange;
+    return position + directionToOpponent * -1.0 * pressureRange / 5;
   }
   return targetPosition;
 }

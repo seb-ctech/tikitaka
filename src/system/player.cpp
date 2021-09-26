@@ -133,13 +133,18 @@ Player* Player::getClosestPlayer(std::vector<Player*> group){
 void Player::NextMove(){
   glm::vec2 move = glm::vec2(0,0);
   move = MoveToTarget();
+  StayInBound();
   steer(move);
 };
 
 // Move to Target allows for Target Corrections and sets the Acceleration
 glm::vec2 Player::MoveToTarget(){
-  float distanceFactor = glm::distance(targetPosition, position) / 50;
-  return glm::normalize(targetPosition - position) * accFactor * distanceFactor;
+  float distanceToTarget = glm::distance(targetPosition, position);
+  if (distanceToTarget > 0){
+    float distanceFactor = glm::distance(targetPosition, position) / 50;
+    return glm::normalize(targetPosition - position) * accFactor * distanceFactor;
+  }
+  return glm::vec2(0,0);
 };
 
 void Player::DecideNextPosition(){
@@ -166,39 +171,43 @@ glm::vec2 Player::EvaluateMovement(){
 }
 
 glm::vec2 Player::MoveAdjustments(glm::vec2 move){
-  return StayInBound(move);
+  return move;
 }
 
 glm::vec2 Player::KeepCohesion(){
   std::vector<glm::vec2> sorrounding = pitch->GetSpace(position, getOtherPlayersPosition(OwnTeam)).getBoundaries();
   glm::vec2 worstPosition;
   float worstDelta = 0;
-  for (glm::vec2 nextPos : sorrounding){
+  if(sorrounding.size() > 1){
+    for (glm::vec2 nextPos : sorrounding){
     float delta = glm::distance(nextPos, position) - cohesionFactor;
-    if (glm::abs(delta) > glm::abs(worstDelta)){
-      worstDelta = delta;
-      worstPosition = nextPos;
+      if (glm::abs(delta) > glm::abs(worstDelta)){
+        worstDelta = delta;
+        worstPosition = nextPos;
+      }
+    }
+    if (worstPosition.x != position.x || worstPosition.y != position.y){
+      glm::vec2 direction = glm::normalize(worstPosition - position);
+      return position + direction * worstDelta * 0.6;
     }
   }
-  glm::vec2 direction = glm::normalize(worstPosition - position);
-  return position + direction * worstDelta * 0.6;
+  return position;
 };
 
 
-glm::vec2 Player::StayInBound(glm::vec2 move){
-  float buffer = 10.0;
-  glm::vec2 closestBound = pitch->getClosestBound(position);
-  float distance = glm::distance(closestBound, position);
-  if(distance < buffer){
-    if(closestBound.x == 100 || closestBound.x == 0){
-      move.x = velocity.x * -1.0 * (1 - distance / buffer);
-    }
-    if(closestBound.y == 100 || closestBound.y == 0){
-      move.y = velocity.y * -1.0 * (1 - distance / buffer);
-    }
+void Player::StayInBound(){
+  float tolerance = 5.0;
+  glm::vec2 size = pitch->getSize();
+  if(position.x - tolerance < 0 || position.x + tolerance> size.x){
+    velocity.x *= 0.6;
+    acceleration.x *= -1.0;
   }
-  return move;
+  if(position.y - tolerance < 0 || position.y + tolerance > size.y){
+    velocity.y *= 0.6;
+    acceleration.y *= -1.0;
+  }
 };
+
 
 glm::vec2 Player::RandomPosition(){
   return pitch->RandomPosition();

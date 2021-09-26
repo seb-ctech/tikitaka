@@ -53,7 +53,7 @@ protected:
   float cohesionFactor = 20.0;
 
 private:
-  glm::vec2 StayInBound(glm::vec2 move);
+  void StayInBound();
   glm::vec2 MoveToTarget();
   glm::vec2 RandomPosition();
   std::vector<Player*> RemoveSelfFromGroup(std::vector<Player*> group);

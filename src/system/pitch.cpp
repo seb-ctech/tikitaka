@@ -65,28 +65,41 @@ glm::vec2 Pitch::getClosestBound(glm::vec2 position){
 
 glm::vec2 Pitch::getClosestInBoundPosition(glm::vec2 position, glm::vec2 targetPosition){
 	if(targetPosition.x > size.x){
-		return castToBound(glm::vec2(size.x, position.y), position, targetPosition);
+		return castToBound(glm::vec2(size.x, -1), position, targetPosition);
 	}
 	if(targetPosition.y > size.y){
-		return castToBound(glm::vec2(position.x, size.y), position, targetPosition);
+		return castToBound(glm::vec2(-1, size.y), position, targetPosition);
 	}
 	if(targetPosition.x < 0){
-		return castToBound(glm::vec2(0, position.y), position, targetPosition);
+		return castToBound(glm::vec2(0, -1), position, targetPosition);
 	}
 	if(targetPosition.y < 0){
-		return castToBound(glm::vec2(position.x, 0), position, targetPosition);
+		return castToBound(glm::vec2(-1, 0), position, targetPosition);
 	}
 	return targetPosition;
 }
 
 
 glm::vec2 Pitch::castToBound(glm::vec2 bound, glm::vec2 position, glm::vec2 target){
-	float stepSize = 2.0;
 	glm::vec2 direction = glm::normalize(target - position);
 	glm::vec2 rayPosition = position;
-	float distance = glm::distance(bound, rayPosition);
-	while(distance < stepSize * 2){
+	float stepSize = 1.0;
+	while(checkInBound(bound, rayPosition + direction * stepSize)){
 		rayPosition = rayPosition + direction * stepSize;
 	}
 	return rayPosition;
+}
+
+bool Pitch::checkInBounds(glm::vec2 target){
+	return checkInBound(glm::vec2(0, -1), target) && checkInBound(glm::vec2(size.x, -1), target)
+				&& checkInBound(glm::vec2(-1, 0), target) && checkInBound(glm::vec2(-1, size.y), target);
+}
+
+bool Pitch::checkInBound(glm::vec2 bound, glm::vec2 target){
+	if (bound.x >= 0){
+		return target.x > 0 && target.x < size.x;
+	} else if (bound.y >= 0){
+		return target.y > 0 && target.y < size.y;
+	}
+	return false;
 }
