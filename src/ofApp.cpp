@@ -26,6 +26,8 @@ void ofApp::draw(){
         renderImage.resize(ofGetWidth(), ofGetHeight());
         renderImage.draw(0, 0);
         Shader->end();
+        infoFont.drawString(std::to_string(par2), ofGetWidth() - 100, ofGetHeight() - 20);
+        infoFont.drawString(std::to_string(par1), ofGetWidth() - 200, ofGetHeight() - 20);
     } else {
         ofFill();
         ofSetColor(200);
@@ -43,10 +45,38 @@ void ofApp::keyPressed(int key){
     int arrow_right = 57358;
     Parameter* parameter = system.getParameter();
     if(key == spacebar) showShader = !showShader;
-    if(key == arrow_up) parameter->SwitchParameter(1);
-    if(key == arrow_down) parameter->SwitchParameter(-1);
-    if(key == arrow_left) parameter->SwitchParameterValue(-1);
-    if(key == arrow_right) parameter->SwitchParameterValue(1);
+    if(key == arrow_up) {
+        if (showShader){
+            par1 += 0.01;
+            glm::min(1.0f, par1);
+        } else {
+            parameter->SwitchParameter(1);
+        }
+    }
+    if(key == arrow_down){
+        if(showShader){
+            par1 -= 0.01;
+            glm::max(0.0f, par1);
+        } else {
+            parameter->SwitchParameter(-1);
+        }
+    } 
+    if(key == arrow_left){
+        if(showShader){
+            par2 -= 0.01;
+            glm::max(0.0f, par2);
+        } else {
+            parameter->SwitchParameterValue(-1);
+        }
+    } 
+    if(key == arrow_right){
+        if (showShader){
+            par2 += 0.01;
+            glm::min(1.0f, par2);
+        } else {
+            parameter->SwitchParameterValue(1);
+        }
+    }
 }
 
 //--------------------------------------------------------------
@@ -108,6 +138,8 @@ void ofApp::passPositionsToShader(){
     Shader->setUniformTexture("tex2", posFboDef.getTexture(), 2);
     Shader->setUniform2f("res", (float)ofGetWidth(), (float)ofGetHeight());
     Shader->setUniform2f("ball", positions.ball);   
+    Shader->setUniform1f("v1", par1);
+    Shader->setUniform1f("v2", par2);
 }
 
 void ofApp::BufferPositions(){

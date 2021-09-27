@@ -23,6 +23,9 @@
 		{
 			"name": "ShaderDynamicPattern",
 			"path": "..\\ShaderDynamicPattern"
+		},
+		{
+			"path": "..\\..\\..\\..\\..\\playground\\shaders\\shadertoy\\voronoi"
 		}
 	],
 	"settings": {
