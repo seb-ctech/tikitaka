@@ -124,9 +124,9 @@ void main(){
   vec2 p = ball / res;
   float d = pow(distance(coord, p), 2.0);
   // Do something with group 1
-  float out1 = 1 - group_basicSDF(tex1, coord);
+  float out1 = 1 - group_basicSDF(tex2, coord);
   // Do something with group 2
-  float out2 = pcurve(group_basicSDF(tex2, coord), v1 * 10, v2 * 10);
+  float out2 = pcurve(group_basicSDF(tex1, coord), v1 * 10, v2 * 10);
   // Combine to final color
   vec3 color = Spotlight(out1, out2, d);
   gl_FragColor = vec4(color, 1.0);
