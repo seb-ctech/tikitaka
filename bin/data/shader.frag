@@ -109,8 +109,8 @@ vec3 Spotlight(float o1, float o2, float d){
   vec3 color2 = vec3(1.0, 0.6353, 0.1569);
   float spot = pow(1 - d, 0.2);
   float spotCenter = pow(1 - d, 24.0);
-  float a = pow(parabola(o1, 4.0), o2); // parabola(o1, spot)
-  float b = a;
+  float a = pow(parabola(o1, 4.0), spot); // parabola(o1, spot)
+  float b = a - o2;
   b = pcurve(b, 0.6, 0.4);
   return vec3(mix(mix(color0, color1, b), color2 * b, spotCenter));
 }
@@ -124,9 +124,9 @@ void main(){
   vec2 p = ball / res;
   float d = pow(distance(coord, p), 2.0);
   // Do something with group 1
-  float out1 = group_basicSDF(tex1, coord);
+  float out1 = 1 - group_basicSDF(tex1, coord);
   // Do something with group 2
-  float out2 = 1 - pcurve(group_basicSDF(tex2, coord), 2, 4);
+  float out2 = pcurve(group_basicSDF(tex2, coord), 2.4, 5);
   // Combine to final color
   vec3 color = Spotlight(out1, out2, d);
   gl_FragColor = vec4(color, 1.0);
