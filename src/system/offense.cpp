@@ -102,13 +102,14 @@ void OffensivePlayer::PassBallTo(OffensivePlayer* target){
 }
 
 void OffensivePlayer::DecideNextPosition(){
-  if (glm::distance(position, targetPosition) < 5 || ofRandom(0, 1) < movementFlexibility){
-    targetPosition = KeepCohesion(); 
-    targetPosition = FreeFromCover();
+  if (glm::distance(position, targetPosition) < 5 || ofRandom(0, 1) < movementFlexibility){ 
     if(ofRandom(0, 1) < triangleRate){
       targetPosition = FormTriangle();
+    } else {
+      targetPosition = KeepCohesion();
     }
     targetPosition = SupportBallCarry();
+    targetPosition = FreeFromCover();
     AdjustWalkingSpeed();
   }
 }
@@ -123,6 +124,7 @@ void OffensivePlayer::BallPassing(){
       }
     }
     if(PlayableMates.size() > 0){
+      OffensivePlayer* ballReceiver;
       std::vector<Player*> FreeMates;
       for (Player* p : PlayableMates){
         if(dynamic_cast<OffensivePlayer*>(p)->isFreeFromCover()){
@@ -130,10 +132,18 @@ void OffensivePlayer::BallPassing(){
         }
       }
       if (FreeMates.size() > 0){
-        PlayableMates = FreeMates;
-      }
-      OffensivePlayer* ballReceiver = dynamic_cast<OffensivePlayer*>(getClosestPlayer(PlayableMates));
-      PassBallTo(ballReceiver);
+        float mostSpace = 0.0;
+        Player* mostFreeMate = FreeMates[0];
+        for (Player* p : FreeMates){
+          float distance = glm::distance(p->getPos(), p->getClosestPlayer(OpponentTeam)->getPos());
+          if (distance > mostSpace){
+            mostFreeMate = p;
+            mostSpace = distance;
+          }
+        }
+        ballReceiver = dynamic_cast<OffensivePlayer*>(mostFreeMate);
+        PassBallTo(ballReceiver);
+      } 
     }
   }
 }
@@ -203,22 +213,27 @@ glm::vec2 OffensivePlayer::FormTriangle(){
 }
 
 glm::vec2 OffensivePlayer::SupportBallCarry(){
+  glm::vec2 adjustedPosition = targetPosition;
   std::vector<Player*> sorroundingPlayers = getSorroundingPlayers(OwnTeam);
   for(Player* player : sorroundingPlayers){
     if(player == BallCarry){
       glm::vec2 carryPosition = BallCarry->getPos();
+      if(!isFreeLineOfSight(BallCarry)){
+        glm::vec2 offset = targetPosition - position;
+        adjustedPosition = HelperMath::PolarToCartesian(HelperMath::CartesianToPolRadius(offset), HelperMath::CartesianToPolAngle(offset) + ofRandom(-0.1, 0.1));
+      }
       if (glm::distance(carryPosition, targetPosition) > passRange){
-        glm::vec2 offset = carryPosition - targetPosition;
-        return targetPosition + glm::normalize(offset) * glm::distance(carryPosition, targetPosition) - passRange;
+        glm::vec2 offset = carryPosition - adjustedPosition;
+        adjustedPosition = targetPosition + glm::normalize(offset) * glm::distance(carryPosition, adjustedPosition) - passRange;
       }
     }
   }
-  return targetPosition;
+  return adjustedPosition;
 }
 
 bool OffensivePlayer::isFreeLineOfSight(Player* potentialPassReceiver){
   float tolerance = 3;
-  float deltaAngle = HelperMath::DegreesToRadians(12);
+  float deltaAngle = HelperMath::DegreesToRadians(30);
   glm::vec2 lineToPlayer = potentialPassReceiver->getPos() - position;
   std::vector<glm::vec2> blockingOpponents = FootballShape::RaycastToMany(position, potentialPassReceiver->getPos(), getOtherPlayersPosition(OpponentTeam), tolerance);
   for(glm::vec2 blocker : blockingOpponents){
