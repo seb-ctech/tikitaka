@@ -108,7 +108,7 @@ vec3 Spotlight(float o1, float o2, float d){
   vec3 color1 = vec3(0.3294, 0.4275, 0.3804);
   vec3 color2 = vec3(1.0, 0.6353, 0.1569);
   float spot = pow(1 - d, 0.2);
-  float spotCenter = pow(1 - d, 24.0);
+  float spotCenter = pow(1 - d, 64.0);
   float a = pow(parabola(o1, v1 * 10.0), spot); // parabola(o1, spot)
   float b = a - o2;
   b = pcurve(b, 0.6, 0.4);
