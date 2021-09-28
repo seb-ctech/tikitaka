@@ -48,7 +48,6 @@ void ofApp::keyPressed(int key){
     if(key == arrow_up) {
         if (showShader){
             par1 += 0.01;
-            glm::min(1.0f, par1);
         } else {
             parameter->SwitchParameter(1);
         }
@@ -56,7 +55,6 @@ void ofApp::keyPressed(int key){
     if(key == arrow_down){
         if(showShader){
             par1 -= 0.01;
-            glm::max(0.0f, par1);
         } else {
             parameter->SwitchParameter(-1);
         }
@@ -64,7 +62,6 @@ void ofApp::keyPressed(int key){
     if(key == arrow_left){
         if(showShader){
             par2 -= 0.01;
-            glm::max(0.0f, par2);
         } else {
             parameter->SwitchParameterValue(-1);
         }
@@ -72,7 +69,6 @@ void ofApp::keyPressed(int key){
     if(key == arrow_right){
         if (showShader){
             par2 += 0.01;
-            glm::min(1.0f, par2);
         } else {
             parameter->SwitchParameterValue(1);
         }
