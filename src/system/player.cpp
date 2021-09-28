@@ -42,8 +42,8 @@ void Player::Display(SystemUnits* su){
 void Player::NextMove(){
   glm::vec2 move = glm::vec2(0,0);
   move = MoveToTarget();
-  StayInBound();
   steer(move);
+  StayInBound();
 };
 
 void Player::InitMatch(std::vector<Player*> Attackers, std::vector<Player*> Defenders, Ball* _ball){
@@ -188,15 +188,31 @@ glm::vec2 Player::KeepCohesion(){
 
 
 void Player::StayInBound(){
-  float tolerance = 5.0;
+  float tolerance = 2.0;
   glm::vec2 size = pitch->getSize();
-  if(position.x - tolerance < 0 || position.x + tolerance> size.x){
-    velocity.x *= 0.6;
-    acceleration.x *= -1.0;
+  if(position.x - tolerance < 0){
+    if (velocity.x < 0.0){
+       velocity.x *= 0.6;
+    }
+    acceleration.x = (tolerance - position.x) * accFactor * 10.0;
   }
-  if(position.y - tolerance < 0 || position.y + tolerance > size.y){
-    velocity.y *= 0.6;
-    acceleration.y *= -1.0;
+  if(position.x + tolerance > size.x){
+    if(velocity.x > 0.0){
+      velocity.x *= 0.6;
+    }
+    acceleration.x = (size.x - tolerance - position.x) * accFactor;
+  }
+  if(position.y - tolerance < 0){
+    if (velocity.y < 0.0){
+      velocity.y *= 0.6;
+    }
+    acceleration.y = (tolerance - position.y) * accFactor;
+  } 
+  if(position.y + tolerance > size.y){
+    if (velocity.y > 0.0){
+      velocity.y *= 0.6;
+    }
+    acceleration.y = (size.y - tolerance - position.y) * accFactor;
   }
 };
 

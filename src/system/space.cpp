@@ -21,7 +21,7 @@ void Space::ScanBoundaries(glm::vec2 origin, std::vector<glm::vec2> positions){
   std::vector<glm::vec2> foundBounds; 
   float angleStep = glm::two_pi<float>() / steps;
   while (angle < glm::two_pi<float>()){
-    glm::vec2 foundPosition = FootballShape::RaycastScan(origin, pitch, positions, angle, 2);
+    glm::vec2 foundPosition = FootballShape::RaycastScan(origin, pitch, positions, angle, 0.5);
     foundBounds.push_back(foundPosition);
     angle += angleStep;
   }
