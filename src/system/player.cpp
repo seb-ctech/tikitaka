@@ -167,7 +167,7 @@ glm::vec2 Player::EvaluateMovement(){
 }
 
 glm::vec2 Player::KeepCohesion(){
-  std::vector<glm::vec2> sorrounding = pitch->getSpace(position, getOtherPlayersPosition(OwnTeam)).getBoundaries();
+  std::vector<glm::vec2> sorrounding = getOtherPlayersPosition(getSorroundingPlayers(OwnTeam));
   glm::vec2 worstPosition;
   float worstDelta = 0;
   if(sorrounding.size() > 1){

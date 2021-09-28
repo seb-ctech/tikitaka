@@ -107,6 +107,7 @@ void OffensivePlayer::PassBallTo(OffensivePlayer* target){
 
 void OffensivePlayer::DecideNextPosition(){
   if (glm::distance(position, targetPosition) < 5 || ofRandom(0, 1) < movementFlexibility){
+    cohesionFactor = glm::max(1.0f, passRange - passRange * 0.2f);
     targetPosition = KeepCohesion(); 
     targetPosition = FreeFromCover();
     if(ofRandom(0, 1) < chaosRate){
