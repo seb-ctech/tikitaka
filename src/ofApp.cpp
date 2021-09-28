@@ -26,8 +26,8 @@ void ofApp::draw(){
         renderImage.resize(ofGetWidth(), ofGetHeight());
         renderImage.draw(0, 0);
         Shader->end();
-        infoFont.drawString(std::to_string(par2), ofGetWidth() - 100, ofGetHeight() - 20);
-        infoFont.drawString(std::to_string(par1), ofGetWidth() - 200, ofGetHeight() - 20);
+        // infoFont.drawString(std::to_string(par2), ofGetWidth() - 100, ofGetHeight() - 20);
+        // infoFont.drawString(std::to_string(par1), ofGetWidth() - 200, ofGetHeight() - 20);
     } else {
         ofFill();
         ofSetColor(200);
