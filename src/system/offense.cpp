@@ -112,6 +112,7 @@ void OffensivePlayer::DecideNextPosition(){
     if(ofRandom(0, 1) < chaosRate){
       targetPosition = FormTriangle();
     }
+    targetPosition = SupportBallCarry();
     AdjustWalkingSpeed();
   }
 }
@@ -203,6 +204,20 @@ glm::vec2 OffensivePlayer::FormTriangle(){
   }
   // Return the optimal pivot to keep cohesion
   return FootballShape::getClosestPositionFromSelection(pivots, KeepCohesion());
+}
+
+glm::vec2 OffensivePlayer::SupportBallCarry(){
+  std::vector<Player*> sorroundingPlayers = getSorroundingPlayers(OwnTeam);
+  for(Player* player : sorroundingPlayers){
+    if(player == BallCarry){
+      glm::vec2 carryPosition = BallCarry->getPos();
+      if (glm::distance(carryPosition, targetPosition) > passRange){
+        glm::vec2 offset = carryPosition - targetPosition;
+        return targetPosition + glm::normalize(offset) * glm::distance(carryPosition, targetPosition) - passRange;
+      }
+    }
+  }
+  return targetPosition;
 }
 
 bool OffensivePlayer::isFreeLineOfSight(Player* potentialPassReceiver){

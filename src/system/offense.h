@@ -38,6 +38,7 @@ private:
     virtual void Action();
     glm::vec2 FormTriangle();
     glm::vec2 FreeFromCover();
+    glm::vec2 SupportBallCarry();
     bool isFreeLineOfSight(Player* passReceiver);
     bool isFreeFromCover();
     void BallPassing();
