@@ -28,14 +28,10 @@ void OffensivePlayer::Action(){
 
 void OffensivePlayer::Display(SystemUnits* su){
   Player::Display(su);
-  if(ownsBall){
-    Player::DisplaySpace(su);
-  }
   DisplayPlayerPosition(su);
   if(ownsBall){
     DisplayBallPossession(su); 
   }
-  DisplaySupportWithTriangle(su);
   DisplayPassingOptions(su);
   DisplayClosestOpponent(su);
 }
