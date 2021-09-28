@@ -156,7 +156,7 @@ glm::vec2 OffensivePlayer::FreeFromCover(){
 
 bool OffensivePlayer::isFreeFromCover(){
   glm::vec2 closestOpponentPosition = getClosestPlayer(OpponentTeam)->getPos();
-  return glm::distance(closestOpponentPosition, position) >= pressureRange;
+  return glm::distance(closestOpponentPosition, position) >= pressureRange / 2.0;
 }
 
 glm::vec2 OffensivePlayer::FormTriangle(){
