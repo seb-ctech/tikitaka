@@ -26,12 +26,12 @@ public:
     void setPressureRange(float delta){pressureRange = glm::min(glm::max(2.0f, pressureRange + delta), 40.0f);};
     void setPassRate(float delta){passRate = glm::min(glm::max(0.0f, passRate + delta * 1.0f / 100.0f), 1.0f);};
     void setFlexibility(float delta){movementFlexibility = glm::min(glm::max(0.0f, movementFlexibility + delta * 1.0f / 100.0f), 1.0f);};
-    void setChaosRate(float delta){chaosRate = glm::min(glm::max(0.0f, chaosRate + delta * 1.0f / 100.0f), 1.0f);};
+    void setTriangleRate(float delta){triangleRate = glm::min(glm::max(0.0f, triangleRate + delta * 1.0f / 100.0f), 1.0f);};
     float getPassRange(){return passRange;};
     float getPassRate(){return passRate;};
     float getPressureRange(){return pressureRange;};
     float getFlexibility(){return movementFlexibility;};
-    float getChaosRate(){return chaosRate;};
+    float getTriangleRate(){return triangleRate;};
 
 private:
     virtual void DecideNextPosition();
@@ -59,5 +59,5 @@ private:
     float passRange = 26;
     float passRate = 0.08;
     float movementFlexibility = 0.4;
-    float chaosRate = 0.02;
+    float triangleRate = 0.6;
 };

@@ -105,7 +105,7 @@ void OffensivePlayer::DecideNextPosition(){
   if (glm::distance(position, targetPosition) < 5 || ofRandom(0, 1) < movementFlexibility){
     targetPosition = KeepCohesion(); 
     targetPosition = FreeFromCover();
-    if(ofRandom(0, 1) < chaosRate){
+    if(ofRandom(0, 1) < triangleRate){
       targetPosition = FormTriangle();
     }
     targetPosition = SupportBallCarry();
