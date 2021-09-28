@@ -25,9 +25,9 @@ protected:
 	ofTrueTypeFont infoFont;
 	float maxAcc = 0.006;
 	float speed = 0.05; // Max-Value that velocity can reach, can vary over time;
-	float speedLimit = 0.05; // Value that limits speed
+	float speedLimit = 0.1; // Value that limits speed
 	float speedMin = 0.01;
-	float accFactor = 0.006;
+	float accFactor = 0.01;
 
 private:
 	void Init();
