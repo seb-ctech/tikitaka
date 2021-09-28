@@ -232,15 +232,15 @@ glm::vec2 OffensivePlayer::SupportBallCarry(){
 }
 
 bool OffensivePlayer::isFreeLineOfSight(Player* potentialPassReceiver){
-  float tolerance = 3;
-  float deltaAngle = HelperMath::DegreesToRadians(30);
+  float tolerance = 2;
+  float deltaAngle = HelperMath::DegreesToRadians(15);
   glm::vec2 lineToPlayer = potentialPassReceiver->getPos() - position;
   std::vector<glm::vec2> blockingOpponents = FootballShape::RaycastToMany(position, potentialPassReceiver->getPos(), getOtherPlayersPosition(OpponentTeam), tolerance);
   for(glm::vec2 blocker : blockingOpponents){
     glm::vec2 lineToOpponent = blocker - position;
     float angleDifference = glm::abs(HelperMath::CartesianToPolAngle(lineToPlayer)) - glm::abs(HelperMath::CartesianToPolAngle(lineToOpponent));
     float minAngle = deltaAngle * (2 - glm::distance(blocker, position) / glm::distance(potentialPassReceiver->getPos(), position));
-    if(glm::abs(angleDifference) < minAngle){
+    if(glm::abs(angleDifference) < minAngle / (glm::distance(blocker, position) / 10.0) ){
       return false;
     }
   }
