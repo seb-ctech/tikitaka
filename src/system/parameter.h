@@ -2,6 +2,7 @@
 #include <string>
 #include <vector>
 #include "offense.h"
+#include "defense.h"
 #include "system_units.h"
 #include "ofMain.h"
 
@@ -17,7 +18,7 @@ public:
   void SwitchParameterValue(int delta);
   void Display();
   void Update();
-  void Init(std::vector<OffensivePlayer*> players);
+  void Init(std::vector<OffensivePlayer*> offPlayers, std::vector<DefensivePlayer*> defPlayers);
 
 private:
   ofTrueTypeFont fontMain;
@@ -28,6 +29,7 @@ private:
   float valueLife;
   float parameterLife;
   int index = 0;
-  std::vector<OffensivePlayer*> players;
+  std::vector<OffensivePlayer*> Oplayers;
+  std::vector<DefensivePlayer*> Dplayers;
 
 };

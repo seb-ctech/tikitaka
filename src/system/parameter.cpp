@@ -4,6 +4,7 @@ Parameter::Parameter(){
   parameters.push_back("PASS RANGE");
   parameters.push_back("PASS RATE");
   parameters.push_back("PRESSURE RANGE");
+  parameters.push_back("PRESSURE AMOUNT");
   parameters.push_back("RESPONSIVENESS");
   parameters.push_back("FLUIDITY");
   parameterLife = 0;
@@ -12,8 +13,9 @@ Parameter::Parameter(){
   fontSecondary.load("Roboto-Light.ttf", 20);
 }
 
-void Parameter::Init(std::vector<OffensivePlayer*> _players){
-  players = _players;
+void Parameter::Init(std::vector<OffensivePlayer*> _Oplayers, std::vector<DefensivePlayer*> _Dplayers){
+  Oplayers = _Oplayers;
+  Dplayers = _Dplayers;
 }
 
 void Parameter::Display(){
@@ -25,7 +27,7 @@ void Parameter::Display(){
     fontMain.drawString(parameters[index], x, ofGetHeight() / 2.0);
   }
   if(valueLife > 0){
-    OffensivePlayer* offPlayer = players[0];
+    OffensivePlayer* offPlayer = Oplayers[0];
     float value;
     switch(index){
       case 0:
@@ -38,9 +40,12 @@ void Parameter::Display(){
       value = 1 - ((100.0 - offPlayer->getPressureRange()) / 100.0);
       break;
       case 3:
-      value = offPlayer->getFlexibility();
+      value = 1 - ((10.0 - Dplayers[0]->getPressure()) / 10.0);
       break;
       case 4:
+      value = offPlayer->getFlexibility();
+      break;
+      case 5:
       value = offPlayer->getChaosRate();
       break;
     }
@@ -80,23 +85,42 @@ void Parameter::SwitchParameter(int delta){
 void Parameter::SwitchParameterValue(int delta){
   parameterLife = valueLifeTime;
   valueLife = valueLifeTime;
-  for (OffensivePlayer* player : players){
+  
     switch(index){
       case 0:
-      player->setPassRange(delta);
+      for (OffensivePlayer* Offplayer : Oplayers){      
+        Offplayer->setPassRange(delta);
+      }
       break;
+
       case 1:
-      player->setPassRate(delta);
+      for (OffensivePlayer* Offplayer : Oplayers){
+        Offplayer->setPassRate(delta);
+      }
       break;
+
       case 2:
-      player->setPressureRange(delta);
+      for (OffensivePlayer* Offplayer : Oplayers){
+        Offplayer->setPressureRange(delta);
+      }
       break;
+
       case 3:
-      player->setFlexibility(delta);
+      for (DefensivePlayer* Dplayer : Dplayers){
+        Dplayer->setPressure(delta);
+      }
       break;
+    
       case 4:
-      player->setChaosRate(delta);
+      for (OffensivePlayer* Offplayer : Oplayers){
+        Offplayer->setFlexibility(delta);
+      }
       break;
+      case 5:
+      for (OffensivePlayer* Offplayer : Oplayers){
+        Offplayer->setChaosRate(delta);
+      }
+      break;
+
     }
-  }
 }

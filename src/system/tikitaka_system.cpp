@@ -42,7 +42,7 @@ void Tikitaka::Init(){
     }
     OffensivePlayer* first = attackers[0];
     ball->AttachToPlayer(first);
-    parameter->Init(attackers);
+    parameter->Init(attackers, defenders);
 }
 
 void Tikitaka::Display(){

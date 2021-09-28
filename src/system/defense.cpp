@@ -27,7 +27,7 @@ void DefensivePlayer::InitMatch(std::vector<Player*> Attackers, std::vector<Play
 
 void DefensivePlayer::DecideNextPosition(){
 	float distance = glm::distance(BallCarry->getPos(), position);
-	if(distance < coverRange){
+	if(distance < coverRange + pressStrength){
 		targetPosition = MoveTowardsBallCarrier();
 		AdjustWalkingSpeed();
 	} else {
@@ -36,7 +36,6 @@ void DefensivePlayer::DecideNextPosition(){
 }
 
 glm::vec2 DefensivePlayer::MoveTowardsBallCarrier(){
-	float pressStrength = 6.0;
 	glm::vec2 direction = glm::normalize(BallCarry->getPos() - position);
 	return position + direction * pressStrength;
 }
