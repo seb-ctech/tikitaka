@@ -28,14 +28,10 @@ void OffensivePlayer::Action(){
 
 void OffensivePlayer::Display(SystemUnits* su){
   Player::Display(su);
-  if(ownsBall){
-    Player::DisplaySpace(su);
-  }
   DisplayPlayerPosition(su);
   if(ownsBall){
     DisplayBallPossession(su); 
   }
-  DisplaySupportWithTriangle(su);
   DisplayPassingOptions(su);
   DisplayClosestOpponent(su);
 }
@@ -106,13 +102,14 @@ void OffensivePlayer::PassBallTo(OffensivePlayer* target){
 }
 
 void OffensivePlayer::DecideNextPosition(){
-  if (glm::distance(position, targetPosition) < 5 || ofRandom(0, 1) < movementFlexibility){
-    cohesionFactor = glm::max(1.0f, passRange - passRange * 0.2f);
-    targetPosition = KeepCohesion(); 
-    targetPosition = FreeFromCover();
-    if(ofRandom(0, 1) < chaosRate){
+  if (glm::distance(position, targetPosition) < 5 || ofRandom(0, 1) < movementFlexibility){ 
+    if(ofRandom(0, 1) < triangleRate){
       targetPosition = FormTriangle();
+    } else {
+      targetPosition = KeepCohesion();
     }
+    targetPosition = SupportBallCarry();
+    targetPosition = FreeFromCover();
     AdjustWalkingSpeed();
   }
 }
@@ -127,6 +124,7 @@ void OffensivePlayer::BallPassing(){
       }
     }
     if(PlayableMates.size() > 0){
+      OffensivePlayer* ballReceiver;
       std::vector<Player*> FreeMates;
       for (Player* p : PlayableMates){
         if(dynamic_cast<OffensivePlayer*>(p)->isFreeFromCover()){
@@ -134,10 +132,18 @@ void OffensivePlayer::BallPassing(){
         }
       }
       if (FreeMates.size() > 0){
-        PlayableMates = FreeMates;
-      }
-      OffensivePlayer* ballReceiver = dynamic_cast<OffensivePlayer*>(getClosestPlayer(PlayableMates));
-      PassBallTo(ballReceiver);
+        float mostSpace = 0.0;
+        Player* mostFreeMate = FreeMates[0];
+        for (Player* p : FreeMates){
+          float distance = glm::distance(p->getPos(), p->getClosestPlayer(OpponentTeam)->getPos());
+          if (distance > mostSpace){
+            mostFreeMate = p;
+            mostSpace = distance;
+          }
+        }
+        ballReceiver = dynamic_cast<OffensivePlayer*>(mostFreeMate);
+        PassBallTo(ballReceiver);
+      } 
     }
   }
 }
@@ -156,7 +162,7 @@ glm::vec2 OffensivePlayer::FreeFromCover(){
 
 bool OffensivePlayer::isFreeFromCover(){
   glm::vec2 closestOpponentPosition = getClosestPlayer(OpponentTeam)->getPos();
-  return glm::distance(closestOpponentPosition, position) >= pressureRange;
+  return glm::distance(closestOpponentPosition, position) >= pressureRange / 2.0;
 }
 
 glm::vec2 OffensivePlayer::FormTriangle(){
@@ -206,16 +212,35 @@ glm::vec2 OffensivePlayer::FormTriangle(){
   return FootballShape::getClosestPositionFromSelection(pivots, KeepCohesion());
 }
 
+glm::vec2 OffensivePlayer::SupportBallCarry(){
+  glm::vec2 adjustedPosition = targetPosition;
+  std::vector<Player*> sorroundingPlayers = getSorroundingPlayers(OwnTeam);
+  for(Player* player : sorroundingPlayers){
+    if(player == BallCarry){
+      glm::vec2 carryPosition = BallCarry->getPos();
+      if(!isFreeLineOfSight(BallCarry)){
+        glm::vec2 offset = targetPosition - position;
+        adjustedPosition = HelperMath::PolarToCartesian(HelperMath::CartesianToPolRadius(offset), HelperMath::CartesianToPolAngle(offset) + ofRandom(-0.1, 0.1));
+      }
+      if (glm::distance(carryPosition, targetPosition) > passRange){
+        glm::vec2 offset = carryPosition - adjustedPosition;
+        adjustedPosition = targetPosition + glm::normalize(offset) * glm::distance(carryPosition, adjustedPosition) - passRange;
+      }
+    }
+  }
+  return adjustedPosition;
+}
+
 bool OffensivePlayer::isFreeLineOfSight(Player* potentialPassReceiver){
-  float tolerance = 3;
-  float deltaAngle = HelperMath::DegreesToRadians(12);
+  float tolerance = 2;
+  float deltaAngle = HelperMath::DegreesToRadians(15);
   glm::vec2 lineToPlayer = potentialPassReceiver->getPos() - position;
   std::vector<glm::vec2> blockingOpponents = FootballShape::RaycastToMany(position, potentialPassReceiver->getPos(), getOtherPlayersPosition(OpponentTeam), tolerance);
   for(glm::vec2 blocker : blockingOpponents){
     glm::vec2 lineToOpponent = blocker - position;
     float angleDifference = glm::abs(HelperMath::CartesianToPolAngle(lineToPlayer)) - glm::abs(HelperMath::CartesianToPolAngle(lineToOpponent));
     float minAngle = deltaAngle * (2 - glm::distance(blocker, position) / glm::distance(potentialPassReceiver->getPos(), position));
-    if(glm::abs(angleDifference) < minAngle){
+    if(glm::abs(angleDifference) < minAngle / (glm::distance(blocker, position) / 10.0) ){
       return false;
     }
   }

@@ -6,7 +6,7 @@ Parameter::Parameter(){
   parameters.push_back("PRESSURE RANGE");
   parameters.push_back("PRESSURE AMOUNT");
   parameters.push_back("RESPONSIVENESS");
-  parameters.push_back("FLUIDITY");
+  parameters.push_back("TRIANGLES");
   parameterLife = 0;
   valueLife = 0;
   fontMain.load("Roboto-Light.ttf", 60);
@@ -46,7 +46,7 @@ void Parameter::Display(){
       value = offPlayer->getFlexibility();
       break;
       case 5:
-      value = offPlayer->getChaosRate();
+      value = offPlayer->getTriangleRate();
       break;
     }
     ofSetLineWidth(12);
@@ -118,7 +118,7 @@ void Parameter::SwitchParameterValue(int delta){
       break;
       case 5:
       for (OffensivePlayer* Offplayer : Oplayers){
-        Offplayer->setChaosRate(delta);
+        Offplayer->setTriangleRate(delta);
       }
       break;
 

@@ -31,8 +31,8 @@ class ofApp : public ofBaseApp{
 		ofImage renderImage;
 		Tikitaka system;
 		ofShader* Shader;
-		float par1 = 0.5;
-		float par2 = 0.5;
+		float par1 = -0.02;
+		float par2 = -0.02;
 		ofTrueTypeFont infoFont;
 		bool showShader = true;
 };
